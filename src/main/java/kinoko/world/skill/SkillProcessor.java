@@ -26,6 +26,8 @@ import kinoko.world.job.resistance.BattleMage;
 import kinoko.world.job.resistance.Citizen;
 import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.job.resistance.WildHunter;
+import kinoko.world.job.staff.GM;
+import kinoko.world.job.staff.SuperGM;
 import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
@@ -35,9 +37,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public abstract class SkillProcessor {
     protected static final Logger log = LogManager.getLogger(SkillProcessor.class);
@@ -143,6 +147,39 @@ public abstract class SkillProcessor {
 
 
     // PROCESS SKILL ---------------------------------------------------------------------------------------------------
+    /**
+     * Apply a field-wide buff with multiple stats to all affected users.
+     *
+     * @param skill      The skill being applied.
+     * @param field      The field where the buff takes effect.
+     * @param statValues Map of CharacterTemporaryStat → Integer value.
+     * @param duration   Duration of the buff in milliseconds (or whatever your system uses).
+     */
+    protected static void applyFieldBuff(Skill skill, Field field,
+                                         Map<CharacterTemporaryStat, Integer> statValues, int duration) {
+        skill.forEachAffectedUser(field, other -> {
+            Map<CharacterTemporaryStat, TemporaryStatOption> tempStats = new HashMap<>();
+            for (Map.Entry<CharacterTemporaryStat, Integer> entry : statValues.entrySet()) {
+                tempStats.put(entry.getKey(), TemporaryStatOption.of(entry.getValue(), skill.skillId, duration));
+            }
+            other.setTemporaryStat(tempStats);
+
+            other.write(UserLocal.effect(Effect.skillAffected(skill.skillId, skill.slv)));
+            field.broadcastPacket(UserRemote.effect(other, Effect.skillAffected(skill.skillId, skill.slv)), other);
+        }, true);
+    }
+
+    /**
+     * Reset specific temporary stats for all users in a field.
+     *
+     * @param field       The field where the reset takes effect.
+     * @param statsToReset Set of CharacterTemporaryStat to remove.
+     */
+    protected static void resetFieldTemporaryStats(Skill skill, Field field, Set<CharacterTemporaryStat> statsToReset) {
+        skill.forEachAffectedUser(field, other -> {
+            other.resetTemporaryStat(statsToReset);
+        }, true);
+    }
 
     public static void processSkill(User user, Skill skill) {
         final SkillInfo si = SkillProvider.getSkillInfoById(skill.skillId).orElseThrow();
@@ -192,12 +229,9 @@ public abstract class SkillProcessor {
             case Aran.ECHO_OF_HERO:
             case Evan.HEROS_ECHO:
             case Citizen.HEROS_ECHO:
-                user.setTemporaryStat(CharacterTemporaryStat.MaxLevelBuff, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
-                skill.forEachAffectedUser(field, (other) -> {
-                    other.setTemporaryStat(CharacterTemporaryStat.MaxLevelBuff, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
-                    other.write(UserLocal.effect(Effect.skillAffected(skill.skillId, skill.slv)));
-                    field.broadcastPacket(UserRemote.effect(other, Effect.skillAffected(skill.skillId, skill.slv)), other);
-                });
+                applyFieldBuff(skill, field,
+                        Map.of(CharacterTemporaryStat.MaxLevelBuff, si.getValue(SkillStat.x, slv)),
+                        si.getDuration(slv));
                 return;
 
             // COPY SKILLS ---------------------------------------------------------------------------------------------
@@ -314,6 +348,7 @@ public abstract class SkillProcessor {
             case Thief.HASTE_SHAD:
             case Thief.SELF_HASTE:
             case NightWalker.HASTE:
+            case GM.HASTE_NORMAL:
                 user.setTemporaryStat(Map.of(
                         CharacterTemporaryStat.Speed, TemporaryStatOption.of(si.getValue(SkillStat.speed, slv), skillId, si.getDuration(slv)),
                         CharacterTemporaryStat.Jump, TemporaryStatOption.of(si.getValue(SkillStat.jump, slv), skillId, si.getDuration(slv))
@@ -454,6 +489,7 @@ public abstract class SkillProcessor {
                 return;
         }
 
+
         // CLASS SPECIFIC SKILLS ---------------------------------------------------------------------------------------
         final int skillRoot = SkillConstants.getSkillRoot(skill.skillId);
         switch (Job.getById(skillRoot)) {
@@ -504,6 +540,12 @@ public abstract class SkillProcessor {
             }
             case MECHANIC_1, MECHANIC_2, MECHANIC_3, MECHANIC_4 -> {
                 Mechanic.handleSkill(user, skill);
+            }
+//            case GM ->  {
+//                GM.handleSKill(user, skill);
+//            }
+            case SUPER_GM -> {
+                SuperGM.handleSkill(user, skill);
             }
             default -> {
                 log.error("Unhandled skill {}", skill.skillId);

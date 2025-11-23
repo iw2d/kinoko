@@ -5,9 +5,19 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
 
+
+/**
+ * Utility class for time operations and measuring durations.
+ *
+ * Provides methods for current time, unit conversions, and timing/logging code execution.
+ * Helps remove magic numbers across the codebase. All methods are static; the class cannot be instantiated.
+ */
 public final class Timing {
     private static final Logger log = LogManager.getLogger(Timing.class);
-    public static final long DAY_SECONDS = 86400;
+    public static final int DAY_SECONDS = 86400;
+    public static final int DAY_MINUTES = 1440;
+    public static final int SECONDS_IN_MINUTE = 60;
+    public static final long NANOS_IN_MILLI = 1_000_000L;
 
     private Timing() {
         // prevent instantiation
@@ -52,7 +62,7 @@ public final class Timing {
     public static void logDuration(String taskName, Runnable action, Logger logger) {
         long start = System.nanoTime();
         action.run();
-        long elapsedMillis = (System.nanoTime() - start) / 1_000_000; // simpler conversion
+        long elapsedMillis = (System.nanoTime() - start) / NANOS_IN_MILLI; // simpler conversion
         logger.info("{} completed in {} milliseconds", taskName, elapsedMillis);
     }
 
@@ -72,7 +82,21 @@ public final class Timing {
     public static <E extends Exception> void logDurationThrowing(String taskName, ThrowingRunnable<E> action, Logger logger) throws E {
         long start = System.nanoTime();
         action.run(); // can throw E
-        long elapsedMillis = (System.nanoTime() - start) / 1_000_000;
+        long elapsedMillis = (System.nanoTime() - start) / NANOS_IN_MILLI;
         logger.info("{} completed in {} milliseconds", taskName, elapsedMillis);
+    }
+
+    /**
+     * Converts a duration in seconds to whole minutes, rounding down.
+     *
+     * Example:
+     *   90 seconds -> 1 minute
+     *   59 seconds -> 0 minutes
+     *
+     * @param seconds the duration in seconds
+     * @return the equivalent number of minutes
+     */
+    public static int secondsToMinutes(long seconds) {
+        return (int) (seconds / SECONDS_IN_MINUTE);
     }
 }

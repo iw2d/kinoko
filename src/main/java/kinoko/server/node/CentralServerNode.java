@@ -30,34 +30,19 @@ import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static kinoko.util.Timing.logDuration;
 
 /**
- * Represents the central server node responsible for coordinating all channel servers,
- * user data, parties, guilds, messengers, and family information.
+ * Central server node coordinating channels, users, parties, guilds, messengers, and families.
  *
- * This class provides **high-level, thread-safe access** to shared server data via
- * wrapper methods. All internal storage objects (FamilyStorage, UserStorage, GuildStorage,
- * MessengerStorage, PartyStorage, MigrationStorage, ServerStorage) are **private** and
- * should **not be accessed directly** by external classes.
- *
- * Instead, external code should always interact with data through the provided
- * CentralServerNode methods, which handle synchronization, validation, and safe
- * concurrent access. This design ensures thread safety and encapsulates the
- * internal implementation details, keeping the storage classes simple and fast.
- *
- * High-level operations, such as modifying families, creating parties, or
- * updating guilds, acquire the necessary locks internally and expose only safe
- * interfaces for external use.
+ * Provides high-level, thread-safe access to shared data via wrapper methods.
+ * Internal storage (FamilyStorage, UserStorage, etc.) is private and must not be accessed directly.
+ * External code should use CentralServerNode methods, which handle synchronization and validation,
+ * ensuring thread safety while keeping storage classes simple and fast.
  */
 public final class CentralServerNode extends Node {
     private static final Logger log = LogManager.getLogger(CentralServerNode.class);
@@ -155,6 +140,35 @@ public final class CentralServerNode extends Node {
                         .getChannelServerNodeById(remoteUser.getChannelId())
                         .flatMap(channelNode -> channelNode.getUserByCharacterId(characterId))
                 );
+    }
+
+    /**
+     * Batch retrieves User objects for the given list of character IDs.
+     *
+     * This method returns only users that are currently online (connected to a channel).
+     *
+     * @param characterIds the list of character IDs to look up
+     * @return a list of User objects corresponding to the IDs found
+     */
+    public List<User> getUsersByCharacterIds(List<Integer> characterIds) {
+        List<User> result = new ArrayList<>();
+        if (characterIds.isEmpty()) {
+            return result;
+        }
+
+        // Convert to a set for faster contains() checks
+        var idSet = Set.copyOf(characterIds);
+
+        // Iterate through all connected channel servers
+        for (ChannelServerNode channelNode : getChannelServerNodes()) {
+            for (User user : channelNode.getConnectedUsers()) {
+                if (idSet.contains(user.getCharacterId())) {
+                    result.add(user);
+                }
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -271,49 +285,17 @@ public final class CentralServerNode extends Node {
 
 
     // FAMILY METHODS --------------------------------------------------------------------------------------------------
-    // High-level family operations for CentralServerNode
-    //
-    // These methods provide thread-safe, high-level access to family data, such as
-    // retrieving members or adding/updating family trees
-    // Each method acquires the global family lock to ensure safe concurrent access.
-    //
-    // Note: The underlying FamilyStorage methods themselves are **not** thread-safe.
-    // Only these high-level wrapper methods acquire the lock. Direct calls to
-    // familyStorage should not be made without proper synchronization.
-    //
-    // This design ensures that all external access to family data through CentralServerNode
-    // is safe, while keeping the internal FamilyStorage implementation simple and fast.
+    // High-level thread-safe family operations for CentralServerNode.
+    // These methods acquire the global family lock to safely read or modify family data.
+    // FamilyStorage methods themselves are not thread-safe; direct calls must be synchronized.
+    // This ensures safe external access while keeping FamilyStorage fast and simple.
 
     /**
-     * Returns the global lock used to synchronize access to the family storage.
+     * Returns the global lock for FamilyStorage.
      *
-     * This lock protects all operations on the shared family data structures,
-     * such as adding, removing, or retrieving FamilyMember instances.
-     * Since the underlying familyStorage is mutable and may be accessed concurrently
-     * by multiple threads, any read or write operation should acquire this lock
-     * to avoid race conditions or inconsistent data.
-     *
-     * Important usage notes:
-     * 1. **Use only for family data operations** – do not hold this lock for network
-     *    writes, database I/O, or other slow tasks. Keep the critical section short.
-     * 2. **Avoid combining with other locks** – acquiring this lock alongside
-     *    other locks can lead to deadlocks; follow a consistent lock acquisition order.
-     * 3. **External responsibility** – the underlying FamilyStorage methods do not
-     *    acquire this lock themselves. Any multi-step operation that reads or
-     *    modifies family data should acquire the lock externally.
-     *
-     * Example usage:
-     * getGlobalFamilyLock().lock();
-     * try {
-     *     FamilyMember member = familyStorage.getFamilyMember(characterId).orElse(FamilyMember.EMPTY);
-     *     FamilyTree tree = familyStorage.getTreeByMemberId(characterId).orElse(null);
-     * } finally {
-     *     getGlobalFamilyLock().unlock();
-     * }
-     *
-     * Note: Even if some call sites already hold this lock before calling
-     * methods like getFamilyInfo(), acquiring the lock here ensures safety and
-     * prevents accidental concurrent access elsewhere in the code.
+     * Acquire this lock when reading or modifying family data. Keep the scope short,
+     * avoid I/O or network operations while locked, and never combine with other locks.
+     * FamilyStorage methods do not lock internally; external synchronization is required.
      *
      * @return the ReentrantLock protecting all family operations
      */

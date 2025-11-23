@@ -20,37 +20,13 @@ public final class FamilyStorage {
     private final ReentrantLock globalFamilyLock = new ReentrantLock();
 
     /**
-     * Returns the global lock for the family storage.
+     * Returns the global lock for family storage.
      *
-     * This lock should be used **only by external classes** (such as CentralServerNode or FamilyHandler)
-     * when performing operations that involve multiple reads/writes across FamilyStorage
-     * to ensure thread safety.
+     * Acquire this lock when performing multiple reads/writes on FamilyStorage.
+     * Keep the scope short, avoid I/O or network operations while locked, and
+     * never combine with other locks to prevent deadlocks.
      *
-     * Important guidelines for usage:
-     * 1. **Use exclusively for family modifications** – acquire the lock only while
-     *    reading or modifying family data. Do not hold it for network operations,
-     *    database I/O, or other slow tasks, as this lock is highly contended.
-     * 2. **Avoid combining with other locks** – never acquire this lock while holding
-     *    another lock (or vice versa), as it can easily lead to deadlocks.
-     * 3. **Keep lock duration short** – perform only the necessary operations inside
-     *    the lock scope to minimize contention, since this lock protects all families
-     *    globally and is used frequently.
-     *
-     * Example usage:
-     *   ReentrantLock lock = Server.getCentralServerNode().getGlobalFamilyLock();
-     *   lock.lock();
-     *   try {
-     *       // perform only family modifications or reads
-     *       FamilyMember member = familyStorage.getFamilyMember(characterId).orElse(FamilyMember.EMPTY);
-     *       FamilyTree tree = familyStorage.getTreeByMemberId(characterId).orElse(null);
-     *   } finally {
-     *       lock.unlock();
-     *   }
-     *
-     * Internal methods of FamilyStorage do **not acquire this lock** themselves
-     * and assume that the caller handles synchronization if needed.
-     *
-     * @return the ReentrantLock protecting access to the family storage
+     * @return the ReentrantLock protecting family storage
      */
     public ReentrantLock getGlobalLock() {
         return globalFamilyLock;

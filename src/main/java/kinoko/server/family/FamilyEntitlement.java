@@ -1,6 +1,8 @@
 package kinoko.server.family;
 
 
+import kinoko.util.Timing;
+
 /**
  * Represents a Family Entitlement in the server.
  *
@@ -21,34 +23,34 @@ package kinoko.server.family;
 public enum FamilyEntitlement {
     FAMILY_REUNION(1, 100, "Family Reunion",
             "[Target] Me\n[Effect] Teleport directly to the Family member of your choice.",
-            1440, (byte) 1, null, null),
+            Timing.DAY_MINUTES, (byte) 1, null, null),
 
     SUMMON_FAMILY(1, 200, "Summon Family",
             "[Target] 1 Family member\n[Effect] Summon a Family member of choice to the map you're in.",
-            1440, (byte) 1, null, null),
+            Timing.DAY_MINUTES, (byte) 1, null, null),
 
     FAMILY_HASTE(1, 500, "Quicker Together",
             "[Target] All Family Members\n[Effect] All family members, regardless of map, " +
                     "are blessed with Family Haste.",
-            1440, (byte) 2, null, null),
+            Timing.DAY_MINUTES, (byte) 2, null, null),
 
     FAMILY_EXP(1, 5000, "A Better Experience",
             "[Target] All Family Members\n[Effect] For 15 minutes, all family members receive 1.2x experience, " +
                     "regardless of map.",
-            1440, (byte) 2, 1.2, 15),
+            Timing.DAY_MINUTES, (byte) 2, 1.2, 15),
 
     FAMILY_DROP(1, 5000, "All The Drops",
             "[Target] All Family Members\n[Effect] For 15 minutes, " +
                     "all family members receive 1.2x drop rate, regardless of map.",
-            1440, (byte) 2, 1.2, 15),
+            Timing.DAY_MINUTES, (byte) 2, 1.2, 15),
 
     SELF_DROP_1_5(1, 8000, "My Drop Rate 1.5x (15 min)",
             "[Target] Me\n[Time] 15 min\n[Effect] Monster drop rate will be increased #c1.5x#.",
-            1440, (byte) 2, 1.5, 15),
+            Timing.DAY_MINUTES, (byte) 2, 1.5, 15),
 
     SELF_EXP_1_5(1, 8000, "My EXP 1.5x (15 min)",
             "[Target] Me\n[Time] 15 min\n[Effect] EXP earned from hunting will be increased #c1.5x#.",
-            1440, (byte) 2, 1.5, 15);
+            Timing.DAY_MINUTES, (byte) 2, 1.5, 15);
 
     private final int usageLimit, repCost, usageResetAfterMinutes;
     private final Integer expiresAfterMinutes;
@@ -96,6 +98,16 @@ public enum FamilyEntitlement {
 
     public byte getType(){
         return type;
+    }
+
+    public String getStatName() {
+        if (this == FAMILY_EXP || this == SELF_EXP_1_5) {
+            return "EXP";
+        }
+        if (this == FAMILY_DROP || this == SELF_DROP_1_5) {
+            return "DROP";
+        }
+        return ""; // e.g. teleport/haste/etc
     }
 }
 

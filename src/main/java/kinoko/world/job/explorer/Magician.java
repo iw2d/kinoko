@@ -230,8 +230,7 @@ public final class Magician extends SkillProcessor {
                 return;
             case RESURRECTION:
                 if (user.getHp() <= 0) {
-                    user.setHp(user.getMaxHp());
-                    user.setMp(user.getMaxMp());
+                    user.heal();
                 }
                 return;
             case SUMMON_DRAGON:

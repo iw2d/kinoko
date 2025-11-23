@@ -1,9 +1,13 @@
 package kinoko.server.family;
 
+import kinoko.server.Server;
+import kinoko.server.node.CentralServerNode;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Timing;
 import kinoko.util.exceptions.DumbDeveloperFoundException;
+import kinoko.world.GameConstants;
 import kinoko.world.user.FamilyMember;
+import kinoko.world.user.User;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -98,6 +102,20 @@ public final class FamilyTree {
         forEach(member -> member.setFamilyMessage(familyMessage)); // Update each member
     }
 
+    public void broadcastSystemMessage(String message, Object... args) {
+        CentralServerNode centralServerNode = Server.getCentralServerNode();
+
+        String formattedMessage = String.format(message, args);
+
+        // get all character IDs directly from the members map and get their User objects if they are online.
+        List<Integer> characterIds = new ArrayList<>(members.keySet());
+        List<User> users = centralServerNode.getUsersByCharacterIds(characterIds);
+
+        for (User user : users) {
+            user.systemMessage("[FAMILY] " + formattedMessage);
+        }
+    }
+
     /**
      * Activates a given family entitlement for the user.
      *
@@ -108,7 +126,7 @@ public final class FamilyTree {
      */
     public void activateEntitlement(FamilyEntitlement ent) {
         long expiresMinutes = ent.getExpiresAfterMinutes();
-        long expireAt = Timing.nowSeconds() + expiresMinutes * 60;
+        long expireAt = Timing.nowSeconds() + expiresMinutes * Timing.SECONDS_IN_MINUTE;
 
         activeEntitlements.put(ent, expireAt);
     }
@@ -145,7 +163,7 @@ public final class FamilyTree {
     public double getExpModifier() {
         return isEntitlementActive(FamilyEntitlement.FAMILY_EXP)
                 ? FamilyEntitlement.FAMILY_EXP.getModifier()
-                : 1.0;
+                : GameConstants.DEFAULT_FAMILY_EXP_MODIFIER;
     }
 
     /**
@@ -159,7 +177,7 @@ public final class FamilyTree {
     public double getDropModifier() {
         return isEntitlementActive(FamilyEntitlement.FAMILY_DROP)
                 ? FamilyEntitlement.FAMILY_DROP.getModifier()
-                : 1.0;
+                : GameConstants.DEFAULT_FAMILY_DROP_MODIFIER;
     }
 
     // -------------------------------------------------------------------------

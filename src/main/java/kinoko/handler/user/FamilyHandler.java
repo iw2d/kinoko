@@ -12,7 +12,6 @@ import kinoko.server.header.InHeader;
 import kinoko.server.node.CentralServerNode;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
-import kinoko.util.exceptions.DumbDeveloperFoundException;
 import kinoko.util.exceptions.InvalidInputException;
 import kinoko.world.GameConstants;
 import kinoko.world.user.FamilyMember;
@@ -570,6 +569,15 @@ public final class FamilyHandler {
 
             User targetUser = null;
 
+
+            Optional<FamilyTree> familyTreeOpt = user.getFamilyTree();
+            if (familyTreeOpt.isEmpty()) {
+                user.write(FamilyPacket.of(FamilyResultType.DifferentFamily, 0));
+                return; // exit if user has no family tree
+            }
+
+            FamilyTree familyTree = familyTreeOpt.get();
+
             if (entitlement.getType() == 1) {  // this entitlement requires a character name input
                 String targetName = inPacket.decodeString();
                 targetUser = Server.getCentralServerNode()
@@ -609,32 +617,52 @@ public final class FamilyHandler {
                         break;
 
                     case FAMILY_EXP:
-                        System.out.println("Applying FAMILY_EXP to all family members");
-                        // TODO: apply exp boost
+                        familyTree.activateEntitlement(FamilyEntitlement.FAMILY_EXP);
+                        familyTree.broadcastSystemMessage(
+                                "%s has activated the %s buff (%sx EXP) for %d minutes.",
+                                user.getCharacterName(),
+                                FamilyEntitlement.FAMILY_EXP.getName(),
+                                FamilyEntitlement.FAMILY_EXP.getModifier(),
+                                FamilyEntitlement.FAMILY_EXP.getExpiresAfterMinutes()
+                        );
                         break;
 
                     case FAMILY_DROP:
-                        System.out.println("Applying FAMILY_DROP to all family members");
-                        // TODO: apply drop boost
+                        familyTree.activateEntitlement(FamilyEntitlement.FAMILY_DROP);
+                        familyTree.broadcastSystemMessage(
+                                "%s has activated the %s buff (%sx DROP) for %d minutes.",
+                                user.getCharacterName(),
+                                FamilyEntitlement.FAMILY_DROP.getName(),
+                                FamilyEntitlement.FAMILY_DROP.getModifier(),
+                                FamilyEntitlement.FAMILY_DROP.getExpiresAfterMinutes()
+                        );
                         break;
 
                     case SELF_DROP_1_5:
-                        System.out.println("Applying SELF_DROP_1_5 to user");
-                        // TODO: apply self drop boost
+                        userMember.activateEntitlement(FamilyEntitlement.SELF_DROP_1_5);
+                        user.systemMessage(String.format(
+                                "You have activated the %s buff (%sx DROP) for %d minutes!",
+                                FamilyEntitlement.SELF_DROP_1_5.getName(),
+                                FamilyEntitlement.SELF_DROP_1_5.getModifier(),
+                                FamilyEntitlement.SELF_DROP_1_5.getExpiresAfterMinutes()
+                        ));
                         break;
 
                     case SELF_EXP_1_5:
-                        System.out.println("Applying SELF_EXP_1_5 to user");
-                        // TODO: apply self exp boost
+                        userMember.activateEntitlement(FamilyEntitlement.SELF_EXP_1_5);
+                        user.systemMessage(String.format(
+                                "You have activated the %s buff (%sx EXP) for %d minutes!",
+                                FamilyEntitlement.SELF_EXP_1_5.getName(),
+                                FamilyEntitlement.SELF_EXP_1_5.getModifier(),
+                                FamilyEntitlement.SELF_EXP_1_5.getExpiresAfterMinutes()
+                        ));
                         break;
                     default:
-                        System.out.println("Unhandled FamilyEntitlement: " + entitlement);
+                        log.error("Unhandled FamilyEntitlement: {}", entitlement);
                         break;
                 }
             }
         });
-
-//        System.out.println("Handled FamilyUsePrivilege: " + entitlement + ", target: " + targetUser);
     }
 
     /**

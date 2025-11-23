@@ -303,11 +303,11 @@ public final class FamilyMember implements Encodable {
     }
 
     public int getMinutesOnline() {
-        return (int) ((System.currentTimeMillis() / 1000L - lastSeenUnix) / 60);
+        return Timing.secondsToMinutes(Timing.nowSeconds() - lastSeenUnix);
     }
 
     public void updateLastLogin() {
-        lastSeenUnix = System.currentTimeMillis() / 1000L;
+        lastSeenUnix = Timing.nowSeconds();
     }
 
     public int getChannelID() {
@@ -435,7 +435,7 @@ public final class FamilyMember implements Encodable {
     public double getExpModifier() {
         return isEntitlementActive(FamilyEntitlement.SELF_EXP_1_5)
                 ? FamilyEntitlement.SELF_EXP_1_5.getModifier()
-                : 1.0;
+                : GameConstants.DEFAULT_FAMILY_PERSONAL_EXP_MODIFIER;
     }
 
 
@@ -450,6 +450,6 @@ public final class FamilyMember implements Encodable {
     public double getDropModifier() {
         return isEntitlementActive(FamilyEntitlement.SELF_DROP_1_5)
                 ? FamilyEntitlement.SELF_DROP_1_5.getModifier()
-                : 1.0;
+                : GameConstants.DEFAULT_FAMILY_PERSONAL_DROP_MODIFIER;
     }
 }

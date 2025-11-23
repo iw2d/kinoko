@@ -65,9 +65,9 @@ public final class MaxCommand {
             // Add skills
             List<SkillRecord> skillRecords = new ArrayList<>();
             for (int skillRoot : JobConstants.getSkillRootFromJob(user.getJob())) {
-                if (JobConstants.isBeginnerJob(skillRoot)) {
-                    continue;
-                }
+//                if (JobConstants.isBeginnerJob(skillRoot)) {
+//                    continue;
+//                }
                 Job job = Job.getById(skillRoot);
                 for (SkillInfo si : SkillProvider.getSkillsForJob(job)) {
                     SkillRecord skillRecord = new SkillRecord(si.getSkillId());

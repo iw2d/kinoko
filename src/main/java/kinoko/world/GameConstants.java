@@ -114,6 +114,10 @@ public final class GameConstants {
     public static final int MIN_FAMILY_LEVEL = 10;  // min level required for a character to be in a family.
     public static final int MAX_LEVEL_GAP_FOR_FAMILY = 50;  // max allowed level difference between a senior and junior.
     public static final int MAX_FAMILY_CHILDREN_COUNT = 2;  // max allowed juniors
+    public static final double DEFAULT_FAMILY_DROP_MODIFIER = 1.0;  // max allowed juniors
+    public static final double DEFAULT_FAMILY_EXP_MODIFIER = 1.0;  // max allowed juniors
+    public static final double DEFAULT_FAMILY_PERSONAL_DROP_MODIFIER = 1.0;  // max allowed juniors
+    public static final double DEFAULT_FAMILY_PERSONAL_EXP_MODIFIER = 1.0;  // max allowed juniors
 
     // REACTOR CONSTANTS -----------------------------------------------------------------------------------------------
 

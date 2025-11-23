@@ -60,13 +60,13 @@ public final class FamilyPacket {
      *   String leaderName
      *   String requesterName
      *
-     * @param senior       The user sending the invite (senior)
+     * @param requester       The user sending the invite (senior)
      * @return The encoded packet to send to the client
      */
-    public static OutPacket createSummonRequest(User requestor) {
+    public static OutPacket createSummonRequest(User requester) {
         final OutPacket outPacket = OutPacket.of(OutHeader.FamilySummonRequest);
-        outPacket.encodeString(requestor.getCharacterName());
-        outPacket.encodeString(requestor.getField().getName());
+        outPacket.encodeString(requester.getCharacterName());
+        outPacket.encodeString(requester.getField().getName());
 
         return outPacket;
     }
