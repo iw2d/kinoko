@@ -187,32 +187,21 @@ public final class CentralServerNode extends Node {
     }
 
     public Optional<Guild> getGuildById(int guildId) {
-        if (guildId == 0) {
-            return Optional.empty();
-        }
         return guildStorage.getGuildById(guildId);
+    }
+
+    public Optional<Guild> getGuildByName(String guildName) {
+        return guildStorage.getGuildByName(guildName);
     }
 
     // ALLIANCE METHODS ---------------------------------------------------------------------------------------------------
 
-    public Optional<Alliance> createNewAlliance(int allianceId, String allianceName, RemoteUser remoteUser) {
-        final Alliance alliance = new Alliance(allianceId, allianceName, remoteUser.getCharacterId());
-
-        final GuildMember member = GuildMember.from(remoteUser);
-        member.setGuildRank(GuildRank.MASTER);
-
-        Optional<Guild> guild = guildStorage.getGuildById(remoteUser.getGuildId());
-        if (!guild.isEmpty()) {
-            if (!alliance.addGuild(guild.get())) {
-                throw new IllegalStateException("Could not add guild to alliance");
-            }
-
-            if (allianceStorage.addAlliance(alliance)) {
-                return Optional.of(alliance);
-            }
+    public Optional<Alliance> createNewAlliance(int allianceId, String allianceName) {
+        final Alliance alliance = new Alliance(allianceId, allianceName);
+        if (!allianceStorage.addAlliance(alliance)) {
+            return Optional.empty();
         }
-
-        return Optional.empty();
+        return Optional.of(alliance);
     }
 
     public boolean removeAlliance(Alliance alliance) {

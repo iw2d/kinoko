@@ -1,6 +1,5 @@
 package kinoko.server.alliance;
 
-import kinoko.server.guild.GuildRank;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
@@ -12,15 +11,16 @@ import java.util.List;
 public final class AllianceRequest implements Encodable {
     private final AllianceRequestType requestType;
     private int allianceId;
-    private String allianceName;
-    private String allianceNotice;
-    private List<String> gradeNames;
-    private int memberMax;
+    private int guildId;
+    private String guildName;
 
     private int inviterId;
+    private int oldMasterId;
+    private int newMasterId;
+    private List<String> gradeNames;
     private int targetId;
-    private String targetName;
-    private GuildRank allianceRank;
+    private boolean gradeUp;
+    private String notice;
 
     public AllianceRequest(AllianceRequestType requestType) {
         this.requestType = requestType;
@@ -34,70 +34,76 @@ public final class AllianceRequest implements Encodable {
         return allianceId;
     }
 
-    public String getAllianceName() {
-        return allianceName;
+    public int getGuildId() {
+        return guildId;
     }
 
-    public String getAllianceNotice() {
-        return allianceNotice;
-    }
-
-    public List<String> getGradeNames() {
-        return gradeNames;
-    }
-
-    public int getMemberMax() {
-        return memberMax;
+    public String getGuildName() {
+        return guildName;
     }
 
     public int getInviterId() {
         return inviterId;
     }
 
+    public int getOldMasterId() {
+        return oldMasterId;
+    }
+
+    public int getNewMasterId() {
+        return newMasterId;
+    }
+
+    public List<String> getGradeNames() {
+        return gradeNames;
+    }
+
     public int getTargetId() {
         return targetId;
     }
 
-    public String getTargetName() {
-        return targetName;
+    public boolean isGradeUp() {
+        return gradeUp;
     }
 
-    public GuildRank getAllianceRank() {
-        return allianceRank;
+    public String getNotice() {
+        return notice;
     }
 
     @Override
     public void encode(OutPacket outPacket) {
         outPacket.encodeByte(requestType.getValue());
         switch (requestType) {
-            case Create -> {
+            case Load -> {
                 outPacket.encodeInt(allianceId);
-                outPacket.encodeString(allianceName);
+            }
+            case Withdraw -> {
             }
             case Invite -> {
-                outPacket.encodeString(targetName);
+                outPacket.encodeString(guildName);
             }
             case Join -> {
                 outPacket.encodeInt(inviterId);
+                outPacket.encodeString(guildName);
             }
             case Kick -> {
-                outPacket.encodeInt(targetId);
-                outPacket.encodeString(targetName);
+                outPacket.encodeInt(guildId);
             }
-            case UpdateMemberCountMax -> {
-                outPacket.encodeInt(memberMax);
+            case ChangeMaster -> {
+                outPacket.encodeInt(oldMasterId);
+                outPacket.encodeInt(newMasterId);
             }
             case SetGradeName -> {
-                for (int i = 0; i < GameConstants.GUILD_GRADE_MAX; i++) {
+                for (int i = 0; i < GameConstants.UNION_GRADE_MAX; i++) {
                     outPacket.encodeString(gradeNames.get(i));
                 }
             }
             case ChangeGrade -> {
                 outPacket.encodeInt(targetId);
-                outPacket.encodeByte(allianceRank.getValue());
+                outPacket.encodeByte(gradeUp);
             }
             case SetNotice -> {
-                outPacket.encodeString(allianceNotice);
+                outPacket.encodeString(notice);
             }
         }
     }
@@ -106,38 +112,37 @@ public final class AllianceRequest implements Encodable {
         final int type = inPacket.decodeByte();
         final AllianceRequest request = new AllianceRequest(AllianceRequestType.getByValue(type));
         switch (request.requestType) {
-            case Load, Destroy, Withdraw -> {
+            case Load -> {
                 request.allianceId = inPacket.decodeInt();
             }
-            case Create -> {
-                request.allianceId = inPacket.decodeInt();
-                request.allianceName = inPacket.decodeString();
+            case Withdraw -> {
             }
             case Invite -> {
-                request.targetName = inPacket.decodeString();
+                request.guildName = inPacket.decodeString();
             }
             case Join -> {
                 request.inviterId = inPacket.decodeInt();
+                request.guildName = inPacket.decodeString();
             }
             case Kick -> {
-                request.targetId = inPacket.decodeInt();
-                request.targetName = inPacket.decodeString();
+                request.guildId = inPacket.decodeInt();
             }
-            case UpdateMemberCountMax -> {
-                request.memberMax = inPacket.decodeInt();
+            case ChangeMaster -> {
+                request.oldMasterId = inPacket.decodeInt();
+                request.newMasterId = inPacket.decodeInt();
             }
             case SetGradeName -> {
                 request.gradeNames = new ArrayList<>();
-                for (int i = 0; i < GameConstants.GUILD_GRADE_MAX; i++) {
+                for (int i = 0; i < GameConstants.UNION_GRADE_MAX; i++) {
                     request.gradeNames.add(inPacket.decodeString());
                 }
             }
             case ChangeGrade -> {
                 request.targetId = inPacket.decodeInt();
-                request.allianceRank = GuildRank.getByValue(inPacket.decodeByte());
+                request.gradeUp = inPacket.decodeBoolean();
             }
             case SetNotice -> {
-                request.allianceNotice = inPacket.decodeString();
+                request.notice = inPacket.decodeString();
             }
             case null -> {
                 throw new IllegalStateException(String.format("Unknown alliance request type %d", type));
@@ -149,71 +154,58 @@ public final class AllianceRequest implements Encodable {
         return request;
     }
 
-    public static AllianceRequest loadAlliance(int allianceId) {
+    public static AllianceRequest load(int allianceId) {
         final AllianceRequest request = new AllianceRequest(AllianceRequestType.Load);
         request.allianceId = allianceId;
         return request;
     }
 
-    public static AllianceRequest createNewAlliance(String allianceName) {
-        final AllianceRequest request = new AllianceRequest(AllianceRequestType.Create);
-        request.allianceName = allianceName;
-        return request;
+    public static AllianceRequest withdraw() {
+        return new AllianceRequest(AllianceRequestType.Withdraw);
     }
 
-    public static AllianceRequest inviteAlliance(String targetName) {
+    public static AllianceRequest invite(String guildName) {
         final AllianceRequest request = new AllianceRequest(AllianceRequestType.Invite);
-        request.targetName = targetName;
+        request.guildName = guildName;
         return request;
     }
 
-    public static AllianceRequest joinAlliance(int inviterId) {
-        final AllianceRequest request = new AllianceRequest(AllianceRequestType.Join);
+    public static AllianceRequest join(int inviterId, String guildName) {
+        final AllianceRequest request = new AllianceRequest(AllianceRequestType.Invite);
         request.inviterId = inviterId;
+        request.guildName = guildName;
         return request;
     }
 
-    public static AllianceRequest withdrawAlliance(int allianceId) {
-        final AllianceRequest request = new AllianceRequest(AllianceRequestType.Withdraw);
-        request.allianceId = allianceId;
-        return request;
-    }
-
-    public static AllianceRequest kickAlliance(int targetId, String targetName) {
+    public static AllianceRequest kick(int guildId) {
         final AllianceRequest request = new AllianceRequest(AllianceRequestType.Kick);
-        request.targetId = targetId;
-        request.targetName = targetName;
+        request.guildId = guildId;
         return request;
     }
 
-    public static AllianceRequest removeAlliance(int allianceId) {
-        final AllianceRequest request = new AllianceRequest(AllianceRequestType.Destroy);
-        request.allianceId = allianceId;
-        return request;
-    }
-
-    public static AllianceRequest incMaxMemberNum(int memberMax) {
-        final AllianceRequest request = new AllianceRequest(AllianceRequestType.UpdateMemberCountMax);
-        request.memberMax = memberMax;
+    public static AllianceRequest changeMaster(int oldMasterId, int newMasterId) {
+        final AllianceRequest request = new AllianceRequest(AllianceRequestType.Invite);
+        request.oldMasterId = oldMasterId;
+        request.newMasterId = newMasterId;
         return request;
     }
 
     public static AllianceRequest setGradeName(List<String> gradeNames) {
-        final AllianceRequest request = new AllianceRequest(AllianceRequestType.SetGradeName);
+        final AllianceRequest request = new AllianceRequest(AllianceRequestType.Kick);
         request.gradeNames = gradeNames;
         return request;
     }
 
-    public static AllianceRequest setMemberGrade(int targetId, GuildRank allianceRank) {
+    public static AllianceRequest changeGrade(int targetId, boolean gradeUp) {
         final AllianceRequest request = new AllianceRequest(AllianceRequestType.ChangeGrade);
         request.targetId = targetId;
-        request.allianceRank = allianceRank;
+        request.gradeUp = gradeUp;
         return request;
     }
 
     public static AllianceRequest setNotice(String notice) {
         final AllianceRequest request = new AllianceRequest(AllianceRequestType.SetNotice);
-        request.allianceNotice = notice;
+        request.notice = notice;
         return request;
     }
 }

@@ -14,5 +14,4 @@ public interface AllianceAccessor {
     boolean saveAlliance(Alliance alliance);
 
     boolean deleteAlliance(int allianceId);
-
 }
