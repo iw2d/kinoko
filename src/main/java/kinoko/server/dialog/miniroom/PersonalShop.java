@@ -155,35 +155,28 @@ public final class PersonalShop extends MiniRoom {
                     user.dispose();
                     return;
                 }
-                // Do transaction (ACID-compliant order: validate, execute reversible ops, commit)
-                // Save original quantity for rollback
-                final int originalQuantity = item.getItem().getQuantity();
 
-                // Create buy item (no state modification yet)
+                final int originalQuantity = item.getItem().getQuantity();
                 final Item buyItem = new Item(item.getItem());
                 buyItem.setItemSn(owner.getNextItemSn());
                 buyItem.setQuantity((short) totalCount);
 
-                // Step 1: Deduct buyer's money (reversible)
                 if (!im.addMoney((int) -totalPrice)) {
                     user.write(MiniRoomPacket.PlayerShop.buyResult(PlayerShopBuyResult.NoMoney));
                     user.dispose();
                     return;
                 }
 
-                // Step 2: Add item to buyer (reversible)
                 final Optional<List<InventoryOperation>> addItemResult = im.addItem(buyItem);
                 if (addItemResult.isEmpty()) {
-                    // Rollback: Return money to buyer
                     im.addMoney((int) totalPrice);
                     user.write(MiniRoomPacket.PlayerShop.buyResult(PlayerShopBuyResult.NoSlot));
                     user.dispose();
                     return;
                 }
 
-                // Step 3: Add money to seller (reversible)
                 if (!owner.getInventoryManager().addMoney(moneyForOwner)) {
-                    // Rollback: Remove item from buyer, return money
+                    // rollback: Remove item from buyer, return money
                     im.removeItem(buyItem.getItemId(), totalCount);
                     im.addMoney((int) totalPrice);
                     user.write(MiniRoomPacket.PlayerShop.buyResult(PlayerShopBuyResult.OverPrice));
@@ -191,7 +184,6 @@ public final class PersonalShop extends MiniRoom {
                     return;
                 }
 
-                // Step 4: FINALLY modify shop quantity (commit point - no rollback after this)
                 item.getItem().setQuantity((short) (originalQuantity - totalCount));
                 // Update clients
                 user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
