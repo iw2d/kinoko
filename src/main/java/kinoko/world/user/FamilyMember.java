@@ -551,4 +551,8 @@ public final class FamilyMember implements Encodable {
                 ? FamilyEntitlement.SELF_DROP_1_5.getModifier()
                 : GameConstants.DEFAULT_FAMILY_PERSONAL_DROP_MODIFIER;
     }
+
+    public void resetRepToSenior() {
+        reputationToSenior = 0;
+    }
 }
