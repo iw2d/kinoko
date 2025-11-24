@@ -465,7 +465,8 @@ public final class UserHandler {
                 // Move exclusive body part equip item to inventory
                 final BodyPart exclusiveBodyPart = ItemConstants.getExclusiveEquipItemBodyPart(secondInventory, item.getItemId(), isCash);
                 if (exclusiveBodyPart != null) {
-                    final Item exclusiveEquipItem = secondInventory.getItem(exclusiveBodyPart.getValue() + (isCash ? BodyPart.CASH_BASE.getValue() : 0));
+                    final int exclusiveItemPosition = exclusiveBodyPart.getValue() + (isCash ? BodyPart.CASH_BASE.getValue() : 0);
+                    final Item exclusiveEquipItem = secondInventory.getItem(exclusiveItemPosition);
                     final Optional<Integer> availablePositionResult = InventoryManager.getAvailablePosition(im.getEquipInventory());
                     if (availablePositionResult.isEmpty()) {
                         log.error("No room in inventory remove exclusive equip item body part item ID {} in position {}", exclusiveEquipItem.getItemId(), exclusiveBodyPart);
@@ -473,11 +474,11 @@ public final class UserHandler {
                         return;
                     }
                     final int availablePosition = availablePositionResult.get();
-                    if (!secondInventory.removeItem(exclusiveBodyPart.getValue(), exclusiveEquipItem)) {
+                    if (!secondInventory.removeItem(exclusiveItemPosition, exclusiveEquipItem)) {
                         throw new IllegalStateException("Could not remove exclusive equip item");
                     }
                     im.getEquipInventory().putItem(availablePosition, exclusiveEquipItem);
-                    user.write(WvsContext.inventoryOperation(InventoryOperation.position(InventoryType.EQUIP, -exclusiveBodyPart.getValue(), availablePosition), false)); // client uses negative index for equipped
+                    user.write(WvsContext.inventoryOperation(InventoryOperation.position(InventoryType.EQUIP, -exclusiveItemPosition, availablePosition), false)); // client uses negative index for equipped
                 }
                 // Handle items binded on equip
                 if (itemInfo.isEquipTradeBlock() && !item.hasAttribute(ItemAttribute.EQUIP_BINDED)) {
