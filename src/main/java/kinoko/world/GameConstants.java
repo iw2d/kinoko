@@ -110,6 +110,13 @@ public final class GameConstants {
     public static final int DROP_REMAIN_ON_GROUND_TIME = 120;
     public static final double DROP_MONEY_PROB = 0.60;
 
+    // FAMILY CONSTANTS ------------------------------------------------------------------------------------------------
+    public static final int MIN_FAMILY_LEVEL = 10;  // min level required for a character to be in a family.
+    public static final int MAX_FAMILY_CHILDREN_COUNT = 2;  // max allowed juniors
+    public static final double DEFAULT_FAMILY_DROP_MODIFIER = 1.0;
+    public static final double DEFAULT_FAMILY_EXP_MODIFIER = 1.0;
+    public static final double DEFAULT_FAMILY_PERSONAL_DROP_MODIFIER = 1.0;
+    public static final double DEFAULT_FAMILY_PERSONAL_EXP_MODIFIER = 1.0;
 
     // REACTOR CONSTANTS -----------------------------------------------------------------------------------------------
 

@@ -10,7 +10,7 @@ import kinoko.world.user.User;
  */
 public final class KillMobsCommand {
 
-    @Command("killmobs")
+    @Command({"killmobs", "killall"})
     public static void killMobs(User user, String[] args) {
         user.getField().getMobPool().forEach(mob -> {
             if (mob.getHp() > 0) {

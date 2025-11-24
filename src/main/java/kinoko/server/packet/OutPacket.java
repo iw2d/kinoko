@@ -21,6 +21,10 @@ public interface OutPacket {
         encodeByte((byte) value);
     }
 
+    default void encodeBool(boolean value) {  // alias function
+        encodeByte(value);
+    }
+
     void encodeShort(short value);
 
     default void encodeShort(int value) {

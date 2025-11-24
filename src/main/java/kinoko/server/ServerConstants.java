@@ -33,5 +33,11 @@ public final class ServerConstants {
     public static final String DATABASE_DATACENTER = Util.getEnv("DB_DATACENTER","datacenter1");
     public static final String DATABASE_PROFILE = Util.getEnv("DB_PROFILE_ONE","profile_one");
 
+
+    // --------------- Family -----------------
+    public static final int MAX_LEVEL_GAP_FOR_FAMILY = 20;  // max allowed level difference between a senior and junior.
+    public static final int FAMILY_REP_PER_KILL = 3;
+    public static final int FAMILY_REP_PER_BOSS_KILL = 20;
+    public static final int FAMILY_REP_PER_LEVEL_UP = 200;
 }
 

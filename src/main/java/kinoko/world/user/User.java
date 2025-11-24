@@ -5,7 +5,9 @@ import kinoko.handler.user.FriendHandler;
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
+import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
+import kinoko.packet.world.AdminPacket;
 import kinoko.packet.world.FriendPacket;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
@@ -16,16 +18,20 @@ import kinoko.provider.item.ItemSpecType;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.server.Server;
+import kinoko.server.ServerConstants;
 import kinoko.server.dialog.Dialog;
 import kinoko.server.dialog.ScriptDialog;
 import kinoko.server.dialog.miniroom.MiniRoom;
 import kinoko.server.event.EventType;
+import kinoko.server.family.FamilyTree;
 import kinoko.server.guild.GuildRank;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
 import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.party.PartyRequest;
+import kinoko.server.user.AdminResultType;
 import kinoko.server.user.RemoteUser;
 import kinoko.util.BitFlag;
 import kinoko.world.GameConstants;
@@ -37,6 +43,7 @@ import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedLeaveType;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
+import kinoko.world.job.staff.SuperGM;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillConstants;
@@ -78,6 +85,7 @@ public final class User extends Life {
     private int messengerId;
     private PartyInfo partyInfo;
     private GuildInfo guildInfo;
+    private FamilyMember familyInfo;
 
     private Dialog dialog;
     private Dragon dragon;
@@ -91,6 +99,7 @@ public final class User extends Life {
     private boolean inTransfer;
     private List<EventCoolDown> cooldowns = new ArrayList<>();
     private Instant nextCheckItemExpire;
+    private boolean hidden;
 
     public User(Client client, CharacterData characterData) {
         this.client = client;
@@ -458,6 +467,43 @@ public final class User extends Life {
         setMp(getMaxMp());
     }
 
+    public void hide(boolean hide, boolean isLoggingIn) {
+        this.hidden = hide;
+
+        SecondaryStat ss = getSecondaryStat();
+        CharacterTemporaryStat stat = CharacterTemporaryStat.Sneak;
+
+        BitFlag<CharacterTemporaryStat> flag = BitFlag.from(
+                Set.of(stat),
+                CharacterTemporaryStat.FLAG_SIZE
+        );
+
+        ss.getTemporaryStats().put(
+                stat,
+                TwoStateTemporaryStat.ofTwoState(stat, 1, SuperGM.HIDE, 0)
+        );
+
+        if (hide){
+            write(AdminPacket.getAdminEffect(AdminResultType.SET_HIDE_STATUS.getValue(), (byte) 1));
+            if (!isLoggingIn) {
+                getField().broadcastToNonGMs(UserPacket.userLeaveField(this));
+            }
+            // let GMs see that they are hidden with Sneak / Dark Sight
+            // We do not want to broadcast this to our own user, otherwise they cannot use skills in dark sight.
+            getField().getUserPool().broadcastPacketToGMs(UserRemote.temporaryStatSet(this, ss, flag), this);
+        }
+        else {  // unhide
+            write(AdminPacket.getAdminEffect(AdminResultType.SET_HIDE_STATUS.getValue(), (byte) 0));
+            ss.getTemporaryStats().remove(CharacterTemporaryStat.Sneak);
+            getField().getUserPool().broadcastPacketToGMs(UserRemote.temporaryStatReset(this, flag), this);
+            getField().broadcastToNonGMs(UserPacket.userEnterField(this));
+        }
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
     public void kill() {
         setHp(0);
     }
@@ -494,12 +540,18 @@ public final class User extends Life {
         if (addExpResult.containsKey(Stat.LEVEL)) {
             getField().broadcastPacket(UserRemote.effect(this, Effect.levelUp()), this);
             validateStat();
-            setHp(getMaxHp());
-            setMp(getMaxMp());
+            heal();
             getConnectedServer().notifyUserUpdate(this);
             // Max level
             if (getLevel() == GameConstants.getLevelMax(getJob())) {
                 getCharacterData().setMaxLevelTime(Instant.now());
+            }
+            // reminder that a null check is not needed here, because if they've had a family before,
+            // it would be a unique instance.
+            if (familyInfo.hasFamily()){
+                familyInfo.addRepToSenior(ServerConstants.FAMILY_REP_PER_LEVEL_UP, true,
+                        true, getCharacterName());
+                familyInfo.updateUser(this);  // update level
             }
         }
     }
@@ -993,5 +1045,75 @@ public final class User extends Life {
     // UTILITY ---------------------------------------------------------------------------------------------------------
     public void systemMessage(String text, Object... args){
         write(MessagePacket.system(text, args));
+    }
+
+    public FamilyMember getFamilyInfo() {
+        return familyInfo;
+    }
+
+    public Optional<FamilyTree> getFamilyTree() {
+        return Server.getCentralServerNode().getFamilyTree(this.getCharacterId());
+    }
+
+    /**
+     * Calculates the effective drop rate modifier for the user, taking into account
+     * both their personal family drop modifier and the modifiers from their family tree.
+     *
+     * The method ensures that the returned modifier is never less than 1.0.
+     *
+     * @return the highest applicable drop modifier between personal and family values,
+     *         with a minimum of 1.0
+     */
+    public double getFamilyDropModifier() {
+        double personalModifier = GameConstants.DEFAULT_FAMILY_PERSONAL_DROP_MODIFIER;
+        double familyModifier = GameConstants.DEFAULT_FAMILY_DROP_MODIFIER;
+        if (this.familyInfo != null && this.familyInfo.hasFamily()){
+            personalModifier = this.familyInfo.getDropModifier();
+        }
+
+        Optional<FamilyTree> userTreeOpt = getFamilyTree();
+        if (userTreeOpt.isPresent()) {
+            familyModifier = userTreeOpt.get().getDropModifier();
+        }
+
+        return Math.max(GameConstants.DEFAULT_FAMILY_DROP_MODIFIER, Math.max(personalModifier, familyModifier));
+    }
+
+    /**
+     * Calculates the effective experience (EXP) modifier for the user, considering
+     * both their personal family EXP modifier and any modifiers from their family tree.
+     *
+     * The method ensures that the returned modifier is never less than 1.0.
+     *
+     * @return the highest applicable EXP modifier between personal and family values,
+     *         with a minimum of 1.0
+     */
+    public double getFamilyEXPModifier() {
+        double personalModifier = GameConstants.DEFAULT_FAMILY_PERSONAL_EXP_MODIFIER;
+        double familyModifier = GameConstants.DEFAULT_FAMILY_EXP_MODIFIER;
+
+        if (this.familyInfo != null && this.familyInfo.hasFamily()) {
+            personalModifier = this.familyInfo.getExpModifier();
+        }
+
+        Optional<FamilyTree> userTreeOpt = getFamilyTree();
+        if (userTreeOpt.isPresent()) {
+            familyModifier = userTreeOpt.get().getExpModifier();
+        }
+
+        return Math.max(GameConstants.DEFAULT_FAMILY_EXP_MODIFIER, Math.max(personalModifier, familyModifier));
+    }
+
+    /**
+     * Sets the user's FamilyMember info and updates the last login time
+     * if the user has been a part of a family before.
+     *
+     * @param familyInfo the FamilyMember data to assign
+     */
+    public void setFamilyInfo(FamilyMember familyInfo) {
+        this.familyInfo = familyInfo;
+        if (this.familyInfo != null && !this.familyInfo.isDefault()){
+            this.familyInfo.updateLastLogin();
+        }
     }
 }

@@ -13,9 +13,8 @@ import kinoko.server.rank.RankManager;
 import kinoko.util.crypto.MapleCrypto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import static kinoko.util.Timing.logDuration;
 
-import java.time.Duration;
-import java.time.Instant;
 
 public final class Server {
     private static final Logger log = LogManager.getLogger(Server.class);
@@ -25,24 +24,23 @@ public final class Server {
         Server.initialize();
     }
 
-
     private static void initialize() throws Exception {
         // Initialize providers
-        Instant start = Instant.now();
-        ItemProvider.initialize();      // Character.wz + Item.wz
-        SkillProvider.initialize();     // Skill.wz + Morph.wz
-        MapProvider.initialize();       // Map.wz
-        MobProvider.initialize();       // Mob.wz
-        NpcProvider.initialize();       // Npc.wz
-        ReactorProvider.initialize();   // Reactor.wz
-        QuestProvider.initialize();     // Quest.wz
-        StringProvider.initialize();    // String.wz
-        EtcProvider.initialize();       // Etc.wz
-        ShopProvider.initialize();      // data/shop
-        RewardProvider.initialize();    // data/reward
-        CashShop.initialize();          // data/cash
-        System.gc();
-        log.info("Loaded providers in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+        logDuration("Loading providers", () -> {
+            ItemProvider.initialize();      // Character.wz + Item.wz
+            SkillProvider.initialize();     // Skill.wz + Morph.wz
+            MapProvider.initialize();       // Map.wz
+            MobProvider.initialize();       // Mob.wz
+            NpcProvider.initialize();       // Npc.wz
+            ReactorProvider.initialize();   // Reactor.wz
+            QuestProvider.initialize();     // Quest.wz
+            StringProvider.initialize();    // String.wz
+            EtcProvider.initialize();       // Etc.wz
+            ShopProvider.initialize();      // data/shop
+            RewardProvider.initialize();    // data/reward
+            CashShop.initialize();          // data/cash
+            System.gc();
+        }, log);
 
         // Initialize server classes
         MapleCrypto.initialize();
@@ -50,22 +48,20 @@ public final class Server {
         CommandProcessor.initialize();
 
         // Initialize database
-        start = Instant.now();
-        DatabaseManager.initialize();
-        log.info("Loaded database connection in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+        logDuration("Loaded database connection", DatabaseManager::initialize, log);
 
         // Initialize ranks
-        start = Instant.now();
-        RankManager.initialize();
-        log.info("Loaded ranks in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+        logDuration("Loaded ranks", RankManager::initialize, log);
 
         // Initialize scripts
-        start = Instant.now();
-        ScriptDispatcher.initialize();
-        log.info("Loaded scripts in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+        logDuration("Loaded scripts", ScriptDispatcher::initialize, log);
 
         // Initialize nodes
         centralServerNode = new CentralServerNode(ServerConstants.CENTRAL_PORT);
+
+        // Initialize families
+        logDuration("Loaded families", centralServerNode::createAllFamilies, log);
+
         ServerExecutor.submitService(() -> {
             try {
                 centralServerNode.initialize();
@@ -120,3 +116,4 @@ public final class Server {
         return centralServerNode;
     }
 }
+

@@ -19,7 +19,7 @@ public final class MesoCommand {
      * @param user the target user whose mesos will be set
      * @param args the command arguments, where args[1] should be the amount of mesos
      */
-    @Command(value = {"meso", "money"})
+    @Command(value = {"meso", "money", "mesos"})
     @Arguments("amount")
     public static void meso(User user, String[] args) {
         try {

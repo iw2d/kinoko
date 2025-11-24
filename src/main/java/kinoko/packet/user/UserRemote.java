@@ -7,6 +7,7 @@ import kinoko.world.field.life.MovePath;
 import kinoko.world.job.explorer.Bowman;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.resistance.WildHunter;
+import kinoko.world.job.staff.SuperGM;
 import kinoko.world.skill.*;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.GuildInfo;
@@ -14,6 +15,7 @@ import kinoko.world.user.User;
 import kinoko.world.user.effect.Effect;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 import kinoko.world.user.stat.SecondaryStat;
+import kinoko.world.user.stat.TemporaryStatOption;
 
 public final class UserRemote {
     // CUserPool::OnUserRemotePacket -----------------------------------------------------------------------------------
