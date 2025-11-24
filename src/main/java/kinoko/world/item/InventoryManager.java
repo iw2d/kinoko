@@ -125,12 +125,12 @@ public final class InventoryManager {
 
     // HELPER METHODS -------------------------------------------------------------------------------------------------
 
-    public boolean canAddMoney(int money) {
+    public synchronized boolean canAddMoney(int money) {
         final long newMoney = ((long) getMoney()) + money;
         return newMoney <= Integer.MAX_VALUE && newMoney >= 0;
     }
 
-    public boolean addMoney(int money) {
+    public synchronized boolean addMoney(int money) {
         final long newMoney = ((long) getMoney()) + money;
         if (newMoney > Integer.MAX_VALUE || newMoney < 0) {
             return false;
