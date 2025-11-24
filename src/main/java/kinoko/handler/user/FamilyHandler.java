@@ -818,6 +818,7 @@ public final class FamilyHandler {
 
         // Perform the actual extraction
         FamilyTree newTree = parentTree.extractAndRemoveSubTree(userId);
+        junior.getFamilyInfo().resetRepToSenior();
         centralServerNode.addFamilyTree(newTree);
 
         return success(parentId, userId);
