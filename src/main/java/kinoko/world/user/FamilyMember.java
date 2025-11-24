@@ -1,5 +1,6 @@
 package kinoko.world.user;
 
+import kinoko.packet.world.FamilyPacket;
 import kinoko.server.Server;
 import kinoko.server.family.FamilyEntitlement;
 import kinoko.server.family.FamilyTree;
@@ -52,6 +53,8 @@ public final class FamilyMember implements Encodable {
     private final Map<FamilyEntitlement, List<Long>> entitlementUsageLog = new ConcurrentHashMap<>();
     private final Map<FamilyEntitlement, Long> activeEntitlements = new HashMap<>();
     private String familyMessage;
+    private int lastReputationDay;  // stores YYYYMMDD of last rep gain
+
 
 
     public FamilyMember(int characterId, String name, int level, int job, int currentReputation, int totalReputation,
@@ -84,7 +87,9 @@ public final class FamilyMember implements Encodable {
     public String getName() { return name; }
     public int getLevel() { return level; }
     public int getJob() { return job; }
-    public int getReputation() { return currentReputation; }
+    public int getReputation() {
+        return currentReputation;
+    }
     public int getTotalReputation() { return totalReputation; }
     public int getReputationToSenior() { return reputationToSenior; }
     public Integer getParentId() { return parentId; }
@@ -106,7 +111,10 @@ public final class FamilyMember implements Encodable {
         return children.size();
     }
 
-    public int getTodaysRep() { return todaysReputation; }
+    public int getTodaysRep() {
+        resetDailyReputationIfNeeded();
+        return todaysReputation;
+    }
 
     public void setFamilyMessage(String message){
         this.familyMessage = message;
@@ -158,7 +166,66 @@ public final class FamilyMember implements Encodable {
         currentReputation = Math.max(currentReputation + amount, 0);
         if (increaseTotal){
             totalReputation += amount;
+            resetDailyReputationIfNeeded();
             todaysReputation += amount;
+
+
+        }
+    }
+
+    /**
+     * Resets the user's daily reputation if a new day has started.
+     *
+     * This method compares the stored lastReputationDay with today's date.
+     * If they differ, it updates lastReputationDay to today and sets todaysReputation to 0.
+     * Should be called before modifying or accessing daily reputation to ensure accuracy.
+     */
+    private void resetDailyReputationIfNeeded(){
+        if (lastReputationDay != Timing.todayYmd()){
+            lastReputationDay = Timing.todayYmd();
+            todaysReputation = 0;
+        }
+    }
+
+    /**
+     * Adds reputation to this member's senior and optionally propagates further up the family tree.
+     *
+     * Logic:
+     *  - If this member has no parent, nothing happens.
+     *  - If the senior's level is lower than this member's and the rep amount is positive,
+     *    the amount is halved before being applied.
+     *  - Reputation is added to the senior, tracked in this member's "reputationToSenior",
+     *    and then recursively passed upward (unless disabled).
+     *
+     * @param amount                 The reputation amount to grant.
+     * @param includeGrandSenior     Whether reputation should continue propagating past the direct senior.
+     * @param countRepToSenior       Whether this reputation should be tracked in this member's reputationToSenior field.
+     * @param juniorName             The user's name responsible for getting this reputation.
+     */
+    public void addRepToSenior(int amount, boolean includeGrandSenior, boolean countRepToSenior, String juniorName){
+        if (parentId == null) {
+            return;
+        }
+
+        FamilyMember parentMember = Server.getCentralServerNode().getFamilyInfo(parentId);
+        if (parentMember.isDefault()){
+            return;
+        }
+
+        int finalAmount = (parentMember.getLevel() < getLevel() && amount > 0) ? amount / 2 : amount;
+        parentMember.addRep(finalAmount, true);
+        if (parentMember.isOnline()) {
+            Server.getCentralServerNode()
+                    .getUserByCharacterId(parentMember.getCharacterId())
+                    .ifPresent(u -> u.write(FamilyPacket.sendRepGain(finalAmount, juniorName)));
+        }
+
+        if (countRepToSenior) {
+            reputationToSenior += finalAmount;
+        }
+
+        if (includeGrandSenior) {
+            parentMember.addRepToSenior(finalAmount, false, false, juniorName);
         }
     }
 
@@ -357,7 +424,7 @@ public final class FamilyMember implements Encodable {
     public void encode(OutPacket out) {
         out.encodeInt(currentReputation);
         out.encodeInt(totalReputation);
-        out.encodeInt(todaysReputation);
+        out.encodeInt(getTodaysRep());
         out.encodeShort((short) getChildrenCount());
         out.encodeShort(GameConstants.MAX_FAMILY_CHILDREN_COUNT); // max juniors
         out.encodeShort(0); // unknown, wTotalChildCount

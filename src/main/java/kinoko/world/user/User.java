@@ -19,6 +19,7 @@ import kinoko.provider.map.Foothold;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.server.Server;
+import kinoko.server.ServerConstants;
 import kinoko.server.dialog.Dialog;
 import kinoko.server.dialog.ScriptDialog;
 import kinoko.server.dialog.miniroom.MiniRoom;
@@ -539,12 +540,18 @@ public final class User extends Life {
         if (addExpResult.containsKey(Stat.LEVEL)) {
             getField().broadcastPacket(UserRemote.effect(this, Effect.levelUp()), this);
             validateStat();
-            setHp(getMaxHp());
-            setMp(getMaxMp());
+            heal();
             getConnectedServer().notifyUserUpdate(this);
             // Max level
             if (getLevel() == GameConstants.getLevelMax(getJob())) {
                 getCharacterData().setMaxLevelTime(Instant.now());
+            }
+            // reminder that a null check is not needed here, because if they've had a family before,
+            // it would be a unique instance.
+            if (familyInfo.hasFamily()){
+                familyInfo.addRepToSenior(ServerConstants.FAMILY_REP_PER_LEVEL_UP, true,
+                        true, getCharacterName());
+                familyInfo.updateUser(this);  // update level
             }
         }
     }

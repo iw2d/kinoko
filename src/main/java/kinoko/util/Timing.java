@@ -99,4 +99,20 @@ public final class Timing {
     public static int secondsToMinutes(long seconds) {
         return (int) (seconds / SECONDS_IN_MINUTE);
     }
+
+    /**
+     * Returns today's date as an integer in the format YYYYMMDD.
+     *
+     * Example:
+     *   2025-11-23 -> 20251123
+     *
+     * Useful for daily comparisons without dealing with full date objects.
+     *
+     * @return today's date in YYYYMMDD format
+     */
+    public static int todayYmd() {
+        return java.time.LocalDate.now().getYear() * 10000
+                + java.time.LocalDate.now().getMonthValue() * 100
+                + java.time.LocalDate.now().getDayOfMonth();
+    }
 }

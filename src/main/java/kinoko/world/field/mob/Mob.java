@@ -16,7 +16,10 @@ import kinoko.provider.skill.ElementAttribute;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.script.party.HenesysPQ;
+import kinoko.server.Server;
 import kinoko.server.ServerConfig;
+import kinoko.server.ServerConstants;
+import kinoko.server.node.CentralServerNode;
 import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
@@ -33,6 +36,7 @@ import kinoko.world.item.ItemVariationOption;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.quest.QuestRecord;
+import kinoko.world.user.FamilyMember;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 
@@ -553,6 +557,8 @@ public final class Mob extends Life implements ControlledObject, Encodable {
                 user.write(MessagePacket.questRecord(questProgressResult.get()));
                 user.validateStat();
             }
+
+            giveFamilyRep(user);
         }
     }
 
@@ -701,6 +707,33 @@ public final class Mob extends Life implements ControlledObject, Encodable {
     public String toString() {
         return String.format("Mob { %d, oid : %d, hp : %d, mp : %d, controller : %s }", getTemplateId(), getId(), getHp(), getMp(), getController() != null ? getController().getCharacterName() : "null");
     }
+
+    /**
+     * Grants family reputation to the user's senior chain, but not to the user themselves.
+     *
+     * Logic:
+     *  - If the user is not in a family, no reputation is awarded.
+     *  - If the mob has extremely low HP (such as fake or scripted mobs), no reputation is awarded.
+     *  - Determines the reputation amount based on whether the mob is a boss or a normal mob.
+     *  - Reputation is applied only to the user's senior and recursively to higher ancestors.
+     *    The user who killed the mob does NOT gain any reputation from this method.
+     *
+     * @param user The user who killed the mob, whose senior chain will receive reputation.
+     */
+    private void giveFamilyRep(User user){
+        FamilyMember userMember = user.getFamilyInfo();
+        if (!userMember.hasFamily()) {
+            return;
+        }
+
+        if (getMaxHp() <= 1) {
+            return;  // don't count low hp mobs.
+        }
+
+        int repGain = isBoss() ? ServerConstants.FAMILY_REP_PER_BOSS_KILL : ServerConstants.FAMILY_REP_PER_KILL;
+        userMember.addRepToSenior(repGain, true, true, user.getCharacterName());
+    }
+
 
     @Override
     public void encode(OutPacket outPacket) {

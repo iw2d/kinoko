@@ -198,6 +198,26 @@ public final class FamilyPacket {
     }
 
     /**
+     * Creates a packet notifying the client that they have gained family reputation.
+     *
+     * Packet structure:
+     *  - int   amount of reputation gained
+     *  - str   name of the junior whose action caused the gain
+     *
+     * This is used when a senior receives rep from their junior's activity.
+     *
+     * @param amount      The amount of reputation gained.
+     * @param juniorName  The name of the junior who generated the reputation.
+     * @return            An OutPacket containing the reputation gain notification.
+     */
+    public static OutPacket sendRepGain(int amount, String juniorName) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.FamilyFamousPointIncResult);
+        outPacket.encodeInt(amount);
+        outPacket.encodeString(juniorName);
+        return outPacket;
+    }
+
+    /**
      * Builds a Family Result packet.
      *
      * This packet is used for family-related error and informational messages

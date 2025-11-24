@@ -8,6 +8,7 @@ import kinoko.server.Server;
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
 
+import kinoko.server.ServerConstants;
 import kinoko.server.family.FamilyEntitlement;
 import kinoko.server.family.FamilyResultType;
 import kinoko.server.family.FamilyTree;
@@ -246,7 +247,7 @@ public final class FamilyHandler {
 
         // Level gap check (must be within x levels)
         int levelGap = Math.abs(user.getLevel() - targetUser.getLevel());
-        if (levelGap > GameConstants.MAX_LEVEL_GAP_FOR_FAMILY) {
+        if (levelGap > ServerConstants.MAX_LEVEL_GAP_FOR_FAMILY) {
             user.write(FamilyPacket.of(FamilyResultType.LevelGapTooHigh, 0));
             return;
         }
