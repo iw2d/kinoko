@@ -12,6 +12,8 @@ import kinoko.world.job.resistance.BattleMage;
 import kinoko.world.job.resistance.Citizen;
 import kinoko.world.job.resistance.Mechanic;
 import kinoko.world.job.resistance.WildHunter;
+import kinoko.world.job.staff.GM;
+import kinoko.world.job.staff.SuperGM;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 
 import java.util.List;
@@ -223,6 +225,8 @@ public final class SkillConstants {
             case BlazeWizard.TELEPORT:
             case Evan.TELEPORT:
             case BattleMage.TELEPORT:
+            case GM.TELEPORT:
+            case SuperGM.TELEPORT:
                 return true;
             default:
                 return false;
@@ -268,6 +272,18 @@ public final class SkillConstants {
             default:
                 return false;
         }
+    }
+
+    /**
+     * Returns whether the given skill is a field/map wide buff skill.
+     * Field skills affect the entire map.
+     */
+    public static boolean isFieldSkill(int skillId) {
+        return switch (skillId) {
+            case SuperGM.HEAL_DISPEL, SuperGM.HASTE_SUPER, SuperGM.HOLY_SYMBOL, SuperGM.BLESS, SuperGM.RESURRECTION,
+                 SuperGM.HYPER_BODY -> true;
+            default -> false;
+        };
     }
 
     public static boolean isPartySkill(int skillId) {

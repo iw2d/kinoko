@@ -1,28 +1,7 @@
-# Gold Slime   (7120105)
+# Mob 7120105 - Gold Slime (Year 2021)
+# Drops items for quests 3720, 3721, and 3722
 
 rewards:
-  - [ 0, 642, 963, 0.600000 ]
-  - [ 1002287, 1, 1, 0.000100 ] # Beige Patriot
-  - [ 1051062, 1, 1, 0.000100 ] # Blue Lineros
-  - [ 1072211, 1, 1, 0.000100 ] # Blue Rivers Boots
-  - [ 1082119, 1, 1, 0.000100 ] # Purple Larceny
-  - [ 1332019, 1, 1, 0.000100 ] # Golden River
-  - [ 1452009, 1, 1, 0.000100 ] # Red Hinkel
-  - [ 2000004, 1, 1, 0.001000 ] # Elixir
-  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
-  - [ 2040512, 1, 1, 0.000100 ] # Scroll for Overall Armor for INT 100%
-  - [ 2041008, 1, 1, 0.000100 ] # Scroll for Cape for HP 10%
-  - [ 2044010, 1, 1, 0.000100 ] # Scroll for Two-Handed Sword for Accuracy 100%
-  - [ 2044101, 1, 1, 0.000100 ] # Scroll for Two-handed Axe for ATT 60%
-  - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
-  - [ 2384060, 1, 1, 0.020000 ] # Gold Slime Card
-  - [ 4000547, 1, 1, 0.400000 ] # Gold Squishy Liquid
-  - [ 4004002, 1, 1, 0.001000 ] # DEX Crystal Ore
-  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
-  - [ 4007000, 1, 1, 0.000300 ] # Magic Powder (Brown)
-  - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)
-  - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
-  - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
-  - [ 4130001, 1, 1, 0.000300 ] # Shoes Production Stimulator
-  - [ 4130005, 1, 1, 0.000300 ] # Two-Handed Sword Forging Stimulator
-  - [ 4130017, 1, 1, 0.000300 ] # Gun Production Stimulator
+  - [ 4032512, 1, 1, 0.3, 3720 ] # Scribbled Paper - Quest 3720 (30% drop when quest active)
+  - [ 4000547, 1, 1, 1.0, 3721 ] # Gold Slime Sample - Quest 3721 (100% drop when quest active)
+  - [ 4032513, 1, 1, 1.0, 3722 ] # Sketchbook Page - Quest 3722 (100% drop when quest active)

@@ -1,0 +1,24 @@
+# Dark Fission (9420529)
+
+rewards:
+  - [ 0, 273, 445, 0.600000 ]
+  - [ 4000467, 1, 1, 0.400000 ] # Yellow Wig
+  - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
+  - [ 1402010, 1, 1, 0.000100 ] # Aluminum Baseball Bat
+  - [ 1002099, 1, 1, 0.000100 ] # Mithril Nordic Helm
+  - [ 1040089, 1, 1, 0.000100 ] # Umber Shouldermail
+  - [ 1092009, 1, 1, 0.000100 ] # Wooden Legend Shield
+  - [ 1051030, 1, 1, 0.000200 ] # Dark Calaf
+  - [ 1002216, 1, 1, 0.000100 ] # Aqua Golden Circlet
+  - [ 1082072, 1, 1, 0.000100 ] # Gold Brace
+  - [ 1002166, 1, 1, 0.000100 ] # Red Distinction
+  - [ 1051038, 1, 1, 0.000100 ] # Green Lumati
+  - [ 1452004, 1, 1, 0.000100 ] # Olympus
+  - [ 1082083, 1, 1, 0.000100 ] # Dark Willow
+  - [ 1002184, 1, 1, 0.000100 ] # Brown Pilfer
+  - [ 1040096, 1, 1, 0.000100 ] # Brown China
+  - [ 1060085, 1, 1, 0.000100 ] # Brown China Pants
+  - [ 1041080, 1, 1, 0.000100 ] # Red Moon
+  - [ 1472028, 1, 1, 0.000100 ] # Dark Slain
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir

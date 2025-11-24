@@ -28,7 +28,7 @@ public final class ItemCommand {
 
             final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
             if (itemInfoResult.isEmpty()) {
-                user.write(MessagePacket.system("Could not resolve item ID: %d", itemId));
+                user.systemMessage("Could not resolve item ID: %d", itemId);
                 return;
             }
 
@@ -43,11 +43,11 @@ public final class ItemCommand {
                 user.write(WvsContext.inventoryOperation(addItemResult.get(), true));
                 user.write(UserLocal.effect(Effect.gainItem(item)));
             } else {
-                user.write(MessagePacket.system("Failed to add item ID %d (%d) to inventory", itemId, quantity));
+                user.systemMessage("Failed to add item ID %d (%d) to inventory", itemId, quantity);
             }
 
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !item <item ID> [quantity]"));
+            user.systemMessage("Usage: !item <item ID> [quantity]");
         }
     }
 }

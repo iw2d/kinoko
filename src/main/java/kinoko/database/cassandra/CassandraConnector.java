@@ -50,6 +50,7 @@ public final class CassandraConnector implements DatabaseConnector {
     private GiftAccessor giftAccessor;
     private MemoAccessor memoAccessor;
     private ItemAccessor itemAccessor;
+    private FamilyAccessor familyAccessor;
 
 
     public boolean createKeyspace(CqlSession session, String keyspace) {
@@ -118,6 +119,12 @@ public final class CassandraConnector implements DatabaseConnector {
     public ItemAccessor getItemAccessor() {
         return itemAccessor;
     }
+
+    @Override
+    public FamilyAccessor getFamilyAccessor() {
+        return familyAccessor;
+    }
+
 
     @Override
     public void initialize() {
@@ -197,6 +204,7 @@ public final class CassandraConnector implements DatabaseConnector {
         guildAccessor = new CassandraGuildAccessor(cqlSession, DATABASE_KEYSPACE);
         giftAccessor = new CassandraGiftAccessor(cqlSession, DATABASE_KEYSPACE);
         memoAccessor = new CassandraMemoAccessor(cqlSession, DATABASE_KEYSPACE);
+        familyAccessor = new CassandraFamilyAccessor(cqlSession, DATABASE_KEYSPACE);
         itemAccessor = new ItemAccessor() {}; // Not needed for Cassandra.
     }
 

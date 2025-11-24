@@ -33,6 +33,7 @@ import kinoko.server.memo.MemoType;
 import kinoko.server.messenger.MessengerProtocol;
 import kinoko.server.messenger.MessengerRequest;
 import kinoko.server.packet.InPacket;
+import kinoko.server.packet.OutPacket;
 import kinoko.server.rank.RankManager;
 import kinoko.server.user.RemoteUser;
 import kinoko.util.Triple;
@@ -286,7 +287,6 @@ public final class UserHandler {
         }
         trunkDialog.handlePacket(user, inPacket);
     }
-
 
     // INVENTORY HANDLERS ----------------------------------------------------------------------------------------------
 
@@ -758,7 +758,7 @@ public final class UserHandler {
 
         final Optional<User> targetResult = user.getField().getUserPool().getById(targetId);
         if (targetResult.isEmpty()) {
-            user.write(MessagePacket.system("Unable to find the character."));
+            user.systemMessage("Unable to find the character.");
             return;
         }
         final User target = targetResult.get();

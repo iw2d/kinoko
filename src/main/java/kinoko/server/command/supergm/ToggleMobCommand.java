@@ -16,15 +16,15 @@ public final class ToggleMobCommand {
         try {
             if (args[1].equalsIgnoreCase("true")) {
                 user.getField().setMobSpawn(true);
-                user.write(MessagePacket.system("Enabled mob spawns"));
+                user.systemMessage("Enabled mob spawns");
             } else if (args[1].equalsIgnoreCase("false")) {
                 user.getField().setMobSpawn(false);
-                user.write(MessagePacket.system("Disabled mob spawns"));
+                user.systemMessage("Disabled mob spawns");
             } else {
-                user.write(MessagePacket.system("Usage: !togglemob <true/false>"));
+                user.systemMessage("Usage: !togglemob <true/false>");
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !togglemob <true/false>"));
+            user.systemMessage("Usage: !togglemob <true/false>");
         }
     }
 }

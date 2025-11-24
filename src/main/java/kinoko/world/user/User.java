@@ -1,11 +1,15 @@
 package kinoko.world.user;
 
+import kinoko.handler.stage.MigrationHandler;
 import kinoko.handler.user.FriendHandler;
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.user.PetPacket;
 import kinoko.packet.user.UserLocal;
+import kinoko.packet.user.UserPacket;
 import kinoko.packet.user.UserRemote;
+import kinoko.packet.world.AdminPacket;
 import kinoko.packet.world.FriendPacket;
+import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.WzProvider;
@@ -14,15 +18,21 @@ import kinoko.provider.item.ItemSpecType;
 import kinoko.provider.map.Foothold;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.skill.SkillStat;
+import kinoko.server.Server;
+import kinoko.server.ServerConstants;
 import kinoko.server.dialog.Dialog;
 import kinoko.server.dialog.ScriptDialog;
 import kinoko.server.dialog.miniroom.MiniRoom;
+import kinoko.server.event.EventType;
+import kinoko.server.family.FamilyTree;
 import kinoko.server.guild.GuildRank;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
 import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.OutPacket;
 import kinoko.server.party.PartyRequest;
+import kinoko.server.user.AdminResultType;
+import kinoko.server.user.RemoteUser;
 import kinoko.util.BitFlag;
 import kinoko.world.GameConstants;
 import kinoko.world.field.Field;
@@ -33,6 +43,7 @@ import kinoko.world.field.summoned.Summoned;
 import kinoko.world.field.summoned.SummonedLeaveType;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.item.Item;
+import kinoko.world.job.staff.SuperGM;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.PassiveSkillData;
 import kinoko.world.skill.SkillConstants;
@@ -45,6 +56,8 @@ import kinoko.world.user.effect.Effect;
 import kinoko.world.user.friend.Friend;
 import kinoko.world.user.friend.FriendStatus;
 import kinoko.world.user.stat.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -54,6 +67,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 public final class User extends Life {
+    private static final Logger log = LoggerFactory.getLogger(User.class);
     private final Client client;
     private final CharacterData characterData;
 
@@ -68,10 +82,10 @@ public final class User extends Life {
     private final Map<Integer, Instant> schedules = new HashMap<>();
     private final AtomicInteger fieldKey = new AtomicInteger(0);
 
-
     private int messengerId;
     private PartyInfo partyInfo;
     private GuildInfo guildInfo;
+    private FamilyMember familyInfo;
 
     private Dialog dialog;
     private Dragon dragon;
@@ -81,8 +95,11 @@ public final class User extends Life {
     private int portableChairId;
     private boolean inCashShop = false;
     private String adBoard;
+    private int dojoEnergy;
     private boolean inTransfer;
+    private List<EventCoolDown> cooldowns = new ArrayList<>();
     private Instant nextCheckItemExpire;
+    private boolean hidden;
 
     public User(Client client, CharacterData characterData) {
         this.client = client;
@@ -98,8 +115,20 @@ public final class User extends Life {
         return client.getAccount();
     }
 
+    public boolean isGM() {
+        return getAdminLevel().isAtLeast(AdminLevel.JR_GM);
+    }
+
     public ChannelServerNode getConnectedServer() {
         return (ChannelServerNode) client.getServerNode();
+    }
+
+    public void changeChannels(int channelID){
+        if (channelID == getConnectedServer().getChannelId()){
+            return;
+        }
+
+        MigrationHandler.handleTransferChannel(this, this.getAccount(), channelID);
     }
 
     public int getChannelId() {
@@ -310,6 +339,46 @@ public final class User extends Life {
         this.townPortal = townPortal;
     }
 
+    public int getDojoEnergy() {
+        return dojoEnergy;
+    }
+
+    public void setDojoEnergy(int newEnergy) {
+        this.dojoEnergy = newEnergy;
+    }
+
+    public void resetDojoEnergy() {
+        this.dojoEnergy = 0;
+    }
+    public EventCoolDown getCoolDownByType(EventType eventType) {
+        return this.cooldowns.stream().filter(eventCoolDown -> eventCoolDown.getEventType() == eventType).toList().getFirst();
+    }
+
+    public void addCoolDown(EventType eventType, long time) {
+        addCoolDown(eventType, 1, System.currentTimeMillis() + time);
+    }
+
+    public void addCoolDown(EventType eventType, int amountDone, long nextReset) {
+        EventCoolDown cd = this.cooldowns.stream().filter(eventCoolDown -> eventCoolDown.getEventType() == eventType).findFirst().orElse(null);
+        if (cd == null) {
+            cd = new EventCoolDown(eventType, amountDone, nextReset);
+            this.cooldowns.add(cd);
+        } else {
+            cd.setNextResetTime(nextReset);
+            cd.setAmountDone(amountDone);
+        }
+    }
+
+    public int getEventAmountDone(EventType eventType) {
+        EventCoolDown cd = this.cooldowns.stream().filter(eventCoolDown -> eventCoolDown.getEventType() == eventType).findFirst().orElse(null);
+        if (cd == null) {
+            return 0;
+        }
+        if (System.currentTimeMillis() > cd.getNextResetTime()) {
+            cd.setAmountDone(0);
+        }
+        return cd.getAmountDone();
+    }
     public int getTownPortalIndex() {
         return hasParty() ? getPartyMemberIndex() - 1 : 0;
     }
@@ -372,6 +441,10 @@ public final class User extends Life {
         return getCharacterStat().getJob();
     }
 
+    public boolean is4thJob() {
+        return getCharacterStat().getJob() % 10 == 2;
+    }
+
     public int getLevel() {
         return getCharacterStat().getLevel();
     }
@@ -387,6 +460,52 @@ public final class User extends Life {
         getField().getUserPool().forEachPartyMember(this, (member) -> {
             member.write(UserRemote.receiveHp(this));
         });
+    }
+
+    public void heal(){
+        setHp(getMaxHp());
+        setMp(getMaxMp());
+    }
+
+    public void hide(boolean hide, boolean isLoggingIn) {
+        this.hidden = hide;
+
+        SecondaryStat ss = getSecondaryStat();
+        CharacterTemporaryStat stat = CharacterTemporaryStat.Sneak;
+
+        BitFlag<CharacterTemporaryStat> flag = BitFlag.from(
+                Set.of(stat),
+                CharacterTemporaryStat.FLAG_SIZE
+        );
+
+        ss.getTemporaryStats().put(
+                stat,
+                TwoStateTemporaryStat.ofTwoState(stat, 1, SuperGM.HIDE, 0)
+        );
+
+        if (hide){
+            write(AdminPacket.getAdminEffect(AdminResultType.SET_HIDE_STATUS.getValue(), (byte) 1));
+            if (!isLoggingIn) {
+                getField().broadcastToNonGMs(UserPacket.userLeaveField(this));
+            }
+            // let GMs see that they are hidden with Sneak / Dark Sight
+            // We do not want to broadcast this to our own user, otherwise they cannot use skills in dark sight.
+            getField().getUserPool().broadcastPacketToGMs(UserRemote.temporaryStatSet(this, ss, flag), this);
+        }
+        else {  // unhide
+            write(AdminPacket.getAdminEffect(AdminResultType.SET_HIDE_STATUS.getValue(), (byte) 0));
+            ss.getTemporaryStats().remove(CharacterTemporaryStat.Sneak);
+            getField().getUserPool().broadcastPacketToGMs(UserRemote.temporaryStatReset(this, flag), this);
+            getField().broadcastToNonGMs(UserPacket.userEnterField(this));
+        }
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void kill() {
+        setHp(0);
     }
 
     public void addHp(int hp) {
@@ -421,12 +540,18 @@ public final class User extends Life {
         if (addExpResult.containsKey(Stat.LEVEL)) {
             getField().broadcastPacket(UserRemote.effect(this, Effect.levelUp()), this);
             validateStat();
-            setHp(getMaxHp());
-            setMp(getMaxMp());
+            heal();
             getConnectedServer().notifyUserUpdate(this);
             // Max level
             if (getLevel() == GameConstants.getLevelMax(getJob())) {
                 getCharacterData().setMaxLevelTime(Instant.now());
+            }
+            // reminder that a null check is not needed here, because if they've had a family before,
+            // it would be a unique instance.
+            if (familyInfo.hasFamily()){
+                familyInfo.addRepToSenior(ServerConstants.FAMILY_REP_PER_LEVEL_UP, true,
+                        true, getCharacterName());
+                familyInfo.updateUser(this);  // update level
             }
         }
     }
@@ -802,6 +927,43 @@ public final class User extends Life {
         }
     }
 
+    public void warp(int newFieldId, boolean isMigrate, boolean isRevive) {
+        if (getFieldId() == newFieldId){
+            return;
+        }
+
+        final Optional<Field> fieldResult = getConnectedServer().getFieldById(newFieldId);
+        if (fieldResult.isEmpty()) {
+            systemMessage("A system error has occurred when changing maps.");
+            log.error("Field with ID {} does not exist.", newFieldId);
+            return;
+        }
+
+        final Field targetField = fieldResult.get();
+
+        // get the default portal
+        final Optional<PortalInfo> portalResult = targetField.getPortalByName(GameConstants.DEFAULT_PORTAL_NAME);
+        if (portalResult.isEmpty()) {
+            systemMessage("A system error has occurred when deciding the entry portal.");
+            log.error("Portal {} does not exist in Field {}", GameConstants.DEFAULT_PORTAL_NAME, newFieldId);
+            return;
+        }
+
+        final PortalInfo targetPortalInfo = portalResult.get();
+
+        this.warp(targetField, targetPortalInfo, isMigrate, isRevive);
+    }
+
+    public void warpTo(User user){
+        changeChannels(user.getChannelId());
+        warp(user.getField(), user.getX(), user.getY(), 0, false, false);
+    }
+
+    public void warpTo(RemoteUser user){
+        changeChannels(user.getChannelId());
+        warp(user.getFieldId(), false, false);
+    }
+
     private void completeWarp(Field destination, boolean isMigrate, boolean isRevive) {
         write(StagePacket.setField(this, getChannelId(), isMigrate, isRevive));
         destination.addUser(this);
@@ -813,8 +975,7 @@ public final class User extends Life {
     }
 
     public void dispose() {
-        OutPacket outpacket = WvsContext.statChanged(Map.of(), true);
-        write(outpacket);
+        write(WvsContext.statChanged(Map.of(), true));
     }
 
     public void logout(boolean disconnect) {
@@ -868,7 +1029,6 @@ public final class User extends Life {
         this.inCashShop = inCashShop;
     }
 
-
     // OVERRIDES -------------------------------------------------------------------------------------------------------
 
     @Override
@@ -879,5 +1039,81 @@ public final class User extends Life {
     @Override
     public void setId(int id) {
         throw new IllegalStateException("Tried to modify character ID");
+    }
+
+
+    // UTILITY ---------------------------------------------------------------------------------------------------------
+    public void systemMessage(String text, Object... args){
+        write(MessagePacket.system(text, args));
+    }
+
+    public FamilyMember getFamilyInfo() {
+        return familyInfo;
+    }
+
+    public Optional<FamilyTree> getFamilyTree() {
+        return Server.getCentralServerNode().getFamilyTree(this.getCharacterId());
+    }
+
+    /**
+     * Calculates the effective drop rate modifier for the user, taking into account
+     * both their personal family drop modifier and the modifiers from their family tree.
+     *
+     * The method ensures that the returned modifier is never less than 1.0.
+     *
+     * @return the highest applicable drop modifier between personal and family values,
+     *         with a minimum of 1.0
+     */
+    public double getFamilyDropModifier() {
+        double personalModifier = GameConstants.DEFAULT_FAMILY_PERSONAL_DROP_MODIFIER;
+        double familyModifier = GameConstants.DEFAULT_FAMILY_DROP_MODIFIER;
+        if (this.familyInfo != null && this.familyInfo.hasFamily()){
+            personalModifier = this.familyInfo.getDropModifier();
+        }
+
+        Optional<FamilyTree> userTreeOpt = getFamilyTree();
+        if (userTreeOpt.isPresent()) {
+            familyModifier = userTreeOpt.get().getDropModifier();
+        }
+
+        return Math.max(GameConstants.DEFAULT_FAMILY_DROP_MODIFIER, Math.max(personalModifier, familyModifier));
+    }
+
+    /**
+     * Calculates the effective experience (EXP) modifier for the user, considering
+     * both their personal family EXP modifier and any modifiers from their family tree.
+     *
+     * The method ensures that the returned modifier is never less than 1.0.
+     *
+     * @return the highest applicable EXP modifier between personal and family values,
+     *         with a minimum of 1.0
+     */
+    public double getFamilyEXPModifier() {
+        double personalModifier = GameConstants.DEFAULT_FAMILY_PERSONAL_EXP_MODIFIER;
+        double familyModifier = GameConstants.DEFAULT_FAMILY_EXP_MODIFIER;
+
+        if (this.familyInfo != null && this.familyInfo.hasFamily()) {
+            personalModifier = this.familyInfo.getExpModifier();
+        }
+
+        Optional<FamilyTree> userTreeOpt = getFamilyTree();
+        if (userTreeOpt.isPresent()) {
+            familyModifier = userTreeOpt.get().getExpModifier();
+        }
+
+        return Math.max(GameConstants.DEFAULT_FAMILY_EXP_MODIFIER, Math.max(personalModifier, familyModifier));
+    }
+
+    /**
+     * Sets the user's FamilyMember info and updates the last login time
+     * if the user has been a part of a family before.
+     *
+     * @param familyInfo the FamilyMember data to assign
+     */
+    public void setFamilyInfo(FamilyMember familyInfo) {
+        this.familyInfo = familyInfo;
+        if (this.familyInfo != null && !this.familyInfo.isDefault()){
+            this.familyInfo.updateLastLogin();
+        }
     }
 }

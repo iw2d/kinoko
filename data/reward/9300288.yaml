@@ -1,0 +1,6 @@
+# Level 100/110 Skill Quest Boss (9300288) - Blaze Wizard / Thunder Breaker
+# Drops quest-specific items based on which quest you are on
+
+rewards:
+  - [ 4032121, 1, 1, 1.000000, 20602 ] # Proof of Qualification (Blaze Wizard) - Quest 20602
+  - [ 4032124, 1, 1, 1.000000, 20605 ] # Proof of Qualification (Thunder Breaker) - Quest 20605

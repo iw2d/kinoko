@@ -1,0 +1,66 @@
+# Bonjasky : Weapon / Armor Seller (2152016) - Edelstein : Edelstein (310000000)
+
+recharge: true
+items:
+  # Weapons for Battle Mage (Staves)
+  - [ 1382000, 1000 ] # Wooden Staff
+  - [ 1382003, 3000 ] # Blue Metal Staff
+  - [ 1382005, 5000 ] # Iron Staff
+  - [ 1382007, 8000 ] # Emerald Staff
+  - [ 1382017, 12000 ] # Fairy Staff
+
+  # Weapons for Wild Hunter (Crossbows)
+  - [ 1462000, 30000 ] # Mountain Crossbow
+  - [ 1462001, 4000 ] # Crossbow
+  - [ 1462002, 8000 ] # Battle Crossbow
+  - [ 1462003, 12000 ] # Balanche
+
+  # Weapons for Mechanic (Guns - if available, otherwise general weapons)
+  - [ 1492000, 10000 ] # Pistol
+  - [ 1492001, 15000 ] # Mauser
+
+  # General Melee Weapons
+  - [ 1302007, 3000 ] # Long Sword
+  - [ 1312004, 50 ] # Hand Axe
+  - [ 1322005, 50 ] # Wooden Club
+
+  # Armor - Hats
+  - [ 1002008, 500 ] # Brown Skullcap
+  - [ 1002010, 800 ] # Brown Winter Hat
+  - [ 1002012, 3000 ] # Red Baseball Cap
+  - [ 1002060, 3000 ] # Black Baseball Cap
+  - [ 1002061, 3000 ] # Yellow Baseball Cap
+  - [ 1002062, 3000 ] # Brown Baseball Cap
+  - [ 1002063, 3000 ] # Blue Baseball Cap
+
+  # Armor - Tops (for various armor types)
+  - [ 1040003, 9000 ] # Brown Hard Leather Top
+  - [ 1040007, 5500 ] # Green Leather Hoodwear
+  - [ 1040008, 3200 ] # Brown Archer Top
+  - [ 1040011, 5500 ] # Silver Leather Hoodwear
+  - [ 1040022, 15000 ] # Green Bennis Chainmail
+  - [ 1040023, 15000 ] # Black Bennis Chainmail
+  - [ 1040071, 3200 ] # Green Archer Top
+
+  # Armor - Bottoms
+  - [ 1060005, 14000 ] # Warfare Pants
+  - [ 1062002, 9000 ] # Brown Hard Leather Pants
+  - [ 1062004, 3000 ] # Archer Pants
+  - [ 1062006, 13000 ] # Bennis Chainpants
+
+  # Armor - Shoes
+  - [ 1072015, 1800 ] # Brown Hard Leather Boots
+  - [ 1072016, 4500 ] # Green Woodsman Boots
+  - [ 1072059, 1800 ] # Green Hard Leather Boots
+  - [ 1072060, 4500 ] # Brown Woodsman Boots
+  - [ 1072061, 4500 ] # Blue Woodsman Boots
+
+  # Armor - Gloves
+  - [ 1082002, 400 ] # Blue Work Gloves
+  - [ 1082003, 500 ] # Brown Work Gloves
+  - [ 1082019, 2500 ] # Green Mittens
+  - [ 1082023, 4000 ] # Blue Wrist Band
+
+  # Accessories
+  - [ 1032001, 7000 ] # Single Earring
+  - [ 1032003, 7000 ] # Amethyst Earrings

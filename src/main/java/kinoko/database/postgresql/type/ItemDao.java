@@ -90,8 +90,13 @@ public class ItemDao {
                     try (PreparedStatement seqStmt = conn.prepareStatement(
                             "SELECT nextval(pg_get_serial_sequence('item.items', 'item_sn'))");
                          ResultSet rs = seqStmt.executeQuery()) {
-                        rs.next();
+                        if (!rs.next()) {
+                            throw new SQLException("Failed to generate item_sn: sequence query returned no results");
+                        }
                         itemSn = rs.getLong(1);
+                        if (itemSn <= 0) {
+                            throw new SQLException("Generated invalid item_sn: " + itemSn);
+                        }
                         item.setItemSn(itemSn);
                     }
 

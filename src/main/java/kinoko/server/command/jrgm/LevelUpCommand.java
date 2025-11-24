@@ -18,14 +18,14 @@ public final class LevelUpCommand {
         try {
             int level = Integer.parseInt(args[1]);
             if (level <= user.getLevel() || level > GameConstants.LEVEL_MAX) {
-                user.write(MessagePacket.system("Could not level up to : %d", level));
+                user.systemMessage("Could not level up to : %d", level);
                 return;
             }
             while (user.getLevel() < level) {
                 user.addExp(GameConstants.getNextLevelExp(user.getLevel()) - user.getCharacterStat().getExp());
             }
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !levelup <new level>"));
+            user.systemMessage("Usage: !levelup <new level>");
         }
     }
 }

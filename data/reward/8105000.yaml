@@ -1,0 +1,20 @@
+# Raco (8105000)
+
+rewards:
+  - [ 0, 467, 661, 0.600000 ]
+  - [ 4000614, 1, 1, 0.400000 ] # Raco's Safety Hat
+  - [ 4032772, 1, 1, 0.200000 ] # Raco Heart
+  - [ 2001001, 1, 1, 0.010000 ] # Ice Cream Pop
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2022000, 1, 1, 0.100000 ] # Pure Water
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2048004, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Jump 60%
+  - [ 2040901, 1, 1, 0.000100 ] # Scroll for Shield for DEF 60%
+  - [ 1060102, 1, 1, 0.000100 ] # Dark Commodore Pants
+  - [ 1040111, 1, 1, 0.000100 ] # Green Commodore
+  - [ 1092026, 1, 1, 0.000100 ] # Bronze Kalkan
+  - [ 1092028, 1, 1, 0.000100 ] # Gold Kalkan
+  - [ 1002276, 1, 1, 0.000100 ] # Red Falcon
+  - [ 1452011, 1, 1, 0.000100 ] # Golden Hinkel
+  - [ 1612002, 1, 1, 0.000100 ] # Iron Engine
+  - [ 1492010, 1, 1, 0.000100 ] # Infinity's Wrath

@@ -21,7 +21,7 @@ public final class LevelCommand {
         try {
             int level = Integer.parseInt(args[1]);
             if (level < 1 || level > GameConstants.LEVEL_MAX) {
-                user.write(MessagePacket.system("Could not change level to : %d", level));
+                user.systemMessage("Could not change level to : %d", level);
                 return;
             }
 
@@ -31,7 +31,7 @@ public final class LevelCommand {
             user.write(WvsContext.statChanged(Stat.LEVEL, (byte) cs.getLevel(), true));
             user.getConnectedServer().notifyUserUpdate(user);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !level <new level>"));
+            user.systemMessage("Usage: !level <new level>");
         }
     }
 }

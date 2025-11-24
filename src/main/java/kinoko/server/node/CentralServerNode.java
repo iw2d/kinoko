@@ -5,6 +5,9 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import kinoko.database.DatabaseManager;
 import kinoko.packet.CentralPacket;
+import kinoko.server.Server;
+import kinoko.server.family.FamilyStorage;
+import kinoko.server.family.FamilyTree;
 import kinoko.server.guild.Guild;
 import kinoko.server.guild.GuildMember;
 import kinoko.server.guild.GuildRank;
@@ -22,19 +25,30 @@ import kinoko.server.party.Party;
 import kinoko.server.party.PartyStorage;
 import kinoko.server.user.RemoteUser;
 import kinoko.server.user.UserStorage;
+import kinoko.world.user.FamilyMember;
+import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.locks.ReentrantLock;
 
+import static kinoko.util.Timing.logDuration;
+
+/**
+ * Central server node coordinating channels, users, parties, guilds, messengers, and families.
+ *
+ * Provides high-level, thread-safe access to shared data via wrapper methods.
+ * Internal storage (FamilyStorage, UserStorage, etc.) is private and must not be accessed directly.
+ * External code should use CentralServerNode methods, which handle synchronization and validation,
+ * ensuring thread safety while keeping storage classes simple and fast.
+ */
 public final class CentralServerNode extends Node {
     private static final Logger log = LogManager.getLogger(CentralServerNode.class);
     private final ServerStorage serverStorage = new ServerStorage();
     private final MigrationStorage migrationStorage = new MigrationStorage();
+    private final FamilyStorage familyStorage = new FamilyStorage();
     private final UserStorage userStorage = new UserStorage();
     private final MessengerStorage messengerStorage = new MessengerStorage();
     private final PartyStorage partyStorage = new PartyStorage();
@@ -60,6 +74,10 @@ public final class CentralServerNode extends Node {
         }
     }
 
+    public synchronized void addChannelServerNode(ChannelServerNode serverNode){
+        serverStorage.addChannelServerNode(serverNode);
+    }
+
     public synchronized void removeServerNode(int channelId) {
         serverStorage.removeServerNode(channelId);
         if (serverStorage.isEmpty()) {
@@ -68,15 +86,20 @@ public final class CentralServerNode extends Node {
     }
 
     public Optional<RemoteServerNode> getChannelServerNodeById(int channelId) {
-        return serverStorage.getChannelServerNodeById(channelId);
+        return serverStorage.getRemoteChannelServerNodeById(channelId);
     }
 
-    public List<RemoteServerNode> getChannelServerNodes() {
+    public List<RemoteServerNode> getRemoteChannelServerNodes() {
+        return serverStorage.getRemoteChannelServerNodes();
+    }
+
+    public List<ChannelServerNode> getChannelServerNodes() {
         return serverStorage.getChannelServerNodes();
     }
 
 
     // MIGRATION METHODS -----------------------------------------------------------------------------------------------
+
 
     public boolean isOnline(int accountId) {
         return migrationStorage.isMigrating(accountId) || userStorage.getByAccountId(accountId).isPresent();
@@ -94,35 +117,104 @@ public final class CentralServerNode extends Node {
         return migrationStorage.completeMigrationRequest(channelId, accountId, characterId, machineId, clientKey);
     }
 
-
     // USER METHODS ----------------------------------------------------------------------------------------------------
 
-    public List<RemoteUser> getUsers() {
+    /**
+     * Returns a list of all users currently connected across all channel servers.
+     */
+    public List<User> getUsers() {
+        List<User> allUsers = new ArrayList<>();
+        for (ChannelServerNode channelNode : getChannelServerNodes()) {
+            allUsers.addAll(channelNode.getConnectedUsers());
+        }
+        return allUsers;
+    }
+
+    /**
+     * Returns the actual User object for a character ID, if connected.
+     * Looks up the RemoteUser by ID, finds their channel server, then fetches the User from that channel.
+     */
+    public Optional<User> getUserByCharacterId(int characterId) {
+        return getRemoteUserByCharacterId(characterId)
+                .flatMap(remoteUser -> serverStorage
+                        .getChannelServerNodeById(remoteUser.getChannelId())
+                        .flatMap(channelNode -> channelNode.getUserByCharacterId(characterId))
+                );
+    }
+
+    /**
+     * Batch retrieves User objects for the given list of character IDs.
+     *
+     * This method returns only users that are currently online (connected to a channel).
+     *
+     * @param characterIds the list of character IDs to look up
+     * @return a list of User objects corresponding to the IDs found
+     */
+    public List<User> getUsersByCharacterIds(List<Integer> characterIds) {
+        List<User> result = new ArrayList<>();
+        if (characterIds.isEmpty()) {
+            return result;
+        }
+
+        // Convert to a set for faster contains() checks
+        var idSet = Set.copyOf(characterIds);
+
+        // Iterate through all connected channel servers
+        for (ChannelServerNode channelNode : getChannelServerNodes()) {
+            for (User user : channelNode.getConnectedUsers()) {
+                if (idSet.contains(user.getCharacterId())) {
+                    result.add(user);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns the actual User object for a character name, if connected.
+     * Looks up the RemoteUser by name, finds their channel server, then fetches the User from that channel.
+     */
+    public Optional<User> getUserByCharacterName(String characterName) {
+        return getRemoteUserByCharacterName(characterName)
+                .flatMap(remoteUser -> serverStorage
+                        .getChannelServerNodeById(remoteUser.getChannelId())
+                        .flatMap(channelNode -> channelNode.getUserByCharacterId(remoteUser.getCharacterId()))
+                );
+    }
+
+
+    // REMOTE USER METHODS ----------------------------------------------------------------------------------------------------
+
+    public List<RemoteUser> getRemoteUsers() {
         return userStorage.getUsers();
     }
 
-    public Optional<RemoteUser> getUserByCharacterId(int characterId) {
+    public Optional<RemoteUser> getRemoteUserByCharacterId(int characterId) {
         return userStorage.getByCharacterId(characterId);
     }
 
-    public Optional<RemoteUser> getUserByCharacterName(String characterName) {
+    public Optional<RemoteUser> getRemoteUserByCharacterName(String characterName) {
         return userStorage.getByCharacterName(characterName);
     }
 
-    public void addUser(RemoteUser remoteUser) {
+    public void addRemoteUser(RemoteUser remoteUser) {
         userStorage.putUser(remoteUser);
         getChannelServerNodeById(remoteUser.getChannelId()).ifPresent(RemoteServerNode::incrementUserCount);
     }
 
-    public void updateUser(RemoteUser remoteUser) {
+    public void updateRemoteUser(RemoteUser remoteUser) {
         userStorage.putUser(remoteUser);
     }
 
-    public void removeUser(RemoteUser remoteUser) {
+    public void removeRemoteUser(RemoteUser remoteUser) {
         userStorage.removeUser(remoteUser);
         getChannelServerNodeById(remoteUser.getChannelId()).ifPresent(RemoteServerNode::decrementUserCount);
     }
 
+    public int getRemoteUserCount() {
+        return userStorage.getUserCount();
+    }
 
     // MESSENGER METHODS -----------------------------------------------------------------------------------------------
 
@@ -192,6 +284,139 @@ public final class CentralServerNode extends Node {
     }
 
 
+    // FAMILY METHODS --------------------------------------------------------------------------------------------------
+    // High-level thread-safe family operations for CentralServerNode.
+    // These methods acquire the global family lock to safely read or modify family data.
+    // FamilyStorage methods themselves are not thread-safe; direct calls must be synchronized.
+    // This ensures safe external access while keeping FamilyStorage fast and simple.
+
+    /**
+     * Returns the global lock for FamilyStorage.
+     *
+     * Acquire this lock when reading or modifying family data. Keep the scope short,
+     * avoid I/O or network operations while locked, and never combine with other locks.
+     * FamilyStorage methods do not lock internally; external synchronization is required.
+     *
+     * @return the ReentrantLock protecting all family operations
+     */
+    public ReentrantLock getGlobalFamilyLock(){
+        return familyStorage.getGlobalLock();
+    }
+
+    /**
+     * Loads all family trees from the database and stores them in memory.
+     *
+     * This method retrieves all families via the DatabaseManager and adds each
+     * FamilyTree to the FamilyStorage, keyed by the family leader's ID.
+     *
+     * The operation is performed under the global family lock to ensure thread-safe
+     * access to the shared FamilyStorage. This prevents concurrent modifications
+     * that could lead to inconsistent or corrupted family data.
+     *
+     * Usage of the global lock ensures that any other thread accessing or modifying
+     * family data will be properly synchronized during this operation.
+     */
+    public void createAllFamilies() {
+        getGlobalFamilyLock().lock();
+        try {
+            Collection<FamilyTree> families = DatabaseManager.familyAccessor().getAllFamilies();
+
+            for (FamilyTree tree : families) {
+                familyStorage.addFamily(tree);
+            }
+        }
+        finally {
+            getGlobalFamilyLock().unlock();
+        }
+    }
+
+    /**
+     * Retrieves the FamilyMember associated with the given character ID.
+     *
+     * This method returns FamilyMember.EMPTY if the character is not part of any family.
+     * Access to the underlying familyStorage is synchronized using the global family lock
+     * to ensure thread safety, preventing race conditions or inconsistent reads when
+     * other threads may be modifying the family data concurrently.
+     *
+     * Even if some callers already hold the global lock, acquiring the lock here ensures
+     * that this method is safe to call from anywhere without requiring external synchronization.
+     *
+     * @param characterId the ID of the character to look up
+     * @return the FamilyMember instance corresponding to the characterId, or FamilyMember.EMPTY if not found
+     */
+    public FamilyMember getFamilyInfo(int characterId) {
+        getGlobalFamilyLock().lock();
+        try {
+            return familyStorage.getFamilyMember(characterId).orElse(FamilyMember.EMPTY);
+        }
+        finally {
+            getGlobalFamilyLock().unlock();
+        }
+    }
+
+    /**
+     * Retrieves the FamilyTree that contains the specified character.
+     *
+     * This method looks up the family tree associated with the given character ID.
+     * Access to the underlying familyStorage is synchronized using the global family lock
+     * to ensure thread-safe reads, preventing race conditions if other threads
+     * are concurrently modifying the family data.
+     *
+     * @param characterId the character ID whose family tree is being requested
+     * @return an Optional containing the FamilyTree if the character is part of a family,
+     *         or an empty Optional if not found
+     */
+    public Optional<FamilyTree> getFamilyTree(int characterId) {
+        getGlobalFamilyLock().lock();
+        try {
+            return familyStorage.getTreeByMemberId(characterId);
+        }
+        finally {
+            getGlobalFamilyLock().unlock();
+        }
+    }
+
+    /**
+     * Registers a new FamilyTree in storage, making it available for lookups
+     * and family relationship tracking.
+     *
+     * This method adds the given FamilyTree to the shared familyStorage.
+     * The operation is performed under the global family lock to ensure thread-safe
+     * modification, preventing concurrent access issues when other threads are
+     * reading or modifying family data.
+     *
+     * @param tree the FamilyTree to add
+     */
+    public void addFamilyTree(FamilyTree tree) {
+        getGlobalFamilyLock().lock();
+        try {
+            familyStorage.addFamily(tree);
+        }
+        finally {
+            getGlobalFamilyLock().unlock();
+        }
+    }
+
+    /**
+     * Updates the shared family storage to reflect the latest state of the given FamilyTree.
+     *
+     * This method registers each member of the FamilyTree in the internal lookup table,
+     * allowing fast retrieval of a FamilyTree by any character ID. Access is synchronized
+     * with the global family lock to ensure thread-safe updates while other threads
+     * may be reading or modifying family data.
+     *
+     * @param family the FamilyTree whose members should be registered in storage
+     */
+    public void updateFamilyTree(FamilyTree family) {
+        getGlobalFamilyLock().lock();
+        try {
+            familyStorage.updateFamilyTree(family); // This is recursive and likely unintended.
+        }
+        finally {
+            getGlobalFamilyLock().unlock();
+        }
+    }
+
     // OVERRIDES -------------------------------------------------------------------------------------------------------
 
     @Override
@@ -211,30 +436,34 @@ public final class CentralServerNode extends Node {
         log.info("Central server listening on port {}", port);
 
         // Wait for child node connections
-        final Instant start = Instant.now();
-        initializeFuture.join();
-        log.info("All servers connected in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+        logDuration("Connecting All Servers", initializeFuture::join, log);
 
         // Complete initialization for login server node
         final RemoteServerNode loginServerNode = serverStorage.getLoginServerNode().orElseThrow();
-        loginServerNode.write(CentralPacket.initializeComplete(serverStorage.getChannelServerNodes()));
+        loginServerNode.write(CentralPacket.initializeComplete(serverStorage.getRemoteChannelServerNodes()));
     }
 
     @Override
     public void shutdown() throws InterruptedException {
-        // Save All Guilds
-        DatabaseManager.guildAccessor().saveAll(guildStorage.getAllGuilds());
+        logDuration("Saving all guilds", () -> {
+                    DatabaseManager.guildAccessor().saveAll(guildStorage.getAllGuilds());
+                }, log
+        );
 
-        // Shutdown login server node
-        final Instant start = Instant.now();
-        serverStorage.getLoginServerNode().ifPresent((serverNode) -> serverNode.write(CentralPacket.shutdownRequest()));
+        logDuration("Saving all families", () -> {
+            DatabaseManager.familyAccessor().saveAll(familyStorage.getAllFamilyTrees());
+        }, log);
 
-        // Shutdown channel server nodes
-        for (RemoteServerNode serverNode : serverStorage.getChannelServerNodes()) {
-            serverNode.write(CentralPacket.shutdownRequest());
-        }
-        shutdownFuture.join();
-        log.info("All servers disconnected in {} milliseconds", Duration.between(start, Instant.now()).toMillis());
+        logDuration("Disconnecting All Servers", () -> {
+            // Shutdown login server node
+            serverStorage.getLoginServerNode().ifPresent((serverNode) -> serverNode.write(CentralPacket.shutdownRequest()));
+
+            // Shutdown channel server nodes
+            for (RemoteServerNode serverNode : serverStorage.getRemoteChannelServerNodes()) {
+                serverNode.write(CentralPacket.shutdownRequest());
+            }
+            shutdownFuture.join();
+        }, log);
 
         // Close central server
         centralServerFuture.channel().close().sync();

@@ -23,7 +23,7 @@ public final class ClearQuestCommand {
             Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(questId);
 
             if (questRecordResult.isEmpty()) {
-                user.write(MessagePacket.system("Could not find quest record : %d", questId));
+                user.systemMessage("Could not find quest record : %d", questId);
                 return;
             }
 
@@ -32,7 +32,7 @@ public final class ClearQuestCommand {
             user.write(MessagePacket.questRecord(qr));
             user.validateStat();
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !clearquest <quest ID>"));
+            user.systemMessage("Usage: !clearquest <quest ID>");
         }
     }
 }

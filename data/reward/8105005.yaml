@@ -1,0 +1,31 @@
+# Ore Muncher (8105005)
+
+# Very Special Sundae - didn't add check
+# Mystery Mastery Book - didn't add check
+# Advanced Dexterity Potion I Recipe - didn't add check
+# Dragon Shiner Cross Recipe - didn't add check
+# Dragonfire Revolver Recipe - didn't add check
+# Purple Bear Pendant Recipe - didn't add check
+# Tenacious Royal Pauldron Recipe - didn't add check
+# Bilge Breaker - didn't add check
+
+rewards:
+  - [ 0, 620, 800, 0.600000 ]
+  - [ 4000619, 1, 1, 0.400000 ] # Rue Ore
+  - [ 2022000, 1, 1, 0.100000 ] # Pure Water
+  - [ 2020014, 1, 1, 0.010000 ] # Sunrise Dew
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2040621, 1, 1, 0.010000 ] # Scroll for Bottomwear for HP 60%
+  - [ 2043212, 1, 1, 0.000100 ] # Scroll for One-Handed BW for Accuracy 60%
+  - [ 2043701, 1, 1, 0.000100 ] # Scroll for Wand for Magic Attack 60%
+  - [ 1402011, 1, 1, 0.000200 ] # Sparta
+  - [ 1060102, 1, 1, 0.000100 ] # Dark Commodore Pants
+  - [ 1382035, 1, 1, 0.000100 ] # Blue Marine
+  - [ 1082163, 1, 1, 0.000200 ] # Red Hunter Gloves
+  - [ 1002326, 1, 1, 0.000100 ] # Red Osfa Hat
+  - [ 1002325, 1, 1, 0.000100 ] # Purple Osfa Hat
+  - [ 1332051, 1, 1, 0.000100 ] # Gold Double Knife
+  - [ 1072272, 1, 1, 0.000200 ] # Black Garina Shoes
+  - [ 1332052, 1, 1, 0.000100 ] # Blood Dagger
+  - [ 1482012, 1, 1, 0.000100 ] # King Cent

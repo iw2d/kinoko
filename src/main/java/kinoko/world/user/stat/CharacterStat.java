@@ -1,17 +1,17 @@
 package kinoko.world.user.stat;
 
+import kinoko.server.Server;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.job.JobConstants;
+import kinoko.world.user.User;
 
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 public final class CharacterStat implements Encodable {
     private int id;
@@ -86,6 +86,10 @@ public final class CharacterStat implements Encodable {
         return id;
     }
 
+    public int getCharacterId(){  // alias func
+        return id;
+    }
+
     public AdminLevel getAdminLevel() {
         return adminLevel;
     }
@@ -152,6 +156,12 @@ public final class CharacterStat implements Encodable {
 
     public void setJob(short job) {
         this.job = job;
+
+        getUser().ifPresent(user -> {
+            if (user.getFamilyInfo().hasFamily()) {
+                user.getFamilyInfo().updateUser(user);
+            }
+        });
     }
 
     public short getSubJob() {
@@ -461,6 +471,10 @@ public final class CharacterStat implements Encodable {
             levelExp += GameConstants.getNextLevelExp(level);
         }
         return levelExp + getExp();
+    }
+
+    public Optional<User> getUser(){
+        return Server.getCentralServerNode().getUserByCharacterId(getCharacterId());
     }
 
     @Override

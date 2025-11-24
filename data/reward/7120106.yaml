@@ -26,7 +26,8 @@ rewards:
   - [ 2040516, 1, 1, 0.000100 ] # Scroll for Overall Armor for LUK 60%
   - [ 2049000, 1, 1, 0.000100 ] # Clean Slate Scroll 1%
   - [ 2384062, 1, 1, 0.020000 ] # Overlord B Card
-  - [ 4000548, 1, 1, 0.400000 ] # Overlord A Radar Device
+  - [ 4000548, 1, 1, 1.0, 3728 ] # Overlord A Radar Device - Quest 3728 (100% drop when quest active)
+  - [ 4032514, 1, 1, 0.4, 3727 ] # Shelter Key - Quest 3727 (40% drop when quest active)
   - [ 4006001, 1, 1, 0.000700 ] # The Summoning Rock
   - [ 4007002, 1, 1, 0.000300 ] # Magic Powder (Blue)
   - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)

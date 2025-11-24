@@ -67,21 +67,21 @@ public final class StatCommand {
                     }
                 }
                 default -> {
-                    user.write(MessagePacket.system(
+                    user.systemMessage(
                             "Syntax: %sstat hp/mp/str/dex/int/luk/ap/sp <new value>",
-                            ServerConfig.PLAYER_COMMAND_PREFIX));
+                            ServerConfig.PLAYER_COMMAND_PREFIX);
                     return;
                 }
             }
 
             user.validateStat();
             user.write(WvsContext.statChanged(statMap, true));
-            user.write(MessagePacket.system("Set %s to %d", stat, value));
+            user.systemMessage("Set %s to %d", stat, value);
 
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system(
+            user.systemMessage(
                     "Syntax: %sstat hp/mp/str/dex/int/luk/ap/sp <new value>",
-                    ServerConfig.PLAYER_COMMAND_PREFIX));
+                    ServerConfig.PLAYER_COMMAND_PREFIX);
         }
     }
 }

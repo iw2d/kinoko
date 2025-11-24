@@ -7,6 +7,10 @@ import kinoko.world.GameConstants;
 public final class ServerConfig {
     public static final boolean TESPIA = Util.getEnv("TESPIA", true);  // DEV ENV
 
+    public static int EXP_RATE  = Util.getEnv("EXP_RATE", 1);
+    public static int MESO_RATE = Util.getEnv("MESO_RATE", 1);
+    public static int DROP_RATE = Util.getEnv("DROP_RATE", 1);
+
     public static final int WORLD_ID = Util.getEnv("WORLD_ID", 0);
     public static final String WORLD_NAME = Util.getEnv("WORLD_NAME", "Kinoko");
     public static final int CHANNELS_PER_WORLD = Util.getEnv("CHANNEL_COUNT", 5);
@@ -32,4 +36,18 @@ public final class ServerConfig {
     public static final String STAFF_COMMAND_PREFIX = Util.getEnv("STAFF_COMMAND_PREFIX", "!");
     public static final boolean DEBUG_MODE = Util.getEnv("DEBUG_MODE", true);
     public static final boolean PLAIN_TRAFFIC = Util.getEnv("PLAIN_TRAFFIC", false);
+
+
+    public static void setExpRate(int rate) {
+        EXP_RATE = Math.max(1, rate);
+    }
+
+    public static void setMesoRate(int rate) {
+        MESO_RATE = Math.max(1, rate);
+    }
+
+    public static void setDropRate(int rate) {
+        DROP_RATE = Math.max(1, rate);
+    }
+
 }

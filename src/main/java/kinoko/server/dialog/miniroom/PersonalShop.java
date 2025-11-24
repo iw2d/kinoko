@@ -155,21 +155,36 @@ public final class PersonalShop extends MiniRoom {
                     user.dispose();
                     return;
                 }
-                // Do transaction
-                item.getItem().setQuantity((short) (item.getItem().getQuantity() - totalCount));
+
+                final int originalQuantity = item.getItem().getQuantity();
                 final Item buyItem = new Item(item.getItem());
                 buyItem.setItemSn(owner.getNextItemSn());
                 buyItem.setQuantity((short) totalCount);
+
                 if (!im.addMoney((int) -totalPrice)) {
-                    throw new IllegalStateException("Could not deduct total price from user");
+                    user.write(MiniRoomPacket.PlayerShop.buyResult(PlayerShopBuyResult.NoMoney));
+                    user.dispose();
+                    return;
                 }
+
                 final Optional<List<InventoryOperation>> addItemResult = im.addItem(buyItem);
                 if (addItemResult.isEmpty()) {
-                    throw new IllegalStateException("Could not add bought item to inventory");
+                    im.addMoney((int) totalPrice);
+                    user.write(MiniRoomPacket.PlayerShop.buyResult(PlayerShopBuyResult.NoSlot));
+                    user.dispose();
+                    return;
                 }
+
                 if (!owner.getInventoryManager().addMoney(moneyForOwner)) {
-                    throw new IllegalStateException("Could not add money to personal shop owner");
+                    // rollback: Remove item from buyer, return money
+                    im.removeItem(buyItem.getItemId(), totalCount);
+                    im.addMoney((int) totalPrice);
+                    user.write(MiniRoomPacket.PlayerShop.buyResult(PlayerShopBuyResult.OverPrice));
+                    user.dispose();
+                    return;
                 }
+
+                item.getItem().setQuantity((short) (originalQuantity - totalCount));
                 // Update clients
                 user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), false));
                 user.write(WvsContext.inventoryOperation(addItemResult.get(), true));

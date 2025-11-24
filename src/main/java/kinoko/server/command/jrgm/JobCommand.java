@@ -33,7 +33,7 @@ public final class JobCommand {
             int jobId = Integer.parseInt(args[1]);
             Job job = Job.getById(jobId);
             if (job == null) {
-                user.write(MessagePacket.system("Could not change to unknown job : %d", jobId));
+                user.systemMessage("Could not change to unknown job : %d", jobId);
                 return;
             }
 
@@ -77,7 +77,7 @@ public final class JobCommand {
 
             user.getConnectedServer().notifyUserUpdate(user);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !job <job ID>"));
+            user.systemMessage("Usage: !job <job ID>");
         }
     }
 }

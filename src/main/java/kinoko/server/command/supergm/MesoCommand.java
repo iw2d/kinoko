@@ -19,7 +19,7 @@ public final class MesoCommand {
      * @param user the target user whose mesos will be set
      * @param args the command arguments, where args[1] should be the amount of mesos
      */
-    @Command(value = {"meso", "money"})
+    @Command(value = {"meso", "money", "mesos"})
     @Arguments("amount")
     public static void meso(User user, String[] args) {
         try {
@@ -28,7 +28,7 @@ public final class MesoCommand {
             im.setMoney(money);
             user.write(WvsContext.statChanged(Stat.MONEY, im.getMoney(), true));
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !meso <amount>"));
+            user.systemMessage("Usage: !meso <amount>");
         }
     }
 }

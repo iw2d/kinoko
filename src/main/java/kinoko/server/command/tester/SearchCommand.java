@@ -25,15 +25,20 @@ import kinoko.provider.skill.SkillStringInfo;
 
 
 /**
- * Fully detailed FindCommand with helpers for item/map/mob/npc/skill/quest/commodity.
+ * Fully detailed SearchCommand with helpers for item/map/mob/npc/skill/quest/commodity.
  */
-public final class FindCommand {
-
-    @Command({ "find", "lookup" })
+public final class SearchCommand {
+    /**
+     * Searches for items, maps, mobs, NPCs, skills, quests, or commodities.
+     * Usage: !search <item/map/mob/npc/skill/quest/commodity> <id or query>
+     *        !lookup <item/map/mob/npc/skill/quest/commodity> <id or query>
+     *        !find <item/map/mob/npc/skill/quest/commodity> <id or query>
+     */
+    @Command({ "search", "find", "lookup"})
     @Arguments({ "item/map/mob/npc/skill/quest/commodity", "id or query" })
     public static void find(User user, String[] args) {
         if (args.length < 2) {
-            user.write(MessagePacket.system("Usage: !find <type> <id or query>"));
+            user.systemMessage("Usage: !find <type> <id or query>");
             return;
         }
 
@@ -50,10 +55,10 @@ public final class FindCommand {
                 case "skill" -> findSkill(user, query, isNumber);
                 case "quest" -> findQuest(user, query, isNumber);
                 case "commodity" -> findCommodity(user, query, isNumber);
-                default -> user.write(MessagePacket.system("Unknown type: %s", type));
+                default -> user.systemMessage("Unknown type: %s", type);
             }
         } catch (NumberFormatException e) {
-            user.write(MessagePacket.system("Invalid number: %s", query));
+            user.systemMessage("Invalid number: %s", query);
         }
     }
 
@@ -67,32 +72,32 @@ public final class FindCommand {
                     .sorted(Map.Entry.comparingByKey())
                     .toList();
             if (results.isEmpty()) {
-                user.write(MessagePacket.system("No item found for name: %s", query));
+                user.systemMessage("No item found for name: %s", query);
                 return;
             } else if (results.size() == 1) {
                 itemId = results.get(0).getKey();
             } else {
-                user.write(MessagePacket.system("Results for item name: \"%s\"", query));
-                results.forEach(entry -> user.write(MessagePacket.system("  %d : %s", entry.getKey(), entry.getValue())));
+                user.systemMessage("Results for item name: \"%s\"", query);
+                results.forEach(entry -> user.systemMessage("  %d : %s", entry.getKey(), entry.getValue()));
                 return;
             }
         }
 
         Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(itemId);
         if (itemInfoResult.isEmpty()) {
-            user.write(MessagePacket.system("Could not find item with %s: %s", isNumber ? "ID" : "name", query));
+            user.systemMessage("Could not find item with %s: %s", isNumber ? "ID" : "name", query);
             return;
         }
 
         ItemInfo ii = itemInfoResult.get();
-        user.write(MessagePacket.system("Item: %s (%d)", StringProvider.getItemName(itemId), itemId));
+        user.systemMessage("Item: %s (%d)", StringProvider.getItemName(itemId), itemId);
         if (!ii.getItemInfos().isEmpty()) {
-            user.write(MessagePacket.system("  info:"));
-            ii.getItemInfos().forEach((key, value) -> user.write(MessagePacket.system("    %s : %s", key.name(), value)));
+            user.systemMessage("  info:");
+            ii.getItemInfos().forEach((key, value) -> user.systemMessage("    %s : %s", key.name(), value));
         }
         if (!ii.getItemSpecs().isEmpty()) {
-            user.write(MessagePacket.system("  spec:"));
-            ii.getItemSpecs().forEach((key, value) -> user.write(MessagePacket.system("    %s : %s", key.name(), value)));
+            user.systemMessage("  spec:");
+            ii.getItemSpecs().forEach((key, value) -> user.systemMessage("    %s : %s", key.name(), value));
         }
     }
 
@@ -106,13 +111,13 @@ public final class FindCommand {
                     .sorted(Map.Entry.comparingByKey())
                     .toList();
             if (results.isEmpty()) {
-                user.write(MessagePacket.system("No map found for name: %s", query));
+                user.systemMessage("No map found for name: %s", query);
                 return;
             } else if (results.size() == 1) {
                 mapId = results.get(0).getKey();
             } else {
-                user.write(MessagePacket.system("Results for map name: \"%s\"", query));
-                results.forEach(entry -> user.write(MessagePacket.system("  %d : %s", entry.getKey(), entry.getValue())));
+                user.systemMessage("Results for map name: \"%s\"", query);
+                results.forEach(entry -> user.systemMessage("  %d : %s", entry.getKey(), entry.getValue()));
                 return;
             }
         }
@@ -121,7 +126,7 @@ public final class FindCommand {
 
         Optional<MapInfo> mapInfoResult = MapProvider.getMapInfo(mapIdFinal);
         if (mapInfoResult.isEmpty()) {
-            user.write(MessagePacket.system("Could not find map with %s: %s", isNumber ? "ID" : "name", query));
+            user.systemMessage("Could not find map with %s: %s", isNumber ? "ID" : "name", query);
             return;
         }
 
@@ -132,23 +137,23 @@ public final class FindCommand {
                 .sorted(Comparator.comparingInt(MapInfo::getMapId))
                 .toList();
 
-        user.write(MessagePacket.system("Map: %s (%d)", StringProvider.getMapName(mapIdFinal), mapIdFinal));
-        user.write(MessagePacket.system("  type: %s", mapInfo.getFieldType()));
-        user.write(MessagePacket.system("  returnMap: %d", mapInfo.getReturnMap()));
-        user.write(MessagePacket.system("  forcedReturn: %d", mapInfo.getForcedReturn()));
-        user.write(MessagePacket.system("  onFirstUserEnter: %s", mapInfo.getOnFirstUserEnter()));
-        user.write(MessagePacket.system("  onUserEnter: %s", mapInfo.getOnUserEnter()));
+        user.systemMessage("Map: %s (%d)", StringProvider.getMapName(mapIdFinal), mapIdFinal);
+        user.systemMessage("  type: %s", mapInfo.getFieldType());
+        user.systemMessage("  returnMap: %d", mapInfo.getReturnMap());
+        user.systemMessage("  forcedReturn: %d", mapInfo.getForcedReturn());
+        user.systemMessage("  onFirstUserEnter: %s", mapInfo.getOnFirstUserEnter());
+        user.systemMessage("  onUserEnter: %s", mapInfo.getOnUserEnter());
 
         if (!mapInfo.getPortalInfos().isEmpty()) {
-            user.write(MessagePacket.system("  portals:"));
+            user.systemMessage("  portals:");
             mapInfo.getPortalInfos().stream()
                     .sorted(Comparator.comparingInt(PortalInfo::getPortalId))
-                    .forEach(p -> user.write(MessagePacket.system("    %s (%d, %d)", p.getPortalName(), p.getX(), p.getY())));
+                    .forEach(p -> user.systemMessage("    %s (%d, %d)", p.getPortalName(), p.getX(), p.getY()));
         }
 
         if (!connectedMaps.isEmpty()) {
-            user.write(MessagePacket.system("  connectedMaps:"));
-            connectedMaps.forEach(m -> user.write(MessagePacket.system("    %s (%d)", StringProvider.getMapName(m.getMapId()), m.getMapId())));
+            user.systemMessage("  connectedMaps:");
+            connectedMaps.forEach(m -> user.systemMessage("    %s (%d)", StringProvider.getMapName(m.getMapId()), m.getMapId()));
         }
     }
 
@@ -161,26 +166,26 @@ public final class FindCommand {
                     .sorted(Map.Entry.comparingByKey())
                     .toList();
             if (results.isEmpty()) {
-                user.write(MessagePacket.system("No mob found for name: %s", query));
+                user.systemMessage("No mob found for name: %s", query);
                 return;
             } else if (results.size() == 1) {
                 mobId = results.get(0).getKey();
             } else {
-                user.write(MessagePacket.system("Results for mob name: \"%s\"", query));
-                results.forEach(entry -> user.write(MessagePacket.system("  %d : %s", entry.getKey(), entry.getValue())));
+                user.systemMessage("Results for mob name: \"%s\"", query);
+                results.forEach(entry -> user.systemMessage("  %d : %s", entry.getKey(), entry.getValue()));
                 return;
             }
         }
 
         Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(mobId);
         if (mobTemplateResult.isEmpty()) {
-            user.write(MessagePacket.system("Could not find mob with %s: %s", isNumber ? "ID" : "name", query));
+            user.systemMessage("Could not find mob with %s: %s", isNumber ? "ID" : "name", query);
             return;
         }
 
         MobTemplate mob = mobTemplateResult.get();
-        user.write(MessagePacket.system("Mob: %s (%d)", StringProvider.getMobName(mobId), mobId));
-        user.write(MessagePacket.system("  level: %d", mob.getLevel()));
+        user.systemMessage("Mob: %s (%d)", StringProvider.getMobName(mobId), mobId);
+        user.systemMessage("  level: %d", mob.getLevel());
     }
 
     private static void findNpc(User user, String query, boolean isNumber) {
@@ -191,20 +196,20 @@ public final class FindCommand {
                     .sorted(Map.Entry.comparingByKey())
                     .toList();
             if (results.isEmpty()) {
-                user.write(MessagePacket.system("No npc found for name: %s", query));
+                user.systemMessage("No npc found for name: %s", query);
                 return;
             } else if (results.size() == 1) {
                 npcId = results.get(0).getKey();
             } else {
-                user.write(MessagePacket.system("Results for npc name: \"%s\"", query));
-                results.forEach(entry -> user.write(MessagePacket.system("  %d : %s", entry.getKey(), entry.getValue())));
+                user.systemMessage("Results for npc name: \"%s\"", query);
+                results.forEach(entry -> user.systemMessage("  %d : %s", entry.getKey(), entry.getValue()));
                 return;
             }
         }
 
         Optional<NpcTemplate> npcTemplateResult = NpcProvider.getNpcTemplate(npcId);
         if (npcTemplateResult.isEmpty()) {
-            user.write(MessagePacket.system("Could not find npc with %s: %s", isNumber ? "ID" : "name", query));
+            user.systemMessage("Could not find npc with %s: %s", isNumber ? "ID" : "name", query);
             return;
         }
 
@@ -214,9 +219,9 @@ public final class FindCommand {
                 .sorted(Comparator.comparingInt(MapInfo::getMapId))
                 .toList();
 
-        user.write(MessagePacket.system("Npc: %s (%d)", StringProvider.getNpcName(npcId), npcId));
-        user.write(MessagePacket.system("  script: %s", npc.getScript()));
-        npcFields.forEach(f -> user.write(MessagePacket.system("  field: %s (%d)", StringProvider.getMapName(f.getMapId()), f.getMapId())));
+        user.systemMessage("Npc: %s (%d)", StringProvider.getNpcName(npcId), npcId);
+        user.systemMessage("  script: %s", npc.getScript());
+        npcFields.forEach(f -> user.systemMessage("  field: %s (%d)", StringProvider.getMapName(f.getMapId()), f.getMapId()));
     }
 
     private static void findSkill(User user, String query, boolean isNumber) {
@@ -227,24 +232,24 @@ public final class FindCommand {
                     .sorted(Map.Entry.comparingByKey())
                     .toList();
             if (results.isEmpty()) {
-                user.write(MessagePacket.system("No skill found for name: %s", query));
+                user.systemMessage("No skill found for name: %s", query);
                 return;
             } else if (results.size() == 1) {
                 skillId = results.get(0).getKey();
             } else {
-                user.write(MessagePacket.system("Results for skill name: \"%s\"", query));
-                results.forEach(e -> user.write(MessagePacket.system("  %d : %s", e.getKey(), e.getValue().getName())));
+                user.systemMessage("Results for skill name: \"%s\"", query);
+                results.forEach(e -> user.systemMessage("  %d : %s", e.getKey(), e.getValue().getName()));
                 return;
             }
         }
 
         Optional<SkillInfo> skillInfoResult = SkillProvider.getSkillInfoById(skillId);
         if (skillInfoResult.isEmpty()) {
-            user.write(MessagePacket.system("Could not find skill with %s: %s", isNumber ? "ID" : "name", query));
+            user.systemMessage("Could not find skill with %s: %s", isNumber ? "ID" : "name", query);
             return;
         }
 
-        user.write(MessagePacket.system("Skill: %s (%d)", StringProvider.getSkillName(skillId), skillId));
+        user.systemMessage("Skill: %s (%d)", StringProvider.getSkillName(skillId), skillId);
     }
 
     private static void findQuest(User user, String query, boolean isNumber) {
@@ -256,51 +261,51 @@ public final class FindCommand {
                     .sorted(Comparator.comparingInt(QuestInfo::getQuestId))
                     .toList();
             if (results.isEmpty()) {
-                user.write(MessagePacket.system("No quest found for name: %s", query));
+                user.systemMessage("No quest found for name: %s", query);
                 return;
             } else if (results.size() == 1) {
                 questId = results.get(0).getQuestId();
             } else {
-                user.write(MessagePacket.system("Results for quest name: \"%s\"", query));
-                results.forEach(q -> user.write(MessagePacket.system("  %d : %s%s",
+                user.systemMessage("Results for quest name: \"%s\"", query);
+                results.forEach(q -> user.systemMessage("  %d : %s%s",
                         q.getQuestId(),
                         q.getQuestParent().isEmpty() ? "" : q.getQuestParent() + " : ",
-                        q.getQuestName())));
+                        q.getQuestName()));
                 return;
             }
         }
 
         Optional<QuestInfo> questInfoResult = QuestProvider.getQuestInfo(questId);
         if (questInfoResult.isEmpty()) {
-            user.write(MessagePacket.system("Could not find quest with %s: %s", isNumber ? "ID" : "name", query));
+            user.systemMessage("Could not find quest with %s: %s", isNumber ? "ID" : "name", query);
             return;
         }
 
         QuestInfo quest = questInfoResult.get();
-        user.write(MessagePacket.system("Quest %d : %s%s", quest.getQuestId(),
+        user.systemMessage("Quest %d : %s%s", quest.getQuestId(),
                 quest.getQuestParent().isEmpty() ? "" : quest.getQuestParent() + " : ",
-                quest.getQuestName()));
+                quest.getQuestName());
     }
 
     private static void findCommodity(User user, String query, boolean isNumber) {
         if (!isNumber) {
-            user.write(MessagePacket.system("Can only lookup commodity by ID"));
+            user.systemMessage("Can only lookup commodity by ID");
             return;
         }
 
         int commodityId = Integer.parseInt(query);
         Optional<Commodity> commodityResult = CashShop.getCommodity(commodityId);
         if (commodityResult.isEmpty()) {
-            user.write(MessagePacket.system("Could not find commodity with ID: %d", commodityId));
+            user.systemMessage("Could not find commodity with ID: %d", commodityId);
             return;
         }
 
         Commodity commodity = commodityResult.get();
-        user.write(MessagePacket.system("Commodity: %d", commodityId));
-        user.write(MessagePacket.system("  itemId : %d (%s)", commodity.getItemId(), StringProvider.getItemName(commodity.getItemId())));
-        user.write(MessagePacket.system("  count : %d", commodity.getCount()));
-        user.write(MessagePacket.system("  price : %d", commodity.getPrice()));
-        user.write(MessagePacket.system("  period : %d", commodity.getPeriod()));
-        user.write(MessagePacket.system("  gender : %d", commodity.getGender()));
+        user.systemMessage("Commodity: %d", commodityId);
+        user.systemMessage("  itemId : %d (%s)", commodity.getItemId(), StringProvider.getItemName(commodity.getItemId()));
+        user.systemMessage("  count : %d", commodity.getCount());
+        user.systemMessage("  price : %d", commodity.getPrice());
+        user.systemMessage("  period : %d", commodity.getPeriod());
+        user.systemMessage("  gender : %d", commodity.getGender());
     }
 }

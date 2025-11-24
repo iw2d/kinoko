@@ -85,10 +85,16 @@ public final class LoginHandler {
             }
 
             // Check password
-            if (!DatabaseManager.accountAccessor().checkPassword(account, password, false)) {
+            if (!ServerConfig.TESPIA && !DatabaseManager.accountAccessor().checkPassword(account, password, false)) {
                 c.write(LoginPacket.checkPasswordResultFail(LoginResultType.IncorrectPassword));
                 return;
             }
+
+            if (account.getBanInfo().isBanned()){
+                c.write(LoginPacket.checkPasswordResultBlocked(0, account.getBanInfo().getTempBanUntil()));
+                return;
+            }
+
 
             c.setAccount(account);
             c.setMachineId(machineId);
@@ -238,6 +244,7 @@ public final class LoginHandler {
             // let non-relational databases handle IDs here.
             cs.setId(characterIdResult.get());
         }
+
         cs.setName(name);
         cs.setGender(gender);
         cs.setSkin((byte) selectedAL[3]);

@@ -17,6 +17,8 @@ public interface DatabaseConnector {
 
     ItemAccessor getItemAccessor();
 
+    FamilyAccessor getFamilyAccessor();
+
     void initialize();
 
     void shutdown();

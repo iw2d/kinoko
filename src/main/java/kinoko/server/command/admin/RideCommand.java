@@ -27,7 +27,7 @@ public final class RideCommand {
         try {
             int vehicleId = Integer.parseInt(args[1]);
             if (ItemProvider.getItemInfo(vehicleId).isEmpty()) {
-                user.write(MessagePacket.system("Could not resolve item info for vehicle ID : %d", vehicleId));
+                user.systemMessage("Could not resolve item info for vehicle ID : %d", vehicleId);
                 return;
             }
 
@@ -42,7 +42,7 @@ public final class RideCommand {
             user.write(WvsContext.temporaryStatSet(ss, flag));
             user.getField().broadcastPacket(UserRemote.temporaryStatSet(user, ss, flag));
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !ride <vehicle ID>"));
+            user.systemMessage("Usage: !ride <vehicle ID>");
         }
     }
 }

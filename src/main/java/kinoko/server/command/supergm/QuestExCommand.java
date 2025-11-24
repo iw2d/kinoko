@@ -24,15 +24,15 @@ public final class QuestExCommand {
             if (newValue == null) {
                 Optional<QuestRecord> questRecordResult = user.getQuestManager().getQuestRecord(questId);
                 String value = questRecordResult.map(QuestRecord::getValue).orElse("");
-                user.write(MessagePacket.system("Get QR value for quest ID %d : %s", questId, value));
+                user.systemMessage("Get QR value for quest ID %d : %s", questId, value);
             } else {
                 QuestRecord qr = user.getQuestManager().setQuestInfoEx(questId, newValue);
                 user.write(MessagePacket.questRecord(qr));
                 user.validateStat();
-                user.write(MessagePacket.system("Set QR value for quest ID %d : %s", questId, newValue));
+                user.systemMessage("Set QR value for quest ID %d : %s", questId, newValue);
             }
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            user.write(MessagePacket.system("Usage: !questex <quest ID> [value]"));
+            user.systemMessage("Usage: !questex <quest ID> [value]");
         }
     }
 }

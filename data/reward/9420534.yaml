@@ -1,0 +1,27 @@
+# Charmer (9420534)
+
+rewards:
+  - [ 0, 391, 599, 0.600000 ]
+  - [ 4000472, 1, 1, 0.400000 ] # Charmer's Flute
+  - [ 4130013, 1, 1, 0.000300 ] # Crossbow Production Stimulator
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 1032011, 1, 1, 0.000100 ] # Blue Moon
+  - [ 1082104, 1, 1, 0.000100 ] # Mithril Husk
+  - [ 1072041, 1, 1, 0.000100 ] # Blood Battle Grieves
+  - [ 1442008, 1, 1, 0.000100 ] # The Gold Dragon
+  - [ 1050067, 1, 1, 0.000100 ] # Blue Requiem
+  - [ 1050068, 1, 1, 0.000100 ] # Red Requiem
+  - [ 1382015, 1, 1, 0.000100 ] # Poison Mushroom
+  - [ 1002254, 1, 1, 0.000200 ] # Dark Infinium Circlet
+  - [ 1452010, 1, 1, 0.000100 ] # Blue Hinkel
+  - [ 1041103, 1, 1, 0.000100 ] # Red Mystique
+  - [ 1061102, 1, 1, 0.000100 ] # Red Mystique Pants
+  - [ 1061077, 1, 1, 0.000100 ] # Blue Moon Pants
+  - [ 1472017, 1, 1, 0.000100 ] # Dark Avarice
+  - [ 4021008, 1, 1, 0.002000 ] # Dark Crystal Ore
+  - [ 4020008, 1, 1, 0.002000 ] # Black Crystal Ore
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2070003, 1, 1, 0.000400 ] # Vital Bullet
+  - [ 2044701, 1, 1, 0.000100 ] # Scroll for Claw for ATT 60%
+  - [ 2044801, 1, 1, 0.001000 ] # Scroll for Gun for Attack 60%
