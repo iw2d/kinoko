@@ -348,7 +348,7 @@ public final class CharacterStat implements Encodable {
             return statMap;
         }
         long newExp = ((long) getExp()) + delta;
-        while (newExp >= GameConstants.getNextLevelExp(getLevel())) {
+        while (getLevel() < GameConstants.getLevelMax(job) && newExp >= GameConstants.getNextLevelExp(getLevel())) {
             newExp -= GameConstants.getNextLevelExp(getLevel());
             statMap.putAll(levelUp(totalInt));
         }
