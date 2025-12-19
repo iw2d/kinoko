@@ -41,7 +41,18 @@ public enum QuestRecordType {
 
     EdelsteinUnlockTownQuests(23977), //Not sure what quest is supposed to update this
     EdelsteinFabioFirebombs(23979),
-    EdelsteinWonny10PM(23984);
+    EdelsteinWonny10PM(23984),
+
+    ZakumPreqStageOne(100200),      // Zakum Pre-quest Stage 1 tracking
+    ZakumPreqStageTwo(100201),      // Zakum Pre-quest Stage 2 tracking
+    Zakum(100250),                  // Zakum daily entry tracking
+    MuLungDojoTutorial(100300),     // Mu Lung Dojo tutorial quest
+    GachaponEvent(100400),          // Gachapon return map tracking
+    AlcasterAndTheDarkCrystal(100500),  // Alcaster Dark Crystal quest
+    WheresHella(100501),                // Where's Hella quest
+    TheSmallGraveThatsHidden(100502),   // Small Grave quest
+    AcquiringTheFairyDust(100503),      // Fairy Dust quest
+    MemoryKeeper(100504);               // Memory Keeper quest
 
     private final int questId;
 

@@ -1,13 +1,17 @@
 package kinoko.world.user.stat;
 
+import kinoko.server.Server;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.util.Util;
 import kinoko.world.GameConstants;
 import kinoko.world.job.JobConstants;
+import kinoko.world.user.User;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public final class CharacterStat implements Encodable {
     private int id;
@@ -36,9 +40,62 @@ public final class CharacterStat implements Encodable {
     private long petSn1;
     private long petSn2;
     private long petSn3;
+    private AdminLevel adminLevel = AdminLevel.PLAYER;
+
+    public CharacterStat(){
+
+    }
+
+    public CharacterStat(int id, String name, byte gender, byte skin, int face, int hair,
+                         short level, short job, short subJob,
+                         short baseStr, short baseDex, short baseInt, short baseLuk,
+                         int hp, int maxHp, int mp, int maxMp, short ap,
+                         int exp, short pop, int posMap, byte portal,
+                         long petSn1, long petSn2, long petSn3, AdminLevel adminLevel) {
+        this.id = id;
+        this.name = name;
+        this.gender = gender;
+        this.skin = skin;
+        this.face = face;
+        this.hair = hair;
+        this.level = level;
+        this.job = job;
+        this.subJob = subJob;
+        this.baseStr = baseStr;
+        this.baseDex = baseDex;
+        this.baseInt = baseInt;
+        this.baseLuk = baseLuk;
+        this.hp = hp;
+        this.maxHp = maxHp;
+        this.mp = mp;
+        this.maxMp = maxMp;
+        this.ap = ap;
+        this.exp = exp;
+        this.pop = pop;
+        this.posMap = posMap;
+        this.portal = portal;
+        this.petSn1 = petSn1;
+        this.petSn2 = petSn2;
+        this.petSn3 = petSn3;
+        this.sp = ExtendSp.from(new HashMap<>()); // empty on init.
+
+        this.adminLevel = adminLevel == null ? AdminLevel.PLAYER : adminLevel;
+    }
 
     public int getId() {
         return id;
+    }
+
+    public int getCharacterId(){  // alias func
+        return id;
+    }
+
+    public AdminLevel getAdminLevel() {
+        return adminLevel;
+    }
+
+    public void setAdminLevel(AdminLevel adminLevel) {
+        this.adminLevel = adminLevel;
     }
 
     public void setId(int id) {
@@ -99,6 +156,12 @@ public final class CharacterStat implements Encodable {
 
     public void setJob(short job) {
         this.job = job;
+
+        getUser().ifPresent(user -> {
+            if (user.getFamilyInfo().hasFamily()) {
+                user.getFamilyInfo().updateUser(user);
+            }
+        });
     }
 
     public short getSubJob() {
@@ -408,6 +471,10 @@ public final class CharacterStat implements Encodable {
             levelExp += GameConstants.getNextLevelExp(level);
         }
         return levelExp + getExp();
+    }
+
+    public Optional<User> getUser(){
+        return Server.getCentralServerNode().getUserByCharacterId(getCharacterId());
     }
 
     @Override

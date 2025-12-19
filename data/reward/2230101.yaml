@@ -33,4 +33,5 @@ rewards:
   - [ 4010002, 1, 1, 0.002000 ] # Mithril Ore
   - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
-  - [ 4032461, 1, 1, 0.050000, 22531 ] # Zombie Mushroom Doll
+  - [ 4032321, 1, 1, 1.000000, 21727 ] # Zombie Mushroom Puppet (Quest 21727 - Aran)
+  - [ 4032461, 1, 1, 0.050000, 22531 ] # Zombie Mushroom Doll (Quest 22531 - Evan)

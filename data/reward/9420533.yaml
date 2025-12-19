@@ -1,0 +1,28 @@
+# Rodeo (9420533)
+
+rewards:
+  - [ 0, 390, 552, 0.600000 ]
+  - [ 4000471, 1, 1, 0.400000 ] # Rodeo's Master
+  - [ 1322012, 1, 1, 0.000100 ] # Red Brick
+  - [ 1332020, 1, 1, 0.000100 ] # Korean Fan
+  - [ 1432007, 1, 1, 0.000100 ] # Redemption
+  - [ 1312009, 1, 1, 0.000100 ] # Hawkhead
+  - [ 1402017, 1, 1, 0.000100 ] # Daiwa Sword
+  - [ 1051023, 1, 1, 0.000100 ] # Purple Moonlight
+  - [ 1050039, 1, 1, 0.000200 ] # Dark Starlight
+  - [ 1372008, 1, 1, 0.000100 ] # Hinomaru Fan
+  - [ 1002254, 1, 1, 0.000100 ] # Dark Infinium Circlet
+  - [ 1051038, 1, 1, 0.000100 ] # Green Lumati
+  - [ 1050052, 1, 1, 0.000100 ] # Blue-Lined Kismet
+  - [ 1041096, 1, 1, 0.000100 ] # Umber Mantis
+  - [ 1061095, 1, 1, 0.000100 ] # Umber Mantis Pants
+  - [ 1002248, 1, 1, 0.000100 ] # Silver Identity
+  - [ 1002249, 1, 1, 0.000100 ] # Dark Identity
+  - [ 1082180, 1, 1, 0.000100 ] # Green Lagger Halfglove
+  - [ 2000003, 1, 1, 0.010000 ] # White Pill
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2022003, 1, 1, 0.010000 ] # Warrior Potion
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2022000, 1, 1, 0.010000 ] # Pain Reliever
+  - [ 2048003, 1, 1, 0.000100 ] # Scroll for Pet Equip. for Speed 60%
+  - [ 2040901, 1, 1, 0.000100 ] # Scroll for Shield for DEF 60%

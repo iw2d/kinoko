@@ -13,12 +13,13 @@ import kinoko.world.user.User;
 import kinoko.world.user.stat.Stat;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public final class TradingRoom extends MiniRoom {
-    private final Map<User, Map<Integer, Item>> items = new HashMap<>(); // user -> slot, items
-    private final Map<User, Integer> money = new HashMap<>(); // user -> offered money
-    private final Map<User, Boolean> confirm = new HashMap<>(); // user -> trade confirmation
+    private final Map<User, Map<Integer, Item>> items = new ConcurrentHashMap<>(); // user -> slot, items
+    private final Map<User, Integer> money = new ConcurrentHashMap<>(); // user -> offered money
+    private final Map<User, Boolean> confirm = new ConcurrentHashMap<>(); // user -> trade confirmation
 
 
     public TradingRoom() {
@@ -73,15 +74,17 @@ public final class TradingRoom extends MiniRoom {
             }
             case TRP_Trade -> {
                 // CTradingRoomDlg::Trade
-                confirm.put(user, true);
-                // Update other
-                if (!confirm.getOrDefault(other, false)) {
-                    other.write(MiniRoomPacket.TradingRoom.trade());
-                    return;
-                }
-                // Complete trade
-                if (!completeTrade(user)) {
-                    cancelTrade(user, MiniRoomLeaveType.TradeFail); // Trade unsuccessful.
+                synchronized (confirm) {
+                    confirm.put(user, true);
+                    // Update other
+                    if (!confirm.getOrDefault(other, false)) {
+                        other.write(MiniRoomPacket.TradingRoom.trade());
+                        return;
+                    }
+                    // Complete trade
+                    if (!completeTrade(user)) {
+                        cancelTrade(user, MiniRoomLeaveType.TradeFail); // Trade unsuccessful.
+                    }
                 }
             }
             case TRP_ItemCRC -> {
@@ -215,12 +218,12 @@ public final class TradingRoom extends MiniRoom {
         final Set<Item> itemsForUser = items.getOrDefault(other, Map.of()).values().stream().collect(Collectors.toUnmodifiableSet());
         final int moneyForUser = GameConstants.getTradeTax(money.getOrDefault(other, 0));
         if (!user.getInventoryManager().canAddItems(itemsForUser)) {
-            user.write(MessagePacket.system("You do not have enough inventory space."));
+            user.systemMessage("You do not have enough inventory space.");
             other.write(MessagePacket.system(user.getCharacterName() + " does not have enough inventory space."));
             return false;
         }
         if (!user.getInventoryManager().canAddMoney(moneyForUser)) {
-            user.write(MessagePacket.system("You cannot hold any more mesos."));
+            user.systemMessage("You cannot hold any more mesos.");
             other.write(MessagePacket.system(user.getCharacterName() + " cannot hold any more mesos."));
             return false;
         }
@@ -229,12 +232,12 @@ public final class TradingRoom extends MiniRoom {
         final int moneyForOther = GameConstants.getTradeTax(money.getOrDefault(user, 0));
         if (!other.getInventoryManager().canAddItems(itemsForOther)) {
             other.write(MessagePacket.system("You do not have enough inventory space."));
-            user.write(MessagePacket.system(user.getCharacterName() + " does not have enough inventory space."));
+            user.systemMessage(user.getCharacterName() + " does not have enough inventory space.");
             return false;
         }
         if (!other.getInventoryManager().canAddMoney(moneyForOther)) {
             other.write(MessagePacket.system("You cannot hold any more mesos."));
-            user.write(MessagePacket.system(user.getCharacterName() + " cannot hold any more mesos."));
+            user.systemMessage(user.getCharacterName() + " cannot hold any more mesos.");
             return false;
         }
         // Process items

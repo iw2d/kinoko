@@ -1,0 +1,16 @@
+# Morgan : Weapon Seller (1091000) | Nautilus : Mid Floor - Hallway (120000200)
+
+items:
+  - [ 1492000, 6000, 1, 1 ] # Pistol
+  - [ 1492001, 12000, 1, 1 ] # Dellinger Special
+  - [ 1492002, 20000, 1, 1 ] # The Negotiator
+  - [ 1492003, 44000, 1, 1 ] # Golden Hook
+  - [ 1492004, 75000, 1, 1 ] # Cold Mind
+  - [ 1482000, 6000, 1, 1 ] # Steel Knuckler
+  - [ 1482001, 12000, 1, 1 ] # Leather Arms
+  - [ 1482002, 20000, 1, 1 ] # Double Tail Knuckler
+  - [ 1482003, 40000, 1, 1 ] # Norman Grip
+  - [ 1482004, 75000, 1, 1 ] # Prime Hands
+  - [ 1442004, 33000, 1, 1 ] # Janitor's Mop
+  - [ 1302007, 6000, 1, 1 ] # Long Sword
+  - [ 1322007, 12000, 1, 1 ] # Leather Purse

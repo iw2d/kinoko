@@ -34,6 +34,7 @@ rewards:
   - [ 2044602, 1, 1, 0.000100 ] # Scroll for Crossbow for ATT 10%
   - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
   - [ 4000146, 1, 1, 0.400000 ] # Evil Spirit
+  - [ 4000460, 1, 1, 0.500000, 3250 ] # Springy Worm (quest 3250 only)
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
   - [ 4007001, 1, 1, 0.000300 ] # Magic Powder (White)

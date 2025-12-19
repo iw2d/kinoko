@@ -9,6 +9,12 @@ public final class SkillRecord {
         this.skillId = skillId;
     }
 
+    public SkillRecord(int skillId, int skillLevel, int masterLevel) {
+        this.skillId = skillId;
+        this.skillLevel = skillLevel;
+        this.masterLevel = masterLevel;
+    }
+
     public int getSkillId() {
         return skillId;
     }

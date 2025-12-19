@@ -8,6 +8,7 @@ import kinoko.packet.world.MemoPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.item.ItemInfo;
+import kinoko.server.ServerConfig;
 import kinoko.server.cashshop.*;
 import kinoko.server.header.InHeader;
 import kinoko.server.memo.Memo;
@@ -91,10 +92,19 @@ public final class CashShopHandler {
                     throw new IllegalStateException("Could not deduct price for cash item");
                 }
 
+                // Generate an item SN for the locker item - (Relational DBs) - Safe for NoSQL DBs.
+                if (!DatabaseManager.idAccessor().generateItemSn(cashItemInfo.getItem())){
+                    user.write(CashShopPacket.fail(CashItemResultType.Buy_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
+                    log.error("Could not generate SN for Item ID: {}", cashItemInfo.getItem().getItemId());
+                    return;
+                }
+
                 // Add to locker and update client
                 account.getLocker().addCashItem(cashItemInfo);
                 user.write(CashShopPacket.queryCashResult(account));
                 user.write(CashShopPacket.buyDone(cashItemInfo));
+
+
             }
             case Gift, GiftPackage -> {
                 // CCashShop::SendGiftsPacket
@@ -111,7 +121,7 @@ public final class CashShopHandler {
                 final String giftMessage = inPacket.decodeString();
 
                 // Check secondary password
-                if (!DatabaseManager.accountAccessor().checkPassword(user.getAccount(), secondaryPassword, true)) {
+                if (ServerConfig.REQUIRE_SECONDARY_PASSWORD && !DatabaseManager.accountAccessor().checkPassword(user.getAccount(), secondaryPassword, true)) {
                     user.write(CashShopPacket.fail(CashItemResultType.Gift_Failed, CashItemFailReason.InvalidBirthDate)); // Check your PIC password and\r\nplease try again
                     return;
                 }
@@ -520,7 +530,7 @@ public final class CashShopHandler {
                 final String giftMessage = inPacket.decodeString();
 
                 // Check secondary password
-                if (!DatabaseManager.accountAccessor().checkPassword(user.getAccount(), secondaryPassword, true)) {
+                if (ServerConfig.REQUIRE_SECONDARY_PASSWORD && !DatabaseManager.accountAccessor().checkPassword(user.getAccount(), secondaryPassword, true)) {
                     user.write(CashShopPacket.fail(CashItemResultType.Couple_Failed, CashItemFailReason.InvalidBirthDate)); // Check your PIC password and\r\nplease try again
                     return;
                 }
@@ -567,8 +577,8 @@ public final class CashShopHandler {
                 }
 
                 // Generate item SN for both rings
-                final long selfItemSn = user.getNextItemSn();
-                final long pairItemSn = user.getNextItemSn();
+                long selfItemSn = user.getNextItemSn();
+                long pairItemSn = user.getNextItemSn();
 
                 // Create CashItemInfo and set RingData
                 final Optional<CashItemInfo> cashItemInfoResult = commodity.createCashItemInfo(selfItemSn, user.getAccountId(), user.getCharacterId(), "");
@@ -578,6 +588,20 @@ public final class CashShopHandler {
                     return;
                 }
                 final CashItemInfo cashItemInfo = cashItemInfoResult.get();
+
+                if (DatabaseManager.isRelational()){
+                    // Generate SN for the pair item (Relational DBs)
+                    selfItemSn = cashItemInfo.getItem().getItemSn();
+                    Item pairItem = new Item(cashItemInfo.getItem());
+                    pairItem.resetSN(false);
+                    if (!DatabaseManager.idAccessor().generateItemSn(pairItem)){
+                        user.write(CashShopPacket.fail(CashItemResultType.Couple_Failed, CashItemFailReason.Unknown)); // Due to an unknown error, the request for Cash Shop has failed.
+                        log.error("Could not generate SN for Item ID: {}", cashItemInfo.getItem().getItemId());
+                        return;
+                    }
+                    pairItemSn = pairItem.getItemSn();
+                }
+
                 final RingData selfRingData = new RingData();
                 selfRingData.setPairCharacterId(receiverCharacterId);
                 selfRingData.setPairCharacterName(receiverCharacterName);

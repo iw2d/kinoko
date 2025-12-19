@@ -20,5 +20,6 @@ rewards:
   - [ 4000021, 1, 1, 0.040000 ] # Leather
   - [ 4010006, 1, 1, 0.002000 ] # Gold Ore
   - [ 4020006, 1, 1, 0.002000 ] # Topaz Ore
+  - [ 4032340, 1, 1, 1.000000, 21710 ] # Pig tail (Quest 21710: A Monster War?)
   - [ 4032453, 1, 1, 0.400000, 22503 ] # Pork
   - [ 4032379, 1, 1, 0.035000, 2409 ] # Letter of Commendation - Pirate Adventurer

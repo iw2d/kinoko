@@ -1,0 +1,15 @@
+# Chlorotrap (9420527)
+
+rewards:
+  - [ 0, 201, 300, 0.600000 ]
+  - [ 4000465, 1, 1, 0.400000 ] # Coconut Husk
+  - [ 1050046, 1, 1, 0.000100 ] # Red Calas
+  - [ 1082064, 1, 1, 0.000100 ] # Dark Arten
+  - [ 1072124, 1, 1, 0.000100 ] # Blue Steel-Tip Boots
+  - [ 1051039, 1, 1, 0.000100 ] # Red Lumati
+  - [ 1052110, 1, 1, 0.000100 ] # Blue Brace Look
+  - [ 2022025, 1, 1, 0.010000 ] # Chocolate
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2002010, 1, 1, 0.010000 ] # Speed Pill
+  - [ 2060001, 10, 20, 0.008000 ] # Bronze Arrow for Bow
+  - [ 2061001, 10, 20, 0.008000 ] # Bronze Arrow for Crossbow

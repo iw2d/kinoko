@@ -112,6 +112,12 @@ public final class PetHandler {
 
     @Handler(InHeader.PetMove)
     public static void handlePetMove(User user, InPacket inPacket) {
+        if (user.isInCashShop()){
+            // If a player attempts to preview a pet, the client for some reason spams this packet that is NOT needed.
+            // It is attempting  to access the character's actual pets.
+            return;
+        }
+
         final long petSn = inPacket.decodeLong(); // liPetLockerSN
         final MovePath movePath = MovePath.decode(inPacket);
         final Optional<Integer> petIndexResult = user.getPetIndex(petSn);

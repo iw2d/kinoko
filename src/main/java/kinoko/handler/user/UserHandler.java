@@ -33,6 +33,7 @@ import kinoko.server.memo.MemoType;
 import kinoko.server.messenger.MessengerProtocol;
 import kinoko.server.messenger.MessengerRequest;
 import kinoko.server.packet.InPacket;
+import kinoko.server.packet.OutPacket;
 import kinoko.server.rank.RankManager;
 import kinoko.server.user.RemoteUser;
 import kinoko.util.Triple;
@@ -60,6 +61,7 @@ import kinoko.world.user.Locker;
 import kinoko.world.user.User;
 import kinoko.world.user.data.*;
 import kinoko.world.user.effect.Effect;
+import kinoko.world.user.stat.AdminLevel;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.Stat;
 import kinoko.world.user.stat.StatConstants;
@@ -124,10 +126,28 @@ public final class UserHandler {
         inPacket.decodeInt(); // update_time
         final String text = inPacket.decodeString(); // sText
         final boolean onlyBalloon = inPacket.decodeBoolean(); // bOnlyBalloon
-        if (text.startsWith(ServerConfig.COMMAND_PREFIX) && text.length() > 1) {
+
+        // if text starts with any valid command prefix for this user
+        boolean isCommand = false;
+
+        if (text.length() > 1) {
+            // Player prefix is always allowed
+            if (text.startsWith(ServerConfig.PLAYER_COMMAND_PREFIX)) {
+                isCommand = true;
+            }
+            // Staff prefix is allowed if the user level >= TESTER
+            else if (user.getAdminLevel().isAtLeast(AdminLevel.TESTER) &&
+                    text.startsWith(ServerConfig.STAFF_COMMAND_PREFIX)) {
+                isCommand = true;
+            }
+        }
+
+        if (isCommand) {
             CommandProcessor.tryProcessCommand(user, text);
             return;
         }
+
+
         user.getField().broadcastPacket(UserPacket.userChat(user, ChatType.NORMAL, text, onlyBalloon));
     }
 
@@ -267,7 +287,6 @@ public final class UserHandler {
         }
         trunkDialog.handlePacket(user, inPacket);
     }
-
 
     // INVENTORY HANDLERS ----------------------------------------------------------------------------------------------
 
@@ -739,7 +758,7 @@ public final class UserHandler {
 
         final Optional<User> targetResult = user.getField().getUserPool().getById(targetId);
         if (targetResult.isEmpty()) {
-            user.write(MessagePacket.system("Unable to find the character."));
+            user.systemMessage("Unable to find the character.");
             return;
         }
         final User target = targetResult.get();
@@ -1218,10 +1237,27 @@ public final class UserHandler {
             targetIds.add(inPacket.decodeInt());
         }
         final String text = inPacket.decodeString(); // sText
-        if (text.startsWith(ServerConfig.COMMAND_PREFIX) && text.length() > 1) {
+
+        // if the text starts with any valid command prefix for this user
+        boolean isCommand = false;
+
+        if (text.length() > 1) {
+            // Player prefix is always allowed
+            if (text.startsWith(ServerConfig.PLAYER_COMMAND_PREFIX)) {
+                isCommand = true;
+            }
+            // Staff prefix is allowed if the user level >= TESTER
+            else if (user.getAdminLevel().isAtLeast(AdminLevel.TESTER) &&
+                    text.startsWith(ServerConfig.STAFF_COMMAND_PREFIX)) {
+                isCommand = true;
+            }
+        }
+
+        if (isCommand) {
             CommandProcessor.tryProcessCommand(user, text);
             return;
         }
+
         user.getConnectedServer().submitUserPacketBroadcast(targetIds, FieldPacket.groupMessage(groupType, user.getCharacterName(), text));
     }
 

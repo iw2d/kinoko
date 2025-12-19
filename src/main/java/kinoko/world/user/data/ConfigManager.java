@@ -25,6 +25,18 @@ public final class ConfigManager {
         this.petExceptionList = List.of();
     }
 
+    public ConfigManager(int petConsumeItem, int petConsumeMpItem, List<Integer> petExceptionList,
+                         FuncKeyMapped[] funcKeyMap, int[] quickslotKeyMap) {
+        assert funcKeyMap.length == GameConstants.FUNC_KEY_MAP_SIZE;
+        assert quickslotKeyMap.length == GameConstants.QUICKSLOT_KEY_MAP_SIZE;
+
+        this.petConsumeItem = petConsumeItem;
+        this.petConsumeMpItem = petConsumeMpItem;
+        this.petExceptionList = petExceptionList != null ? petExceptionList : List.of();
+        this.funcKeyMap = funcKeyMap;
+        this.quickslotKeyMap = quickslotKeyMap;
+    }
+
     public List<SingleMacro> getMacroSysData() {
         return macroSysData;
     }

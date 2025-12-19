@@ -32,3 +32,6 @@ rewards:
   - [ 4010004, 1, 1, 0.002000 ] # Silver Ore
   - [ 4020002, 1, 1, 0.002000 ] # AquaMarine Ore
   - [ 4020003, 1, 1, 0.002000 ] # Emerald Ore
+  - [ 4032316, 1, 1, 1.000000, 21714 ] # Green Mushroom Puppet (Quest 21714 - Aran)
+  - [ 4032317, 1, 1, 1.000000, 21717 ] # Green Mushroom Puppet (Quest 21717 - Rowen's Request 1 - Aran)
+  - [ 4032318, 1, 1, 1.000000, 21718 ] # Green Mushroom Puppet (Quest 21718 - Rowen's Request 2 - Aran)

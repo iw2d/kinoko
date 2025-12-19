@@ -36,7 +36,8 @@ rewards:
   - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
   - [ 2330004, 1, 1, 0.000400 ] # Shiny Bullet
   - [ 2384062, 1, 1, 0.020000 ] # Overlord B Card
-  - [ 4000549, 1, 1, 0.400000 ] # Overlord B Radar Device
+  - [ 4000549, 1, 1, 1.0, 3728 ] # Overlord B Radar Device - Quest 3728 (100% drop when quest active)
+  - [ 4032514, 1, 1, 0.4, 3727 ] # Shelter Key - Quest 3727 (40% drop when quest active)
   - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
   - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
   - [ 4007004, 1, 1, 0.000300 ] # Magic Powder (Yellow)

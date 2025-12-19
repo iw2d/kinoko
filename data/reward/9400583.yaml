@@ -1,0 +1,13 @@
+# Leprechaun [2] (9400584)
+
+rewards:
+  - [ 4032031, 1, 1, 0.600000 ] # Lucky Charm
+  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2050004, 1, 1, 0.010000 ] # All Cure Potion
+  - [ 2041030, 1, 1, 0.010000 ] # Dark scroll for Cape for HP 70%
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
+  - [ 1002391, 1, 1, 0.000100] # Green Bandana
+  - [ 1402013, 1, 1, 0.000100] # Japanese Map
