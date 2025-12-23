@@ -1376,6 +1376,36 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 }
             }
             
+            case ChangeMaster -> {
+            	// Resolve alliance
+                final Optional<Alliance> allianceResult = centralServerNode.getAllianceById(guild.getAllianceId());
+                if (allianceResult.isEmpty()) {
+                    log.error("Could not resolve alliance for changeMaster");
+                    remoteServerNode.write(CentralPacket.userPacketReceive(characterId, GuildPacket.serverMsg(null))); // The guild request has not been accepted due to unknown reason.
+                    return;
+                }
+                try (var lockedAlliance = allianceResult.get().acquire()) {
+                    final Alliance alliance = lockedAlliance.get();
+                    try (var lockedGuild = guild.acquire()) {
+                        final GuildMember master = guild.getMember(characterId);
+                        if (master == null || master.getGuildRank() != GuildRank.MASTER || master.getAllianceRank() != GuildRank.MASTER) {
+                            remoteServerNode.write(CentralPacket.userPacketReceive(characterId, GuildPacket.serverMsg("You are not the master of the alliance.")));
+                            return;
+                        }
+                        
+                        int oldMasterId = characterId;
+                        int newMasterId = allianceRequest.getTargetId();
+                        final OutPacket gradeNamesPacket = AlliancePacket.changeMasterDone(alliance.getAllianceId(), oldMasterId, newMasterId);
+                        
+                        forEachAllianceMember(alliance, (member, node) -> {
+                            node.write(CentralPacket.userPacketReceive(member.getCharacterId(), gradeNamesPacket));
+                        });
+                        // Save to database
+                        DatabaseManager.allianceAccessor().saveAlliance(alliance);
+                    }
+                }
+            }
+            
             case SetGradeName -> {
             	// Resolve alliance
                 final Optional<Alliance> allianceResult = centralServerNode.getAllianceById(guild.getAllianceId());
