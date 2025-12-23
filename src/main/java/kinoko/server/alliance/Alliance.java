@@ -165,7 +165,7 @@ public final class Alliance implements Encodable, Lockable<Alliance> {
     }
 
     public boolean addGuild(int guildId, Guild guild) {
-        if (canAddGuild(guildId)) {
+        if (!canAddGuild(guildId)) {
             return false;
         }
         guilds.put(guildId, guild);
