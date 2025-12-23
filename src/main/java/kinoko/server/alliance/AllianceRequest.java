@@ -65,6 +65,10 @@ public final class AllianceRequest implements Encodable {
     public String getNotice() {
         return notice;
     }
+    
+    public List<String> getGradeNames() {
+    	return gradeNames;
+    }
 
     @Override
     public void encode(OutPacket outPacket) {

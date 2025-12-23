@@ -3,7 +3,7 @@ package kinoko.server.alliance;
 public enum AllianceResultType {
     // AllianceRes
     LoadDone(12),
-    LoadallianceDone(13),
+    LoadAllianceDone(13),
     NotifyLoginOrLogout(14),
     CreateDone(15),
     Withdraw_Done(16),

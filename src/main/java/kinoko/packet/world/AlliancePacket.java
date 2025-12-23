@@ -33,7 +33,7 @@ public final class AlliancePacket {
     }
 
     public static OutPacket loadGuildDone(List<Guild> guilds) {
-        final OutPacket outPacket = AlliancePacket.of(AllianceResultType.LoadallianceDone);
+        final OutPacket outPacket = AlliancePacket.of(AllianceResultType.LoadAllianceDone);
         outPacket.encodeInt(guilds.size());
         for (Guild guild : guilds) {
             guild.encode(outPacket); // GUILDDATA::Decode
@@ -110,7 +110,7 @@ public final class AlliancePacket {
     }
 
     public static OutPacket changeGradeDone(GuildMember member) {
-        final OutPacket outPacket = AlliancePacket.of(AllianceResultType.SetGradeName_Done);
+        final OutPacket outPacket = AlliancePacket.of(AllianceResultType.ChangeGrade_Done);
         outPacket.encodeInt(member.getCharacterId());
         outPacket.encodeByte(member.getAllianceRank().getValue()); // nAllianceGrade
         return outPacket;
