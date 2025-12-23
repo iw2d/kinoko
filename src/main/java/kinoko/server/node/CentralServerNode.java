@@ -4,6 +4,8 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import kinoko.packet.CentralPacket;
+import kinoko.server.alliance.Alliance;
+import kinoko.server.alliance.AllianceStorage;
 import kinoko.server.guild.Guild;
 import kinoko.server.guild.GuildMember;
 import kinoko.server.guild.GuildRank;
@@ -21,6 +23,7 @@ import kinoko.server.party.Party;
 import kinoko.server.party.PartyStorage;
 import kinoko.server.user.RemoteUser;
 import kinoko.server.user.UserStorage;
+import kinoko.world.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,6 +41,7 @@ public final class CentralServerNode extends Node {
     private final MessengerStorage messengerStorage = new MessengerStorage();
     private final PartyStorage partyStorage = new PartyStorage();
     private final GuildStorage guildStorage = new GuildStorage();
+    private final AllianceStorage allianceStorage = new AllianceStorage();
     private final CompletableFuture<?> initializeFuture = new CompletableFuture<>();
     private final CompletableFuture<?> shutdownFuture = new CompletableFuture<>();
     private final int port;
@@ -184,12 +188,45 @@ public final class CentralServerNode extends Node {
     }
 
     public Optional<Guild> getGuildById(int guildId) {
-        if (guildId == 0) {
-            return Optional.empty();
-        }
         return guildStorage.getGuildById(guildId);
     }
+    
+    public Optional<Guild> getGuildByName(String guildName) {
+        return guildStorage.getGuildByName(guildName);
+    }
 
+    // ALLIANCE METHODS ---------------------------------------------------------------------------------------------------
+
+    public Optional<Alliance> createNewAlliance(int allianceId, String allianceName, RemoteUser remoteUser) {
+        final Alliance alliance = new Alliance(allianceId, allianceName, remoteUser.getCharacterId());
+        
+        final GuildMember member = GuildMember.from(remoteUser);
+        member.setGuildRank(GuildRank.MASTER);
+        
+        Optional<Guild> guild = guildStorage.getGuildById(remoteUser.getGuildId());
+        if (!guild.isEmpty()) {
+        	if (!alliance.addGuild(guild.get())) {
+                throw new IllegalStateException("Could not add guild to alliance");
+            }
+        	
+        	if (allianceStorage.addAlliance(alliance)) {
+                return Optional.of(alliance);
+            }
+        }
+        
+        return Optional.empty();
+    }
+
+    public boolean removeAlliance(Alliance alliance) {
+        return allianceStorage.removeAlliance(alliance);
+    }
+
+    public Optional<Alliance> getAllianceById(int allianceId) {
+        if (allianceId == 0) {
+            return Optional.empty();
+        }
+        return allianceStorage.getAllianceById(allianceId);
+    }
 
     // OVERRIDES -------------------------------------------------------------------------------------------------------
 

@@ -47,6 +47,7 @@ public final class CassandraConnector implements DatabaseConnector {
     private CharacterAccessor characterAccessor;
     private FriendAccessor friendAccessor;
     private GuildAccessor guildAccessor;
+    private AllianceAccessor allianceAccessor;
     private GiftAccessor giftAccessor;
     private MemoAccessor memoAccessor;
 
@@ -100,6 +101,11 @@ public final class CassandraConnector implements DatabaseConnector {
     @Override
     public GuildAccessor getGuildAccessor() {
         return guildAccessor;
+    }
+    
+    @Override
+    public AllianceAccessor getAllianceAccessor() {
+        return allianceAccessor;
     }
 
     @Override
