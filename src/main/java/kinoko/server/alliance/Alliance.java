@@ -15,12 +15,14 @@ import kinoko.util.Encodable;
 import kinoko.util.Lockable;
 import kinoko.world.GameConstants;
 
+import java.util.*;
+
 /**
  * Alliance instance managed by CentralServerNode.
  */
 public final class Alliance implements Encodable, Lockable<Alliance> {
-    
-    private final int allianceId;
+
+	private final int allianceId;
     private final String allianceName;
     private int allianceLordId;
     private final List<String> gradeNames;
@@ -50,7 +52,7 @@ public final class Alliance implements Encodable, Lockable<Alliance> {
     public void setMemberMax(int memberMax) {
         this.memberMax = memberMax;
     }
-
+    
     public int getAllianceId() {
         return allianceId;
     }
@@ -161,10 +163,45 @@ public final class Alliance implements Encodable, Lockable<Alliance> {
     public void setNotice(String str) {
         notice = str;
     }
-    
+
+    public boolean addGuild(int guildId, Guild guild) {
+        if (canAddGuild(guildId)) {
+            return false;
+        }
+        guilds.put(guildId, guild);
+        return true;
+    }
+
+    public boolean removeGuild(int guildId) {
+        return guilds.remove((Integer) guildId) != null;
+    }
+
+    public List<Integer> getGuilds() {
+        return Collections.unmodifiableList(guilds.keySet().stream().toList());
+    }
+
+    public void registerInvite(int inviterId, int targetId) {
+        guildInvites.put(targetId, inviterId);
+    }
+
+    public boolean unregisterInvite(int inviterId, int targetId) {
+        return guildInvites.remove(targetId) == inviterId;
+    }
+
     @Override
     public void encode(OutPacket outPacket) {
-        // TODO
+        // ALLIANCEDATA::Decode
+        outPacket.encodeInt(allianceId); // nAllianceID
+        outPacket.encodeString(allianceName); // sAllianceName
+        for (int i = 0; i < GameConstants.GUILD_GRADE_MAX; i++) {
+            outPacket.encodeString(gradeNames.get(i)); // asGradeName
+        }
+        outPacket.encodeByte(guilds.size()); // adwGuildID
+        for (int guildId : guilds.keySet()) {
+            outPacket.encodeInt(guildId);
+        }
+        outPacket.encodeInt(memberMax); // nMaxMemberNum
+        outPacket.encodeString(notice);
     }
 
     @Override
@@ -176,5 +213,4 @@ public final class Alliance implements Encodable, Lockable<Alliance> {
     public void unlock() {
         lock.unlock();
     }
-    
 }

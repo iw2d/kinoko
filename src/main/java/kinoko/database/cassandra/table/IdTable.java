@@ -41,6 +41,7 @@ public final class IdTable {
                     CHARACTER_ID,
                     PARTY_ID,
                     GUILD_ID,
+                    ALLIANCE_ID,
                     MEMO_ID
             )) {
                 session.execute(

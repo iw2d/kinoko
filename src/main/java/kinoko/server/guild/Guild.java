@@ -82,6 +82,10 @@ public final class Guild implements Encodable, Lockable<Guild> {
         return guildMembers.values().stream().toList();
     }
 
+    public Optional<GuildMember> getGuildMaster() {
+        return guildMembers.values().stream().filter((member) -> member.getGuildRank() == GuildRank.MASTER).findFirst();
+    }
+
     public List<GuildBoardEntry> getBoardEntries() {
         return boardEntries;
     }

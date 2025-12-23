@@ -188,10 +188,11 @@ public final class CentralServerNode extends Node {
     }
 
     public Optional<Guild> getGuildById(int guildId) {
-        if (guildId == 0) {
-            return Optional.empty();
-        }
         return guildStorage.getGuildById(guildId);
+    }
+    
+    public Optional<Guild> getGuildByName(String guildName) {
+        return guildStorage.getGuildByName(guildName);
     }
 
     // ALLIANCE METHODS ---------------------------------------------------------------------------------------------------

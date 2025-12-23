@@ -5,7 +5,7 @@ import kinoko.provider.wz.serialize.WzProperty;
 import kinoko.world.GameConstants;
 
 public final class PortalInfo {
-    public static final PortalInfo EMPTY = new PortalInfo(PortalType.STARTPOINT, 0, "", GameConstants.UNDEFINED_FIELD_ID, "", 0, 0, 0, 0, 0, 0, 0, false, "");
+    public static final PortalInfo EMPTY = new PortalInfo(PortalType.STARTPOINT, 0, "", GameConstants.UNDEFINED_FIELD_ID, "", 0, 0, 0, 0, 0, 0, 0, false, "", "");
     private final PortalType portalType;
     private final int portalId;
     private final String portalName;
@@ -20,8 +20,10 @@ public final class PortalInfo {
     private final int vImpact;
     private final boolean onlyOnce;
     private final String script;
+    private final String reactor;
 
-    public PortalInfo(PortalType portalType, int portalId, String portalName, int destinationFieldId, String destinationPortalName, int x, int y, int delay, int hRange, int vRange, int hImpact, int vImpact, boolean onlyOnce, String script) {
+
+    public PortalInfo(PortalType portalType, int portalId, String portalName, int destinationFieldId, String destinationPortalName, int x, int y, int delay, int hRange, int vRange, int hImpact, int vImpact, boolean onlyOnce, String script, String reactor) {
         this.portalType = portalType;
         this.portalId = portalId;
         this.portalName = portalName;
@@ -36,6 +38,7 @@ public final class PortalInfo {
         this.vImpact = vImpact;
         this.onlyOnce = onlyOnce;
         this.script = script;
+        this.reactor = reactor;
     }
 
     public PortalType getPortalType() {
@@ -98,6 +101,10 @@ public final class PortalInfo {
         return script;
     }
 
+    public String getReactor() {
+        return reactor;
+    }
+
     @Override
     public String toString() {
         return "PortalInfo{" +
@@ -115,6 +122,7 @@ public final class PortalInfo {
                 ", vImpact=" + vImpact +
                 ", onlyOnce=" + onlyOnce +
                 ", script='" + script + '\'' +
+                ", reactor='" + reactor + '\'' +
                 '}';
     }
 
@@ -133,8 +141,8 @@ public final class PortalInfo {
                 WzProvider.getInteger(portalProp.get("horizontalImpact"), 0),
                 WzProvider.getInteger(portalProp.get("verticalImpact"), 0),
                 WzProvider.getInteger(portalProp.get("onlyOnce"), 0) != 0,
-                portalProp.get("script")
+                portalProp.get("script"),
+                portalProp.get("reactorName")
         );
     }
-
 }

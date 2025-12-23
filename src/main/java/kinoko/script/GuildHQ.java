@@ -4,6 +4,8 @@ import kinoko.packet.world.GuildPacket;
 import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
+import kinoko.server.Server;
+import kinoko.server.alliance.Alliance;
 import kinoko.server.guild.GuildRank;
 import kinoko.server.guild.GuildRequest;
 import kinoko.world.GameConstants;
@@ -12,9 +14,6 @@ import kinoko.world.user.User;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
-
-import kinoko.server.Server;
-import kinoko.server.alliance.Alliance;
 
 public final class GuildHQ extends ScriptHandler {
     public static final int GUILD_HEADQUARTERS = 200000301;
@@ -160,10 +159,12 @@ public final class GuildHQ extends ScriptHandler {
                 sm.sayNext("Only the party leader can form a Guild Union.");
                 return;
             }
-            if (!sm.checkParty(2, (user) -> {return user.getGuildRank() == GuildRank.MASTER;})) {
+            if (!sm.checkParty(2, (user) -> {
+                return user.getGuildRank() == GuildRank.MASTER;
+            })) {
                 sm.sayNext("You can create a Guild Union if your party consists of two people.");
             }
-            
+
             if (!sm.askYesNo(String.format("Oh, are you interested in forming a Guild Union? The current fee for this operation is #r%,d mesos#k.", GameConstants.CREATE_UNION_COST))) {
                 sm.sayNext("You're not ready yet? Come back to me when you want to create an alliance.");
                 return;
@@ -172,16 +173,16 @@ public final class GuildHQ extends ScriptHandler {
                 sm.sayNext("You don't have enough mesos for this request.");
                 return;
             }
-            
+
             //TODO alliance submit request
         } else if (answer == 3) {
             if (sm.getUser().getGuildRank() != GuildRank.MASTER) {
                 sm.sayNext("Only the Guild Union Master can expand the number of guilds in the Union.");
             }
-            
+
             Optional<Alliance> alliance = Server.getCentralServerNode().getAllianceById(sm.getUser().getAllianceId());
-            if(!alliance.isEmpty()) {
-            	final int currentCapacity = alliance.get().getMemberMax();
+            if (!alliance.isEmpty()) {
+                final int currentCapacity = alliance.get().getMemberMax();
                 if (currentCapacity >= GameConstants.UNION_CAPACITY_MAX) {
                     sm.sayNext("Your alliance already reached the maximum capacity for guilds.");
                     return;
