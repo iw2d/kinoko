@@ -1345,11 +1345,42 @@ public final class CentralServerHandler extends SimpleChannelInboundHandler<InPa
                 }
             }
             
+            case UpdateMemberCountMax -> {
+            	// Resolve alliance
+                final Optional<Alliance> allianceResult = centralServerNode.getAllianceById(guild.getAllianceId());
+                if (allianceResult.isEmpty()) {
+                    log.error("Could not resolve alliance for updateMemberCountMax");
+                    remoteServerNode.write(CentralPacket.userPacketReceive(characterId, GuildPacket.serverMsg(null))); // The guild request has not been accepted due to unknown reason.
+                    return;
+                }
+                try (var lockedAlliance = allianceResult.get().acquire()) {
+                    final Alliance alliance = lockedAlliance.get();
+                    try (var lockedGuild = guild.acquire()) {
+                        final GuildMember master = guild.getMember(characterId);
+                        if (master == null || master.getGuildRank() != GuildRank.MASTER || master.getAllianceRank() != GuildRank.MASTER) {
+                            remoteServerNode.write(CentralPacket.userPacketReceive(characterId, GuildPacket.serverMsg("You are not the master of the alliance.")));
+                            return;
+                        }
+                        
+                        if (alliance.getMemberMax() >= GameConstants.UNION_CAPACITY_MAX) {
+                        	remoteServerNode.write(CentralPacket.userPacketReceive(characterId, GuildPacket.serverMsg("The alliance already reached maximum capacity.")));
+                        	return;
+                        }
+                        
+                        int count = Math.min(alliance.getMemberMax() + 1, GameConstants.UNION_CAPACITY_MAX);
+                        alliance.setMemberMax(count);
+                        
+                        // Save to database
+                        DatabaseManager.allianceAccessor().saveAlliance(alliance);
+                    }
+                }
+            }
+            
             case SetGradeName -> {
             	// Resolve alliance
                 final Optional<Alliance> allianceResult = centralServerNode.getAllianceById(guild.getAllianceId());
                 if (allianceResult.isEmpty()) {
-                    log.error("Could not resolve alliance for kick");
+                    log.error("Could not resolve alliance for setGradeName");
                     remoteServerNode.write(CentralPacket.userPacketReceive(characterId, GuildPacket.serverMsg(null))); // The guild request has not been accepted due to unknown reason.
                     return;
                 }
