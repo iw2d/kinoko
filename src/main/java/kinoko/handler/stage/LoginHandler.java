@@ -443,6 +443,7 @@ public final class LoginHandler {
                 } else {
                     if (inputPinCode.equals(pinCodeOptional.get())) {
                         c.setPinCodeAttemptCount(0);
+                        doAddClient(c);
                         c.write(LoginPacket.checkPinCodeResult(CheckPinCodeResultType.Done));
                     } else {
                         final int pinCodeAttemptCount = c.getPinCodeAttemptCount();
