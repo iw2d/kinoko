@@ -82,7 +82,7 @@ public final class LoginHandler {
             c.setAccount(account);
             c.setMachineId(machineId);
             if (!ServerConfig.ENABLE_PIN_CODE) {
-                doAddClient(c);
+                addClientToServerNode(c);
             }
             c.write(LoginPacket.checkPasswordResultSuccess(account, c.getClientKey()));
         });
@@ -443,7 +443,7 @@ public final class LoginHandler {
                 } else {
                     if (inputPinCode.equals(pinCodeOptional.get())) {
                         c.setPinCodeAttemptCount(0);
-                        doAddClient(c);
+                        addClientToServerNode(c);
                         c.write(LoginPacket.checkPinCodeResult(CheckPinCodeResultType.Done));
                     } else {
                         final int pinCodeAttemptCount = c.getPinCodeAttemptCount();
@@ -533,7 +533,7 @@ public final class LoginHandler {
         });
     }
 
-    public static void doAddClient(Client c) {
+    public static void addClientToServerNode(Client c) {
         c.getServerNode().addClient(c);
     }
 }
