@@ -12,9 +12,19 @@ public final class Client extends NettyClient {
     private User user;
     private byte[] machineId;
     private byte[] clientKey;
+    private int pinCodeAttemptCount;
 
     public Client(ServerNode serverNode, SocketChannel socketChannel) {
         super(serverNode, socketChannel);
+        this.pinCodeAttemptCount = 0;
+    }
+
+    public int getPinCodeAttemptCount() {
+        return pinCodeAttemptCount;
+    }
+
+    public void setPinCodeAttemptCount(int pinCodeAttemptCount) {
+        this.pinCodeAttemptCount = pinCodeAttemptCount;
     }
 
     public Account getAccount() {

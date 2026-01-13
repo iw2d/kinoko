@@ -2,8 +2,7 @@ package kinoko.handler.stage;
 
 import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
-import kinoko.packet.stage.LoginPacket;
-import kinoko.packet.stage.LoginResultType;
+import kinoko.packet.stage.*;
 import kinoko.provider.EtcProvider;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.SkillProvider;
@@ -82,7 +81,9 @@ public final class LoginHandler {
 
             c.setAccount(account);
             c.setMachineId(machineId);
-            c.getServerNode().addClient(c);
+            if (!ServerConfig.ENABLE_PIN_CODE) {
+                doAddClient(c);
+            }
             c.write(LoginPacket.checkPasswordResultSuccess(account, c.getClientKey()));
         });
     }
@@ -415,6 +416,84 @@ public final class LoginHandler {
         handleMigration(c, account, characterId);
     }
 
+    @Handler(InHeader.CheckPinCode)
+    public static void handleCheckPinCode(Client c, InPacket inPacket) {
+        final byte pinCodeModalOpt = inPacket.decodeByte();
+        if (pinCodeModalOpt == PinCodeModalOpt.CANCEL.getValue()) {
+            c.write(LoginPacket.checkPinCodeResult(CheckPinCodeResultType.Cancel));
+            return;
+        }
+
+        final byte pinCodeAttemptMaxCount = 5;
+
+        final boolean pinCodeShouldRegisterOrEnterInLoginOpt = inPacket.decodeBoolean();
+
+        final String inputPinCode = inPacket.decodeString();
+        if (pinCodeModalOpt == PinCodeModalOpt.LOGIN.getValue()) {
+            final Optional<String> pinCodeOptional = DatabaseManager.accountAccessor().getPinCode(c.getAccount().getId());
+            if (pinCodeShouldRegisterOrEnterInLoginOpt) {
+                if (pinCodeOptional.isEmpty() || pinCodeOptional.get().isBlank()) {
+                    c.write(LoginPacket.checkPinCodeResult(CheckPinCodeResultType.CreateOrUpdate));
+                } else {
+                    c.write(LoginPacket.checkPinCodeResult(CheckPinCodeResultType.RequestToEnter));
+                }
+            } else {
+                if (pinCodeOptional.isEmpty() || pinCodeOptional.get().isBlank()) {
+                    c.write(LoginPacket.checkPinCodeResult(CheckPinCodeResultType.CreateOrUpdate));
+                } else {
+                    if (inputPinCode.equals(pinCodeOptional.get())) {
+                        c.setPinCodeAttemptCount(0);
+                        c.write(LoginPacket.checkPinCodeResult(CheckPinCodeResultType.Done));
+                    } else {
+                        final int pinCodeAttemptCount = c.getPinCodeAttemptCount();
+                        if (pinCodeAttemptCount >= pinCodeAttemptMaxCount) {
+                            c.write(LoginPacket.checkPinCodeResult(CheckPinCodeResultType.CheckTooMuchInvalid));
+                        } else {
+                            c.setPinCodeAttemptCount(pinCodeAttemptCount + 1);
+                            c.write(LoginPacket.checkPinCodeResult(CheckPinCodeResultType.CheckInvalid));
+                        }
+                    }
+                }
+            }
+        } else if (pinCodeModalOpt == PinCodeModalOpt.CHANGE_PIN.getValue()) {
+            final Optional<String> pinCodeOptional = DatabaseManager.accountAccessor().getPinCode(c.getAccount().getId());
+            if (pinCodeOptional.isPresent() && inputPinCode.equals(pinCodeOptional.get())) {
+                c.setPinCodeAttemptCount(0);
+                c.write(LoginPacket.checkPinCodeResult(CheckPinCodeResultType.CreateOrUpdate));
+            } else {
+                final int pinCodeAttemptCount = c.getPinCodeAttemptCount();
+                if (pinCodeAttemptCount >= pinCodeAttemptMaxCount) {
+                    c.write(LoginPacket.checkPinCodeResult(CheckPinCodeResultType.CheckTooMuchInvalid));
+                } else {
+                    c.setPinCodeAttemptCount(pinCodeAttemptCount + 1);
+                    c.write(LoginPacket.checkPinCodeResult(CheckPinCodeResultType.CheckInvalid));
+                }
+            }
+        }
+    }
+
+    @Handler(InHeader.UpdatePinCode)
+    public static void handleUpdatePinCode(Client c, InPacket inPacket) {
+//        void __thiscall CLogin::OnUpdatePinCodeResult(CLogin *this, CInPacket *iPacket)
+//        {
+//            if ( CInPacket::Decode1(iPacket) )
+//                CLoginUtilDlg::Error(15, 0);
+//            else
+//                CPinCodeDlg::Notice(8);
+//            CUITitle::EnableLoginCtrl((CUITitle *)TSingleton<CUITitle>::ms_pInstance._m_pStr, 1);
+//        }
+        final byte pinCodeUpdateModalOpt = inPacket.decodeByte();
+        boolean hasErrorInUpdate = false;
+        if (pinCodeUpdateModalOpt == PinCodeUpdateModalOpt.CANCEL.getValue()) {
+            // If the user clicks the cancel button, then also set hasErrorInUpdate to true.
+            hasErrorInUpdate = true;
+        } else {
+            final String pinCode = inPacket.decodeString();
+            hasErrorInUpdate = !DatabaseManager.accountAccessor().savePinCode(c.getAccount().getId(), pinCode);
+        }
+        c.write(LoginPacket.updatePinCodeResult(hasErrorInUpdate));
+    }
+
     private static void loadCharacterList(Client c) {
         // Resolve character list for account, sorted by highest level
         final Account account = c.getAccount();
@@ -451,5 +530,9 @@ public final class LoginHandler {
             final TransferInfo transferInfo = transferResult.get();
             c.write(LoginPacket.selectCharacterResultSuccess(transferInfo.getChannelHost(), transferInfo.getChannelPort(), characterId));
         });
+    }
+
+    public static void doAddClient(Client c) {
+        c.getServerNode().addClient(c);
     }
 }

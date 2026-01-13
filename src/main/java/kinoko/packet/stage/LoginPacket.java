@@ -46,7 +46,7 @@ public final class LoginPacket {
         outPacket.encodeLong(0); // dtRegisterDate
         outPacket.encodeInt(account.getSlotCount()); // nNumOfCharacter
 
-        outPacket.encodeByte(true); // true ? VIEW_WORLD_SELECT : CHECK_PIN_CODE
+        outPacket.encodeByte(!ServerConfig.ENABLE_PIN_CODE); // true ? WORLD_REQUEST : CHECK_PIN_CODE
         outPacket.encodeByte(LoginOpt.getLoginOpt(account).getValue()); // bLoginOpt
         outPacket.encodeArray(clientKey);
         return outPacket;
@@ -203,6 +203,18 @@ public final class LoginPacket {
     public static OutPacket checkSecondaryPasswordResult() {
         final OutPacket outPacket = OutPacket.of(OutHeader.CheckSPWResult);
         outPacket.encodeByte(-1); // ignored
+        return outPacket;
+    }
+
+    public static OutPacket checkPinCodeResult(CheckPinCodeResultType resultType) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.CheckPinCodeResult);
+        outPacket.encodeByte(resultType.getValue());
+        return outPacket;
+    }
+
+    public static OutPacket updatePinCodeResult(boolean updateResult) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.UpdatePinCodeResult);
+        outPacket.encodeByte(updateResult ? 1 : 0);
         return outPacket;
     }
 

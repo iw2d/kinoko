@@ -195,4 +195,34 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
         );
         return updateResult.wasApplied();
     }
+
+    @Override
+    public Optional<String> getPinCode(int accountId) {
+        final ResultSet selectResult = getSession().execute(
+                selectFrom(getKeyspace(), AccountTable.getTableName()).all()
+                        .column(AccountTable.PIN_CODE)
+                        .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(accountId))
+                        .build()
+                        .setExecutionProfileName(CassandraConnector.PROFILE_ONE)
+        );
+        final Row row = selectResult.one();
+        if (row != null) {
+            final String pinCode = row.getString(AccountTable.PIN_CODE);
+            if (pinCode != null && !pinCode.isBlank()) {
+                return Optional.of(pinCode);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean savePinCode(int accountId, String pinCode) {
+        final ResultSet updateResult = getSession().execute(
+                update(getKeyspace(), AccountTable.getTableName())
+                        .setColumn(AccountTable.PIN_CODE, literal(pinCode))
+                        .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(accountId))
+                        .build()
+        );
+        return updateResult.wasApplied();
+    }
 }
