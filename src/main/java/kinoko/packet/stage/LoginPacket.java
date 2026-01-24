@@ -82,9 +82,9 @@ public final class LoginPacket {
             case ViewAllCharOpt.DETAIL_INFO: {
                 outPacket.encodeByte(ServerConfig.WORLD_ID); // nWorldID
                 outPacket.encodeByte(avatarDataList.size());
+                boolean showRankInfo = false; // Currently, I am not sure whether the server has implemented the rank functionality, so I will disable the rank for now.
                 for (AvatarData avatarData : avatarDataList) {
                     avatarData.encode(outPacket);
-                    boolean showRankInfo = false; // Currently, I am not sure whether the server has implemented the rank functionality, so I will disable the rank for now.
                     outPacket.encodeByte(showRankInfo ? 1 : 0);
                 }
                 outPacket.encodeByte(LoginOpt.CHECK_SECONDARY_PASSWORD.getValue());
