@@ -98,6 +98,9 @@ public final class LoginHandler {
 
     @Handler(InHeader.ViewAllChar)
     public static void handleViewAllChar(Client c, InPacket inPacket) {
+        // If the number exceeds 60, the client will crash.
+        final int characterListMaxSize = 60;
+
         final byte gameStartMode = inPacket.decodeByte();
         if (gameStartMode == 1) {
             final String string = inPacket.decodeString();
@@ -105,10 +108,13 @@ public final class LoginHandler {
             final int gameRoomClient = inPacket.decodeInt();
         }
         loadCharacterList(c);
-        final List<AvatarData> characterList = c.getAccount().getCharacterList();
+        List<AvatarData> characterList = c.getAccount().getCharacterList();
         if (characterList.isEmpty()) {
             c.write(LoginPacket.viewAllCharResult(characterList, ViewAllCharOpt.WAITING_TO_RECEIVE_DATA_OR_EMPTY_DATA));
         } else {
+            if (characterList.size() > characterListMaxSize) {
+                characterList = characterList.subList(0, characterListMaxSize);
+            }
             c.write(LoginPacket.viewAllCharResult(characterList, ViewAllCharOpt.SUMMARY_INFO));
             c.write(LoginPacket.viewAllCharResult(characterList, ViewAllCharOpt.DETAIL_INFO));
         }
