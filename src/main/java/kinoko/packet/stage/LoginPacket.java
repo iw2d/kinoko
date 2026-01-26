@@ -82,11 +82,15 @@ public final class LoginPacket {
             case ViewAllCharOpt.DETAIL_INFO: {
                 outPacket.encodeByte(ServerConfig.WORLD_ID); // nWorldID
                 outPacket.encodeByte(avatarDataList.size());
-                boolean showRankInfo = false; // Currently, I am not sure whether the server has implemented the rank functionality, so I will disable the rank for now.
-                for (AvatarData avatarData : avatarDataList) {
+                avatarDataList.forEach(avatarData -> {
                     avatarData.encode(outPacket);
-                    outPacket.encodeByte(showRankInfo ? 1 : 0);
-                }
+                    final Optional<CharacterRank> characterRankResult = RankManager.getCharacterRank(avatarData);
+                    final boolean showRankInfo = characterRankResult.isPresent();
+                    outPacket.encodeByte(showRankInfo);
+                    if (showRankInfo) {
+                        characterRankResult.get().encode(outPacket);
+                    }
+                });
                 outPacket.encodeByte(LoginOpt.CHECK_SECONDARY_PASSWORD.getValue());
                 break;
             }
@@ -97,7 +101,7 @@ public final class LoginPacket {
             case ViewAllCharOpt.ERROR_OCCURRED: {
                 // In the client, the default error message is: "Unknown Error: View-All-Characters."
                 boolean useCustomErrorMessage = false;
-                outPacket.encodeByte(useCustomErrorMessage ? 1 : 0);
+                outPacket.encodeByte(useCustomErrorMessage);
                 if (useCustomErrorMessage) {
                     outPacket.encodeString("Hello ~");
                 }
