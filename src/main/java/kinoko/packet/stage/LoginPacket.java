@@ -214,7 +214,7 @@ public final class LoginPacket {
 
     public static OutPacket updatePinCodeResult(boolean updateResult) {
         final OutPacket outPacket = OutPacket.of(OutHeader.UpdatePinCodeResult);
-        outPacket.encodeByte(updateResult ? 1 : 0);
+        outPacket.encodeByte(updateResult);
         return outPacket;
     }
 
