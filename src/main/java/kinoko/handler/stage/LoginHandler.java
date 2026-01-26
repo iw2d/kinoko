@@ -419,6 +419,7 @@ public final class LoginHandler {
     public static void handleCheckSpwRequestByACV(Client c, InPacket inPacket) {
         final String secondaryPassword = inPacket.decodeString(); // sSPW
         final int characterId = inPacket.decodeInt(); // dwCharacterID
+        final int charSelectedWorldId = inPacket.decodeInt();
         final String macAddress = inPacket.decodeString(); // CLogin::GetLocalMacAddress
         final String macAddressWithHddSerial = inPacket.decodeString(); // CLogin::GetLocalMacAddressWithHDDSerialNo
 
