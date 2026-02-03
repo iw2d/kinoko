@@ -1,26 +1,5 @@
-# Red Kentaurus (9500165)
+# Mob 9500165 - Mobs in Minar Forest
+# Drops Pocket Watch for quest 3718 (Andy the Time Traveler)
 
 rewards:
-  - [ 0, 492, 739, 0.600000 ]
-  - [ 1002274, 1, 1, 0.000100 ] # Dark Galaxy
-  - [ 1032022, 1, 1, 0.000100 ] # Half Earrings
-  - [ 1051068, 1, 1, 0.000100 ] # Green Pria
-  - [ 1072211, 1, 1, 0.000100 ] # Blue Rivers Boots
-  - [ 1082118, 1, 1, 0.000100 ] # Green Larceny
-  - [ 1092023, 1, 1, 0.000100 ] # Steel Aquila Shield
-  - [ 1332023, 1, 1, 0.000100 ] # Dragon's Tail
-  - [ 1382035, 1, 1, 0.000100 ] # Blue Marine
-  - [ 1402004, 1, 1, 0.000100 ] # Blue Screamer
-  - [ 1422027, 1, 1, 0.000100 ] # Golden Smith Hammer
-  - [ 1432004, 1, 1, 0.000100 ] # Serpent's Tongue
-  - [ 1452019, 1, 1, 0.000100 ] # White Nisrock
-  - [ 2000002, 1, 1, 0.010000 ] # White Potion
-  - [ 2000005, 1, 1, 0.001000 ] # Power Elixir
-  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
-  - [ 2040703, 1, 1, 0.000100 ] # Scroll for Shoes for Jump 100%
-  - [ 2040805, 1, 1, 0.000100 ] # Scroll for Gloves for ATT 10%
-  - [ 4000232, 1, 1, 0.400000 ] # Kentaurus's Flame
-  - [ 4004004, 1, 1, 0.001000 ] # Dark Crystal Ore
-  - [ 4006000, 1, 1, 0.000700 ] # The Magic Rock
-  - [ 4010001, 1, 1, 0.002000 ] # Steel Ore
-  - [ 4020000, 1, 1, 0.002000 ] # Garnet Ore
+  - [ 4032511, 1, 1, 0.4, 3718 ] # Pocket Watch - Quest 3718 (40% drop when quest active)

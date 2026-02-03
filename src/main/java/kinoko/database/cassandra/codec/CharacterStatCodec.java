@@ -6,6 +6,7 @@ import com.datastax.oss.driver.api.core.type.codec.MappingCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.reflect.GenericType;
 import kinoko.database.cassandra.type.CharacterStatUDT;
+import kinoko.world.user.stat.AdminLevel;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.ExtendSp;
 
@@ -49,6 +50,7 @@ public final class CharacterStatCodec extends MappingCodec<UdtValue, CharacterSt
         cs.setPetSn1(value.getLong(CharacterStatUDT.PET_1));
         cs.setPetSn2(value.getLong(CharacterStatUDT.PET_2));
         cs.setPetSn3(value.getLong(CharacterStatUDT.PET_3));
+        cs.setAdminLevel(AdminLevel.fromValue(value.getShort(CharacterStatUDT.ADMIN_LEVEL)));
         return cs;
     }
 
@@ -81,6 +83,7 @@ public final class CharacterStatCodec extends MappingCodec<UdtValue, CharacterSt
                 .setByte(CharacterStatUDT.PORTAL, cs.getPortal())
                 .setLong(CharacterStatUDT.PET_1, cs.getPetSn1())
                 .setLong(CharacterStatUDT.PET_2, cs.getPetSn2())
-                .setLong(CharacterStatUDT.PET_3, cs.getPetSn3());
+                .setLong(CharacterStatUDT.PET_3, cs.getPetSn3())
+                .setShort(CharacterStatUDT.ADMIN_LEVEL, cs.getAdminLevel().getValue());
     }
 }

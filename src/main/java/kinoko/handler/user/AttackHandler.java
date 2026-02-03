@@ -940,7 +940,7 @@ public final class AttackHandler {
     }
 
     private static void handleInfiltrate(User user) {
-        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.Sneak)) {
+        if (!user.getSecondaryStat().hasOption(CharacterTemporaryStat.Sneak) || user.isHidden()) {
             return;
         }
         user.resetTemporaryStat(user.getSecondaryStat().getOption(CharacterTemporaryStat.Sneak).rOption);

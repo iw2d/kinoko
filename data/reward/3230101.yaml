@@ -27,3 +27,4 @@ rewards:
   - [ 4130007, 1, 1, 0.000300 ] # Two-Handed Mace Forging Stimulator
   - [ 4130014, 1, 1, 0.000300 ] # Dagger Forging Stimulator
   - [ 4130018, 1, 1, 0.000300 ] # Armor Production Stimulator
+  - [ 4032620, 1, 1, 0.500000, 2357 ] # Secret Map (Quest 2357 - Falsified Remnant)

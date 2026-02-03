@@ -21,6 +21,7 @@ import kinoko.world.skill.SkillConstants;
 import kinoko.world.skill.SkillProcessor;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
+import kinoko.world.user.stat.AdminLevel;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 
 import java.time.Instant;
@@ -43,6 +44,9 @@ public final class UserPool extends FieldObjectPool<User> {
     public synchronized void addUser(User user) {
         // Update client with existing users in pool
         forEach((existingUser) -> {
+            if (existingUser.isHidden() && !user.getAdminLevel().isAtLeast(AdminLevel.JR_GM)){
+                return;
+            }
             user.write(UserPacket.userEnterField(existingUser));
             for (Pet pet : existingUser.getPets()) {
                 user.write(PetPacket.petActivated(existingUser, pet));
@@ -65,7 +69,13 @@ public final class UserPool extends FieldObjectPool<User> {
 
         // Add user to pool
         addObject(user);
-        broadcastPacket(UserPacket.userEnterField(user), user);
+
+        if (user.isHidden()) {
+            broadcastPacketToGMs(UserPacket.userEnterField(user), user);
+        }
+        else {
+            broadcastPacket(UserPacket.userEnterField(user), user);
+        }
 
         // Add user pets
         for (Pet pet : user.getPets()) {
@@ -322,6 +332,45 @@ public final class UserPool extends FieldObjectPool<User> {
                 return;
             }
             user.write(outPacket);
+        });
+    }
+
+    /**
+     * Broadcasts a packet to all GM/admin users in the field.
+     *
+     * @param outPacket The packet to send to GM users.
+     */
+    public void broadcastPacketToGMs(OutPacket outPacket) {
+        broadcastPacketToGMs(outPacket, null);
+    }
+
+    /**
+     * Broadcasts a packet to all GM/admin users in the field.
+     *
+     * @param outPacket The packet to send to GM users.
+     */
+    public void broadcastPacketToGMs(OutPacket outPacket, User except) {
+        forEach(user -> {
+            if (except != null && user.getCharacterId() == except.getCharacterId()) {
+                return;
+            }
+
+            if (user.getAdminLevel().isAtLeast(AdminLevel.JR_GM)) {
+                user.write(outPacket);
+            }
+        });
+    }
+
+    /**
+     * Broadcasts a packet to all non-GM users in the field.
+     *
+     * @param outPacket The packet to send to non-GM users.
+     */
+    public void broadcastPacketToNonGMs(OutPacket outPacket) {
+        forEach(user -> {
+            if (!user.getAdminLevel().isAtLeast(AdminLevel.JR_GM)) {
+                user.write(outPacket);
+            }
         });
     }
 

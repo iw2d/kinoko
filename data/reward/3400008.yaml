@@ -1,0 +1,20 @@
+# Transformed Doll Claw Game (3400008) [2]
+
+rewards:
+  - [ 0, 96, 125, 0.600000 ]
+  - [ 4000544, 1, 1, 0.400000] # Orange Mushroom Doll
+  - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 1412004, 1, 1, 0.000100 ] # Niam
+  - [ 1050000, 1, 1, 0.000100 ] # White Crusader Chainmail
+  - [ 1060075, 1, 1, 0.000100 ] # Brown Jangoon Pants
+  - [ 1041068, 1, 1, 0.000100 ] # Dark Legolia
+  - [ 1040074, 1, 1, 0.000100 ] # Green Legolier
+  - [ 1040079, 1, 1, 0.000100 ] # Brown Piette
+  - [ 1332020, 1, 1, 0.000100 ] # Korean Fan
+  - [ 1072171, 1, 1, 0.000100 ] #  Black Snowshoes
+  - [ 1072110, 1, 1, 0.000100 ] # Black Blue-Lines Shoes

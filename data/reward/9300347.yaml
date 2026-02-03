@@ -1,0 +1,5 @@
+# Giant Nependeath (9300347) - Quest Monster for Aran
+
+rewards:
+  - [ 0, 12, 19, 0.600000 ]
+  - [ 4032324, 1, 1, 1.000000, 21737 ] # Giant Nependeath Food (Quest 21737 - Aran only)

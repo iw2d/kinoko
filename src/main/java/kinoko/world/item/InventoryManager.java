@@ -20,6 +20,17 @@ public final class InventoryManager {
     private int money;
     private Instant extSlotExpire;
 
+    public InventoryManager() {
+        this.equipped = new Inventory(24, InventoryType.EQUIPPED);
+        this.equipInventory = new Inventory(96, InventoryType.EQUIP);
+        this.consumeInventory = new Inventory(96, InventoryType.CONSUME);
+        this.installInventory = new Inventory(96, InventoryType.INSTALL);
+        this.etcInventory = new Inventory(96, InventoryType.ETC);
+        this.cashInventory = new Inventory(96, InventoryType.CASH);
+        this.money = 0;
+        this.extSlotExpire = null;
+    }
+
     public Inventory getEquipped() {
         return equipped;
     }
@@ -114,12 +125,12 @@ public final class InventoryManager {
 
     // HELPER METHODS -------------------------------------------------------------------------------------------------
 
-    public boolean canAddMoney(int money) {
+    public synchronized boolean canAddMoney(int money) {
         final long newMoney = ((long) getMoney()) + money;
         return newMoney <= Integer.MAX_VALUE && newMoney >= 0;
     }
 
-    public boolean addMoney(int money) {
+    public synchronized boolean addMoney(int money) {
         final long newMoney = ((long) getMoney()) + money;
         if (newMoney > Integer.MAX_VALUE || newMoney < 0) {
             return false;

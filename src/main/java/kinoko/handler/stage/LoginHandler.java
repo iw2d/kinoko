@@ -28,6 +28,7 @@ import kinoko.world.user.Account;
 import kinoko.world.user.AvatarData;
 import kinoko.world.user.CharacterData;
 import kinoko.world.user.data.*;
+import kinoko.world.user.stat.AdminLevel;
 import kinoko.world.user.stat.CharacterStat;
 import kinoko.world.user.stat.ExtendSp;
 import kinoko.world.user.stat.StatConstants;
@@ -56,14 +57,23 @@ public final class LoginHandler {
         final byte[] partnerCode = inPacket.decodeArray(4);
 
         // Resolve account
-        final Optional<Account> accountResult = DatabaseManager.accountAccessor().getAccountByUsername(username);
+        Optional<Account> accountResult = DatabaseManager.accountAccessor().getAccountByUsername(username);
         if (accountResult.isEmpty()) {
             if (ServerConfig.AUTO_CREATE_ACCOUNT) {
                 DatabaseManager.accountAccessor().newAccount(username, password);
+                // allow an instant login
+                accountResult = DatabaseManager.accountAccessor().getAccountByUsername(username);
             }
+            else {
+                c.write(LoginPacket.checkPasswordResultFail(LoginResultType.NotRegistered));
+                return;
+            }
+        }
+        if (accountResult.isEmpty()){  // final check for ID being registered.
             c.write(LoginPacket.checkPasswordResultFail(LoginResultType.NotRegistered));
             return;
         }
+
         final Account account = accountResult.get();
 
         // Check if logged in
@@ -75,10 +85,16 @@ public final class LoginHandler {
             }
 
             // Check password
-            if (!DatabaseManager.accountAccessor().checkPassword(account, password, false)) {
+            if (!ServerConfig.TESPIA && !DatabaseManager.accountAccessor().checkPassword(account, password, false)) {
                 c.write(LoginPacket.checkPasswordResultFail(LoginResultType.IncorrectPassword));
                 return;
             }
+
+            if (account.getBanInfo().isBanned()){
+                c.write(LoginPacket.checkPasswordResultBlocked(0, account.getBanInfo().getTempBanUntil()));
+                return;
+            }
+
 
             c.setAccount(account);
             c.setMachineId(machineId);
@@ -212,6 +228,9 @@ public final class LoginHandler {
             c.write(LoginPacket.createNewCharacterResultFail(LoginResultType.Timeout));
             return;
         }
+
+
+
         final CharacterData characterData = new CharacterData(c.getAccount().getId());
         characterData.setItemSnCounter(new AtomicInteger(1));
         characterData.setCreationTime(Instant.now());
@@ -221,7 +240,11 @@ public final class LoginHandler {
         final int hp = StatConstants.getMinHp(level, job.getJobId());
         final int mp = StatConstants.getMinMp(level, job.getJobId());
         final CharacterStat cs = new CharacterStat();
-        cs.setId(characterIdResult.get());
+        if (characterIdResult.get() != -1) {
+            // let non-relational databases handle IDs here.
+            cs.setId(characterIdResult.get());
+        }
+
         cs.setName(name);
         cs.setGender(gender);
         cs.setSkin((byte) selectedAL[3]);
@@ -244,16 +267,19 @@ public final class LoginHandler {
         cs.setPop((short) 0);
         cs.setPosMap(GameConstants.getStartingMap(job, selectedSubJob));
         cs.setPortal((byte) 0);
+        cs.setAdminLevel(ServerConfig.TESPIA ? AdminLevel.ADMIN : AdminLevel.PLAYER);
+
+
         characterData.setCharacterStat(cs);
 
         // Initialize inventory and add starting equips
         final InventoryManager im = new InventoryManager();
-        im.setEquipped(new Inventory(Short.MAX_VALUE));
-        im.setEquipInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
-        im.setConsumeInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
-        im.setInstallInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
-        im.setEtcInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS));
-        im.setCashInventory(new Inventory(ServerConfig.INVENTORY_CASH_SLOTS));
+        im.setEquipped(new Inventory(Short.MAX_VALUE, InventoryType.EQUIPPED));
+        im.setEquipInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS, InventoryType.EQUIP));
+        im.setConsumeInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS, InventoryType.CONSUME));
+        im.setInstallInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS, InventoryType.INSTALL));
+        im.setEtcInventory(new Inventory(ServerConfig.INVENTORY_BASE_SLOTS, InventoryType.ETC));
+        im.setCashInventory(new Inventory(ServerConfig.INVENTORY_CASH_SLOTS, InventoryType.CASH));
         im.setMoney(0);
         im.setExtSlotExpire(Instant.now());
         characterData.setInventoryManager(im);

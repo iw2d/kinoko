@@ -1,0 +1,13 @@
+# Slimy (9420510)
+
+rewards:
+  - [ 0, 329, 476, 0.600000 ]
+  - [ 1032011, 1, 1, 0.000100 ] # Blue Moon
+  - [ 1050055, 1, 1, 0.000100 ] # White Anakamoon
+  - [ 1050056, 1, 1, 0.000100 ] # Dark Anakamoon
+  - [ 1061053, 1, 1, 0.000100 ] # Dark Legolia
+  - [ 1061089, 1, 1, 0.000100 ] # Dark Shadow Pants
+  - [ 1040109, 1, 1, 0.000100 ] # Red Pirate Top
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2070005, 1, 1, 0.000400 ] # Steely Throwing-Knives
+  - [ 4000379, 1, 1, 0.400000 ] # Green Essence

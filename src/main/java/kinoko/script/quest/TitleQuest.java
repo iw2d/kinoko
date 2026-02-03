@@ -252,4 +252,619 @@ public final class TitleQuest extends ScriptHandler {
         // Special Training Master (29945 - start)
         sm.forceCompleteQuest(29945);
     }
+
+    // ADDITIONAL TITLE QUESTS (29000-29999) ------------------------------------------------------------------------------------------------------------
+
+    @Script("q29002e")
+    public static void q29002e(ScriptManager sm) {
+        // Quest 29002 - Title Challenge - Celebrity! (END)
+        // NPC: 9000040
+        sm.sayNext("You have completed the quest!");
+        
+        if (sm.askYesNo("Would you like to complete this quest and receive your reward?")) {
+            sm.forceCompleteQuest(29002);
+            sm.sayOk("Congratulations on completing the quest!");
+        } else {
+            sm.sayOk("Come back when you're ready to complete the quest.");
+        }
+    }
+
+
+    @Script("q29002s")
+    public static void q29002s(ScriptManager sm) {
+        // Quest 29002 - Title Challenge - Celebrity! (START)
+        // NPC: 9000040
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29002);
+            sm.addItem(1142003, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29021e")
+    public static void q29021e(ScriptManager sm) {
+        // Quest 29021 - Title - Carnival Winner (END)
+        // NPC: 2042000
+        sm.sayNext("You have completed the quest!");
+        
+        if (sm.askYesNo("Would you like to complete this quest and receive your reward?")) {
+            sm.forceCompleteQuest(29021);
+            sm.addExp(10000); // EXP reward
+            sm.addItem(1142187, 1); // Reward item
+            sm.sayOk("Congratulations on completing the quest!");
+        } else {
+            sm.sayOk("Come back when you're ready to complete the quest.");
+        }
+    }
+
+
+    @Script("q29400e")
+    public static void q29400e(ScriptManager sm) {
+        // Quest 29400 - Title Challenge - Veteran Hunter (END)
+        // NPC: 9000040
+        sm.sayNext("You have completed the quest!");
+        
+        if (sm.askYesNo("Would you like to complete this quest and receive your reward?")) {
+            sm.forceCompleteQuest(29400);
+            sm.sayOk("Congratulations on completing the quest!");
+        } else {
+            sm.sayOk("Come back when you're ready to complete the quest.");
+        }
+    }
+
+
+    @Script("q29400s")
+    public static void q29400s(ScriptManager sm) {
+        // Quest 29400 - Title Challenge - Veteran Hunter (START)
+        // NPC: 9000040
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29400);
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29500e")
+    public static void q29500e(ScriptManager sm) {
+        // Quest 29500 - Title Challenge - Maple Idol Star (END)
+        // NPC: 9000040
+        sm.sayNext("You have completed the quest!");
+        
+        if (sm.askYesNo("Would you like to complete this quest and receive your reward?")) {
+            sm.forceCompleteQuest(29500);
+            sm.sayOk("Congratulations on completing the quest!");
+        } else {
+            sm.sayOk("Come back when you're ready to complete the quest.");
+        }
+    }
+
+
+    @Script("q29500s")
+    public static void q29500s(ScriptManager sm) {
+        // Quest 29500 - Title Challenge - Maple Idol Star (START)
+        // NPC: 9000040
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29500);
+            sm.addItem(1142003, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29501e")
+    public static void q29501e(ScriptManager sm) {
+        // Quest 29501 - Title Challenge - Horned Tail Slayer (END)
+        // NPC: 9000040
+        sm.sayNext("You have completed the quest!");
+        
+        if (sm.askYesNo("Would you like to complete this quest and receive your reward?")) {
+            sm.forceCompleteQuest(29501);
+            sm.sayOk("Congratulations on completing the quest!");
+        } else {
+            sm.sayOk("Come back when you're ready to complete the quest.");
+        }
+    }
+
+
+    @Script("q29501s")
+    public static void q29501s(ScriptManager sm) {
+        // Quest 29501 - Title Challenge - Horned Tail Slayer (START)
+        // NPC: 9000040
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29501);
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29502e")
+    public static void q29502e(ScriptManager sm) {
+        // Quest 29502 - Title Challenge - Pink Bean Slayer (END)
+        // NPC: 9000040
+        sm.sayNext("You have completed the quest!");
+        
+        if (sm.askYesNo("Would you like to complete this quest and receive your reward?")) {
+            sm.forceCompleteQuest(29502);
+            sm.sayOk("Congratulations on completing the quest!");
+        } else {
+            sm.sayOk("Come back when you're ready to complete the quest.");
+        }
+    }
+
+
+    @Script("q29502s")
+    public static void q29502s(ScriptManager sm) {
+        // Quest 29502 - Title Challenge - Pink Bean Slayer (START)
+        // NPC: 9000040
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29502);
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29503e")
+    public static void q29503e(ScriptManager sm) {
+        // Quest 29503 - Title Challenge - Donation King (END)
+        // NPC: 9000040
+        sm.sayNext("You have completed the quest!");
+        
+        if (sm.askYesNo("Would you like to complete this quest and receive your reward?")) {
+            sm.forceCompleteQuest(29503);
+            sm.sayOk("Congratulations on completing the quest!");
+        } else {
+            sm.sayOk("Come back when you're ready to complete the quest.");
+        }
+    }
+
+
+    @Script("q29503s")
+    public static void q29503s(ScriptManager sm) {
+        // Quest 29503 - Title Challenge - Donation King (START)
+        // NPC: 9000040
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29503);
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29505e")
+    public static void q29505e(ScriptManager sm) {
+        // Quest 29505 - The Carnivalian of Absolute Victory (END)
+        // NPC: 2042005
+        sm.sayNext("You have completed the quest!");
+        
+        if (sm.askYesNo("Would you like to complete this quest and receive your reward?")) {
+            sm.forceCompleteQuest(29505);
+            sm.sayOk("Congratulations on completing the quest!");
+        } else {
+            sm.sayOk("Come back when you're ready to complete the quest.");
+        }
+    }
+
+
+    @Script("q29505s")
+    public static void q29505s(ScriptManager sm) {
+        // Quest 29505 - The Carnivalian of Absolute Victory (START)
+        // NPC: 2042005
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29505);
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29506e")
+    public static void q29506e(ScriptManager sm) {
+        // Quest 29506 - The Gifted Carnivalian (END)
+        // NPC: 2042005
+        sm.sayNext("You have completed the quest!");
+        
+        if (sm.askYesNo("Would you like to complete this quest and receive your reward?")) {
+            sm.forceCompleteQuest(29506);
+            sm.sayOk("Congratulations on completing the quest!");
+        } else {
+            sm.sayOk("Come back when you're ready to complete the quest.");
+        }
+    }
+
+
+    @Script("q29506s")
+    public static void q29506s(ScriptManager sm) {
+        // Quest 29506 - The Gifted Carnivalian (START)
+        // NPC: 2042005
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29506);
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29508e")
+    public static void q29508e(ScriptManager sm) {
+        // Quest 29508 - Outstanding Citizen (END)
+        // NPC: 9000040
+        sm.sayNext("You have completed the quest!");
+        
+        if (sm.askYesNo("Would you like to complete this quest and receive your reward?")) {
+            sm.forceCompleteQuest(29508);
+            sm.sayOk("Congratulations on completing the quest!");
+        } else {
+            sm.sayOk("Come back when you're ready to complete the quest.");
+        }
+    }
+
+
+    @Script("q29510s")
+    public static void q29510s(ScriptManager sm) {
+        // Quest 29510 - Endless Journey Medal (START)
+        // NPC: 9010010
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29510);
+            sm.addItem(1142099, 1); // Quest item
+            sm.addItem(1142100, 1); // Quest item
+            sm.addItem(1142101, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29900e")
+    public static void q29900e(ScriptManager sm) {
+        // Quest 29900 - Beginner Adventurer (END)
+        // NPC: 9000040
+        sm.sayNext("You have completed the quest!");
+        
+        if (sm.askYesNo("Would you like to complete this quest and receive your reward?")) {
+            sm.forceCompleteQuest(29900);
+            sm.sayOk("Congratulations on completing the quest!");
+        } else {
+            sm.sayOk("Come back when you're ready to complete the quest.");
+        }
+    }
+
+
+    @Script("q29901e")
+    public static void q29901e(ScriptManager sm) {
+        // Quest 29901 - Junior Adventurer (END)
+        // NPC: 9000040
+        sm.sayNext("You have completed the quest!");
+        
+        if (sm.askYesNo("Would you like to complete this quest and receive your reward?")) {
+            sm.forceCompleteQuest(29901);
+            sm.sayOk("Congratulations on completing the quest!");
+        } else {
+            sm.sayOk("Come back when you're ready to complete the quest.");
+        }
+    }
+
+
+    @Script("q29902e")
+    public static void q29902e(ScriptManager sm) {
+        // Quest 29902 - Veteran Adventurer (END)
+        // NPC: 9000040
+        sm.sayNext("You have completed the quest!");
+        
+        if (sm.askYesNo("Would you like to complete this quest and receive your reward?")) {
+            sm.forceCompleteQuest(29902);
+            sm.sayOk("Congratulations on completing the quest!");
+        } else {
+            sm.sayOk("Come back when you're ready to complete the quest.");
+        }
+    }
+
+
+    @Script("q29903e")
+    public static void q29903e(ScriptManager sm) {
+        // Quest 29903 - Master Adventurer (END)
+        // NPC: 9000040
+        sm.sayNext("You have completed the quest!");
+        
+        if (sm.askYesNo("Would you like to complete this quest and receive your reward?")) {
+            sm.forceCompleteQuest(29903);
+            sm.sayOk("Congratulations on completing the quest!");
+        } else {
+            sm.sayOk("Come back when you're ready to complete the quest.");
+        }
+    }
+
+
+    @Script("q29904s")
+    public static void q29904s(ScriptManager sm) {
+        // Quest 29904 - Noblesse (START)
+        // NPC: 1101000
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29904);
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29910s")
+    public static void q29910s(ScriptManager sm) {
+        // Quest 29910 - Gallant Warrior (START)
+        // NPC: 9000066
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29910);
+            sm.addItem(1142009, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29911s")
+    public static void q29911s(ScriptManager sm) {
+        // Quest 29911 - Wiseman (START)
+        // NPC: 9000066
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29911);
+            sm.addItem(1142010, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29912s")
+    public static void q29912s(ScriptManager sm) {
+        // Quest 29912 - Lord Sniper (START)
+        // NPC: 9000066
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29912);
+            sm.addItem(1142011, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29913s")
+    public static void q29913s(ScriptManager sm) {
+        // Quest 29913 - Legendary Thief (START)
+        // NPC: 9000066
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29913);
+            sm.addItem(1142012, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29914s")
+    public static void q29914s(ScriptManager sm) {
+        // Quest 29914 - King Pirate (START)
+        // NPC: 9000066
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29914);
+            sm.addItem(1142013, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29915s")
+    public static void q29915s(ScriptManager sm) {
+        // Quest 29915 - Mu Lung Dojo Vanquisher (START)
+        // NPC: 2091005
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29915);
+            sm.addItem(1142064, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29916s")
+    public static void q29916s(ScriptManager sm) {
+        // Quest 29916 - Henesys Donor Medal (START)
+        // NPC: 9000066
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29916);
+            sm.addItem(1142014, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29917s")
+    public static void q29917s(ScriptManager sm) {
+        // Quest 29917 - Ellinia Donor Medal (START)
+        // NPC: 9000066
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29917);
+            sm.addItem(1142015, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29918s")
+    public static void q29918s(ScriptManager sm) {
+        // Quest 29918 - Perion Donor Medal (START)
+        // NPC: 9000066
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29918);
+            sm.addItem(1142016, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29919s")
+    public static void q29919s(ScriptManager sm) {
+        // Quest 29919 - Kerning City Donor Medal (START)
+        // NPC: 9000066
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29919);
+            sm.addItem(1142017, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29920s")
+    public static void q29920s(ScriptManager sm) {
+        // Quest 29920 - Sleepywood Donor Medal (START)
+        // NPC: 9000066
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29920);
+            sm.addItem(1142018, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29921s")
+    public static void q29921s(ScriptManager sm) {
+        // Quest 29921 - Nautilus Donor Medal (START)
+        // NPC: 9000066
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29921);
+            sm.addItem(1142019, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29922s")
+    public static void q29922s(ScriptManager sm) {
+        // Quest 29922 - Veteran Hunter (START)
+        // NPC: 9000066
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29922);
+            sm.addItem(1142004, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29923s")
+    public static void q29923s(ScriptManager sm) {
+        // Quest 29923 - Legendary Hunter (START)
+        // NPC: 9000066
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29923);
+            sm.addItem(1142005, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29933s")
+    public static void q29933s(ScriptManager sm) {
+        // Quest 29933 - Lith Harbor Donor (START)
+        // NPC: 9000066
+        sm.sayNext("Would you like to begin this quest?");
+
+        if (sm.askAccept("Are you ready to start?")) {
+            sm.forceStartQuest(29933);
+            sm.addItem(1142030, 1); // Quest item
+            sm.sayOk("Good luck with your quest!");
+        } else {
+            sm.sayOk("Come back when you're ready.");
+        }
+    }
+
+
+    @Script("q29946s")
+    public static void q29946s(ScriptManager sm) {
+        // Quest 29946 - Title Quest (START)
+        sm.forceStartQuest(29946);
+    }
 }

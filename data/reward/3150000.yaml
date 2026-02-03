@@ -1,0 +1,16 @@
+# Safety First (3150000)
+
+# The Argents - didn't add check
+
+rewards:
+  - [ 0, 88, 104, 0.600000 ]
+  - [ 4000605, 1, 1, 0.400000 ] # Safety First Sign
+  - [ 4032764, 1, 1, 0.200000 ] # Rue Battery
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2000001, 1, 1, 0.010000 ] # Orange Potion
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 1302004, 1, 1, 0.000100 ] # Cutlus
+  - [ 1002152, 1, 1, 0.000100 ] # Blue Guiltian
+  - [ 1002136, 1, 1, 0.000100 ] # Dark Pole-Feather Hat

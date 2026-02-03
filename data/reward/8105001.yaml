@@ -1,0 +1,33 @@
+# Security System (8105001)
+
+# Very Special Sundae - didn't add check
+# Equip Enhancement Scroll - not added check
+# Potential Scroll - not added check
+# Strength Boost Potion Recipe - not added check
+
+rewards:
+  - [ 0, 488, 694, 0.600000 ]
+  - [ 4000615, 1, 1, 0.400000 ] # Outer Handle
+  - [ 4000618, 1, 1, 0.200000 ] # Broken Parts
+  - [ 4032782, 1, 1, 0.050000 ] # Security System Key Card
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2022000, 1, 1, 0.100000 ] # Pure Water
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2020014, 1, 1, 0.010000 ] # Sunrise Dew
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2001001, 1, 1, 0.010000 ] # Ice Cream Pop
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 2040801, 1, 1, 0.001000 ] # Scroll for Gloves for DEX 60%
+  - [ 2044901, 1, 1, 0.000100 ] # Scroll for Gun for Attack 60%
+  - [ 1432011, 1, 1, 0.000100 ] # Fairfrozen
+  - [ 1072179, 1, 1, 0.000100 ] # Dark Enigma Shoes
+  - [ 1372009, 1, 1, 0.000200 ] # Magicodar
+  - [ 1462010, 1, 1, 0.000100 ] # Marine Raven
+  - [ 1040116, 1, 1, 0.000100 ] # Brown Osfa Suit
+  - [ 1342007, 1, 1, 0.002500 ] # Bloodsoaked Katara
+  - [ 1082120, 1, 1, 0.000100 ] # Blood Larceny
+  - [ 1040109, 1, 1, 0.000100 ] # Red Pirate Top
+  - [ 1040118, 1, 1, 0.000100 ] # Red Osfa Suit
+  - [ 1072193, 1, 1, 0.000100 ] # Brown Osfa Boots
+  - [ 1492011, 1, 1, 0.000100 ] # The Peacemaker

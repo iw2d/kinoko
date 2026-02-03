@@ -1,0 +1,22 @@
+# Mo : Merchant (9201099) - Phantom Forest : Dead Man's Gorge
+
+recharge: true
+items:
+  - [ 2050004, 400, 1, 100 ] # All Cure Potion
+  - [ 2050000, 200, 1, 100 ] # Antidote
+  - [ 2020012, 4500, 1, 100 ] # Melting Cheese
+  - [ 2020013, 5000, 1, 100 ] # Reindeer Milk
+  - [ 2020014, 8100, 1, 100 ] # Sunrise Dew
+  - [ 2020015, 9690, 1, 100 ] # Sunset Dew
+  - [ 2050001, 200, 1, 100 ] # Eyedrop
+  - [ 2050002, 300, 1, 100 ] # Tonic
+  - [ 2050003, 500, 1, 100 ] # Holy Water
+  - [ 2022000, 1650, 1, 100 ] # Pure Water
+  - [ 2002017, 5000, 1, 100 ] # Warrior Elixir
+  - [ 2060004, 40000, 2000, 2000 ] # Diamond Arrow for Bow
+  - [ 2061004, 40000, 2000, 2000 ] # Diamond Arrow for Crossbow
+  - [ 2070010, 2000, 100, 100 ] # Icicle
+  - [ 2022003, 1100, 1, 100 ] # Unagi
+  - [ 2000006, 620, 1, 100 ] # Mana Elixir
+  - [ 2022002, 1000, 1, 100 ] # Cider
+  - [ 2030020, 400, 1, 100 ] # Return to New Leaf City Scroll

@@ -1,0 +1,25 @@
+# Patrol Robot S (2150003)
+
+# Command Emblem - didn't add check
+# Zebra Stripe Ticket Piece - didn't add check
+# Equip Enhancement Scroll - not added check
+# Potential Scroll - not added check
+# Twin Angels - can't find
+
+rewards:
+  - [ 0, 67, 88, 0.600000 ]
+  - [ 4000604, 1, 1, 0.400000 ] # Patrol Robot S Memory Chip
+  - [ 2000003, 1, 1, 0.010000 ] # Blue Potion
+  - [ 2044805, 1, 1, 0.000100 ] # Scroll for Knuckle for Accuracy 100%
+  - [ 2040515, 1, 1, 0.000100 ] # Scroll for Overall Armor for LUK 100%
+  - [ 2040901, 1, 1, 0.010000 ] # Scroll for Shield for DEF 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 1072012, 1, 1, 0.000100 ] # Red Whitebottom Boots
+  - [ 1312005, 1, 1, 0.000100 ] # Fireman's Axe
+  - [ 1382005, 1, 1, 0.000100 ] # Emerald Staff
+  - [ 1462000, 1, 1, 0.000200 ] # Mountain Crossbow
+  - [ 1082048, 1, 1, 0.000100 ] # Brown Marker
+  - [ 1060046, 1, 1, 0.000100 ] # Silver / Black Stealer Pants
+  - [ 1472007, 1, 1, 0.000200 ] # Meba
+  - [ 1002148, 1, 1, 0.000100 ] # Green Tiberian
+  - [ 1472008, 1, 1, 0.002000 ] # Steel Guards

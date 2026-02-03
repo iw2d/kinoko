@@ -38,6 +38,10 @@ public final class RewardProvider implements DataProvider {
         return mobRewards.getOrDefault(mobId, List.of());
     }
 
+    public static Map<Integer, List<Reward>> getAllMobRewards() {
+        return Collections.unmodifiableMap(mobRewards);
+    }
+
     private static void loadMobRewards(int mobId, Object yamlObject) throws ProviderError {
         if (!(yamlObject instanceof Map<?, ?> rewardData)) {
             throw new ProviderError("Could not resolve reward data for mob ID : %d", mobId);

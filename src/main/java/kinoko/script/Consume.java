@@ -30,4 +30,28 @@ public final class Consume extends ScriptHandler {
         sm.spawnMob(9300388, MobAppearType.REGEN, sm.getUser().getX(), sm.getUser().getY(), false);
         sm.removeItem(2430032);
     }
+
+    @Script("consume_2430071")
+    public static void consume_2430071(ScriptManager sm) {
+        // Opalescent Glass Marble (2430071)
+        // Dual Blade Quest 2363 "Time for the Awakening"
+        // Gives Mirror of Insight (4032616) when consumed
+
+        if (!sm.hasQuestStarted(2363)) {
+            sm.message("You don't have the quest to use this item.");
+            return;
+        }
+
+        if (sm.hasItem(4032616, 1)) {
+            sm.message("You already have the Mirror of Insight.");
+            return;
+        }
+
+        if (sm.canAddItem(4032616, 1) && sm.removeItem(2430071, 1)) {
+            sm.addItem(4032616, 1); // Mirror of Insight
+            sm.message("You obtained the Mirror of Insight!");
+        } else {
+            sm.message("Please check if your inventory is full.");
+        }
+    }
 }

@@ -60,7 +60,15 @@ public final class Skill {
         });
     }
 
-    public void forEachAffectedUser(Field field, Consumer<User> consumer) {
+    /**
+     * Executes a given action on all users affected by this skill in the specified field.
+     *
+     * @param field       The field containing the users.
+     * @param consumer    A lambda function or Consumer<User> defining the action to perform on each affected user.
+     * @param mustBeAlive If true, only users with HP > 0 (alive) will be affected; if false, all targeted users are
+     *                    affected regardless of HP.
+     */
+    public void forEachAffectedUser(Field field, Consumer<User> consumer, boolean mustBeAlive) {
         // Echo of Hero, GM Buffs
         if (targetIds == null) {
             return;
@@ -71,7 +79,7 @@ public final class Skill {
                 continue;
             }
             final User user = userResult.get();
-            if (user.getHp() > 0) {
+            if (!mustBeAlive || user.getHp() > 0) {
                 consumer.accept(user);
             }
         }

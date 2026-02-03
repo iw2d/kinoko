@@ -7,9 +7,11 @@ import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
 import kinoko.server.event.*;
 import kinoko.util.Util;
+import kinoko.world.job.JobConstants;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public final class ContiMove extends ScriptHandler {
     @Script("sell_ticket")
@@ -691,6 +693,43 @@ public final class ContiMove extends ScriptHandler {
                 sm.playPortalSE();
                 sm.warp(140010110, "out00"); // Snow Island : Palace of the Master
             }
+        }
+    }
+
+    @Script("ossyria_taxi")
+    public static void ossyria_taxi(ScriptManager sm) {
+        // Ossyria Taxi (2012001)
+        //   Orbis : Orbis (200000000)
+        //   El Nath : El Nath (211000000)
+        //   Ludibrium : Ludibrium (220000000)
+        //   Leafre : Leafre (240000000)
+        //   Mu Lung : Mu Lung (250000000)
+        //   Herb Town : Herb Town (251000000)
+        //   Ariant : Ariant (260000000)
+        //   Magatia : Magatia (261000000)
+        final boolean isBeginner = JobConstants.isBeginnerJob(sm.getJob());
+        final int price = isBeginner ? 100 : 1000;
+        final List<Integer> towns = Stream.of(
+                200000000, // Orbis : Orbis
+                211000000, // El Nath : El Nath
+                220000000, // Ludibrium : Ludibrium
+                240000000, // Leafre : Leafre
+                250000000, // Mu Lung : Mu Lung
+                251000000, // Herb Town : Herb Town
+                260000000, // Ariant : Ariant
+                261000000  // Magatia : Magatia
+        ).filter(mapId -> sm.getFieldId() != mapId).toList();
+        final Map<Integer, String> options = createOptions(towns, (mapId) -> String.format("#m%d# (%d Mesos)", mapId, price));
+        sm.sayNext("Hello, I'm the Ossyria continent taxi driver. I can take you to any major town in Ossyria quickly and safely. Where would you like to go?" + (isBeginner ? "\r\nWe have a special 90% discount for beginners." : ""));
+        final int answer = sm.askMenu("Please select your destination.", options);
+        if (sm.askYesNo(String.format("You want to go to #b#m%d##k? It'll cost you #b%d#k mesos.", towns.get(answer), price))) {
+            if (sm.addMoney(-price)) {
+                sm.warp(towns.get(answer));
+            } else {
+                sm.sayOk("You don't have enough mesos. Sorry, but you can't ride without paying the fare.");
+            }
+        } else {
+            sm.sayOk("There's plenty to explore here too. Come back when you need a ride!");
         }
     }
 }

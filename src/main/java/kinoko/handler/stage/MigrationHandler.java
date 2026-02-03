@@ -10,11 +10,13 @@ import kinoko.packet.field.TransferFieldType;
 import kinoko.packet.stage.CashShopPacket;
 import kinoko.packet.stage.StagePacket;
 import kinoko.packet.user.UserLocal;
+import kinoko.packet.world.FamilyPacket;
 import kinoko.packet.world.FriendPacket;
 import kinoko.packet.world.MemoPacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.MapProvider;
 import kinoko.provider.map.PortalInfo;
+import kinoko.server.Server;
 import kinoko.server.cashshop.Gift;
 import kinoko.server.field.InstanceFieldStorage;
 import kinoko.server.guild.GuildRequest;
@@ -23,6 +25,7 @@ import kinoko.server.memo.Memo;
 import kinoko.server.messenger.MessengerRequest;
 import kinoko.server.migration.MigrationInfo;
 import kinoko.server.migration.TransferInfo;
+import kinoko.server.node.CentralServerNode;
 import kinoko.server.node.ChannelServerNode;
 import kinoko.server.node.Client;
 import kinoko.server.node.ServerExecutor;
@@ -47,6 +50,7 @@ import org.apache.logging.log4j.Logger;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.ReentrantLock;
 
 public final class MigrationHandler {
     private static final Logger log = LogManager.getLogger(MigrationHandler.class);
@@ -112,6 +116,13 @@ public final class MigrationHandler {
 
             // Initialize User
             final User user = new User(c, characterData);
+
+            // Set User's Family Info and broadcast initial family packet.
+            CentralServerNode centralServerNode = Server.getCentralServerNode();
+            user.setFamilyInfo(centralServerNode.getFamilyInfo(user.getId()));  // under a lock
+            user.write(FamilyPacket.userFamilyInfo(user));  // no lock needed
+            user.write(FamilyPacket.loadFamilyEntitlements(!user.getFamilyInfo().hasFamily()));
+
             user.setMessengerId(migrationInfo.getMessengerId()); // this is required before user connect
             if (channelServerNode.isConnected(user)) {
                 log.error("Tried to connect to channel server while already connected");
@@ -320,6 +331,7 @@ public final class MigrationHandler {
         // Remove user from field
         user.getField().removeUser(user);
 
+
         // Load gifts
         final List<Gift> gifts = DatabaseManager.giftAccessor().getGiftsByCharacterId(user.getCharacterId());
 
@@ -330,6 +342,7 @@ public final class MigrationHandler {
         user.write(CashShopPacket.loadLockerDone(account));
         user.write(CashShopPacket.loadWishDone(account.getWishlist()));
         user.write(CashShopPacket.queryCashResult(account));
+        user.setInCashShop(true);
     }
 
     private static boolean isWhitelistedTransferField(int currentFieldId, int targetFieldId) {
@@ -453,7 +466,7 @@ public final class MigrationHandler {
         }
     }
 
-    private static void handleTransferChannel(User user, Account account, int targetChannelId) {
+    public static void handleTransferChannel(User user, Account account, int targetChannelId) {
         // Submit transfer request
         final MigrationInfo migrationInfo = MigrationInfo.from(user, targetChannelId);
         user.getConnectedServer().submitTransferRequest(migrationInfo, (transferResult) -> {

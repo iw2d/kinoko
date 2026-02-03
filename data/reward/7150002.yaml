@@ -1,0 +1,23 @@
+# Cart Bear (7150002)
+
+# Equip Enhancement Scroll - not added check
+# Potential Scroll - not added check
+
+rewards:
+  - [ 0, 385, 576, 0.600000 ]
+  - [ 4000611, 1, 1, 0.400000 ] # Cart Bear's Cart
+  - [ 4032770, 1, 1, 0.200000 ] # Cart Bear Meat
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2022000, 1, 1, 0.100000 ] # Pure Water
+  - [ 2001002, 1, 1, 0.100000 ] # Red Bean Sundae
+  - [ 2044012, 1, 1, 0.010000 ] # Scroll for Two-Handed Sword for Accuracy 60%
+  - [ 2330002, 1, 1, 0.000400 ] # Mighty Bullet
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 1302012, 1, 1, 0.000100 ] # Red Katana
+  - [ 1082117, 1, 1, 0.000100 ] # Dark Emperor
+  - [ 1452010, 1, 1, 0.000100 ] # Blue Hinkel
+  - [ 1452009, 1, 1, 0.000100 ] # Red Hinkel
+  - [ 1082095, 1, 1, 0.000100 ] # Bronze Rover
+  - [ 1060095, 1, 1, 0.000100 ] # Dark Studded Pants

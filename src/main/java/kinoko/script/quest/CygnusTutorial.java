@@ -342,6 +342,19 @@ public final class CygnusTutorial extends ScriptHandler {
         }
     }
 
+    @Script("q20017e")
+    public static void q20017e(ScriptManager sm) {
+        // The First Knight Training (20017 - end)
+        sm.sayNext("Wow, you've already defeated all the #o100122#s? Well done! We can go on to the next stage then.");
+        sm.sayBoth("Oh, and since there is a good chance that you've consumed a lot of your potions already, I'll give you some more just in case. Potions can truly save your life when you're in danger, so guard them well. \r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0# \r\n#v2000020# 10 #t2000020# \r\n#v2000021# 10 #t2000021# \r\n\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 430 exp");
+        if (sm.addItems(List.of(Tuple.of(2000020, 10), Tuple.of(2000021, 10)))) {
+            sm.addExp(430);
+            sm.forceCompleteQuest(20017);
+        } else {
+            sm.sayNext("Please check if your inventory is full or not.");
+        }
+    }
+
     @Script("q20020s")
     public static void q20020s(ScriptManager sm) {
         // 5 Different Paths of Cygnus Knights (20020 - start)

@@ -16,6 +16,10 @@ import kinoko.provider.skill.ElementAttribute;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.provider.skill.SkillStat;
 import kinoko.script.party.HenesysPQ;
+import kinoko.server.Server;
+import kinoko.server.ServerConfig;
+import kinoko.server.ServerConstants;
+import kinoko.server.node.CentralServerNode;
 import kinoko.server.node.ServerExecutor;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.BitFlag;
@@ -32,6 +36,7 @@ import kinoko.world.item.ItemVariationOption;
 import kinoko.world.job.explorer.Thief;
 import kinoko.world.job.resistance.WildHunter;
 import kinoko.world.quest.QuestRecord;
+import kinoko.world.user.FamilyMember;
 import kinoko.world.user.User;
 import kinoko.world.user.stat.CharacterTemporaryStat;
 
@@ -53,6 +58,7 @@ public final class Mob extends Life implements ControlledObject, Encodable {
     private int hp;
     private int mp;
     private int summonType;
+    private int mobType;
     private int itemDropCount;
     private boolean slowUsed;
     private int swallowCharacterId;
@@ -76,6 +82,7 @@ public final class Mob extends Life implements ControlledObject, Encodable {
         this.hp = template.getMaxHp();
         this.mp = template.getMaxMp();
         this.summonType = MobAppearType.REGEN.getValue();
+        this.mobType = MobType.NORMAL.getValue();
         this.nextSendMobHp = Instant.MIN;
         this.nextSkillUse = Instant.MIN;
         this.nextRecovery = Instant.now().plus(GameConstants.MOB_RECOVER_TIME, ChronoUnit.SECONDS);
@@ -200,12 +207,24 @@ public final class Mob extends Life implements ControlledObject, Encodable {
         this.summonType = summonType;
     }
 
+    public int getMobType() {
+        return mobType;
+    }
+
+    public void setMobType(int mobType) {
+        this.mobType = mobType;
+    }
+
     public int getExp() {
+        int baseExp = template.getExp();
+
         if (getMobStat().hasOption(MobTemporaryStat.Showdown)) {
             final double multiplier = (getMobStat().getOption(MobTemporaryStat.Showdown).nOption + 100) / 100.0;
-            return (int) (template.getExp() * multiplier);
+            baseExp  = (int) (baseExp  * multiplier);
         }
-        return template.getExp();
+        baseExp *= ServerConfig.EXP_RATE;
+
+        return baseExp;
     }
 
     public boolean isSlowUsed() {
@@ -515,6 +534,12 @@ public final class Mob extends Life implements ControlledObject, Encodable {
                     finalPartyBonus = (int) (finalPartyBonus * multiplier);
                 }
             }
+            // Family EXP modifier
+            final double familyMultiplier = user.getFamilyEXPModifier();
+            finalExp = (int) (finalExp * familyMultiplier);
+            finalPartyBonus = (int) (finalPartyBonus * familyMultiplier);
+
+            // give exp
             if (finalExp + finalPartyBonus > 0) {
                 user.addExp(finalExp + finalPartyBonus);
                 user.write(MessagePacket.incExp(finalExp, finalPartyBonus, user == highestDamageDone, false));
@@ -532,6 +557,8 @@ public final class Mob extends Life implements ControlledObject, Encodable {
                 user.write(MessagePacket.questRecord(questProgressResult.get()));
                 user.validateStat();
             }
+
+            giveFamilyRep(user);
         }
     }
 
@@ -578,6 +605,11 @@ public final class Mob extends Life implements ControlledObject, Encodable {
             final double multiplier = (getMobStat().getOption(MobTemporaryStat.Showdown).nOption + 100) / 100.0;
             probability = probability * multiplier;
         }
+
+        probability *= owner.getFamilyDropModifier();
+
+        probability = Math.min(probability * ServerConfig.DROP_RATE, 1.0);
+
         if (!Util.succeedDouble(probability)) {
             return Optional.empty();
         }
@@ -599,6 +631,9 @@ public final class Mob extends Life implements ControlledObject, Encodable {
                 final double multiplier = (owner.getSecondaryStat().getOption(CharacterTemporaryStat.MesoUpByItem).nOption + 100) / 100.0;
                 money = (int) (money * multiplier);
             }
+
+            money = Math.max(money * ServerConfig.MESO_RATE, 1);
+
             return Optional.of(owner.hasParty() ?
                     Drop.money(DropOwnType.PARTYOWN, this, money, owner.getPartyId()) :
                     Drop.money(DropOwnType.USEROWN, this, money, owner.getCharacterId())
@@ -672,6 +707,33 @@ public final class Mob extends Life implements ControlledObject, Encodable {
     public String toString() {
         return String.format("Mob { %d, oid : %d, hp : %d, mp : %d, controller : %s }", getTemplateId(), getId(), getHp(), getMp(), getController() != null ? getController().getCharacterName() : "null");
     }
+
+    /**
+     * Grants family reputation to the user's senior chain, but not to the user themselves.
+     *
+     * Logic:
+     *  - If the user is not in a family, no reputation is awarded.
+     *  - If the mob has extremely low HP (such as fake or scripted mobs), no reputation is awarded.
+     *  - Determines the reputation amount based on whether the mob is a boss or a normal mob.
+     *  - Reputation is applied only to the user's senior and recursively to higher ancestors.
+     *    The user who killed the mob does NOT gain any reputation from this method.
+     *
+     * @param user The user who killed the mob, whose senior chain will receive reputation.
+     */
+    private void giveFamilyRep(User user){
+        FamilyMember userMember = user.getFamilyInfo();
+        if (!userMember.hasFamily()) {
+            return;
+        }
+
+        if (getMaxHp() <= 1) {
+            return;  // don't count low hp mobs.
+        }
+
+        int repGain = isBoss() ? ServerConstants.FAMILY_REP_PER_BOSS_KILL : ServerConstants.FAMILY_REP_PER_KILL;
+        userMember.addRepToSenior(repGain, true, true, user.getCharacterName());
+    }
+
 
     @Override
     public void encode(OutPacket outPacket) {

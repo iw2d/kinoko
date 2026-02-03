@@ -1,0 +1,25 @@
+# Kiriwing (1100002) - Consumables Shop
+
+recharge: true
+items:
+  - [ 2000000, 5 ] # Red Potion
+  - [ 2000001, 48 ] # Orange Potion
+  - [ 2000002, 96 ] # White Potion
+  - [ 2000003, 20 ] # Blue Potion
+  - [ 2000006, 186 ] # Mana Elixir
+  - [ 2002000, 500 ] # Dexterity Potion
+  - [ 2002001, 400 ] # Speed Potion
+  - [ 2002002, 500 ] # Magic Potion
+  - [ 2002004, 500 ] # Warrior Potion
+  - [ 2002005, 500 ] # Sniper Potion
+  - [ 2010000, 3 ] # Apple
+  - [ 2010002, 5 ] # Egg
+  - [ 2010001, 10 ] # Meat
+  - [ 2010003, 10 ] # Orange
+  - [ 2010004, 93 ] # Lemon
+  - [ 2030000, 400 ] # Return Scroll - Nearest Town
+  - [ 2060000, 1 ] # Arrow for Bow (single)
+  - [ 2061000, 1 ] # Arrow for Crossbow (single)
+  - [ 2050000, 200 ] # Antidote
+  - [ 2050001, 200 ] # Eyedrop
+  - [ 2050002, 300 ] # Tonic

@@ -6,6 +6,9 @@ WORKDIR /kinoko
 COPY pom.xml .
 RUN mvn dependency:go-offline
 
+# not sure why this was left out originally, if it's needed to pass tests to build the JAR.
+COPY wz ./wz
+
 COPY src ./src
 RUN mvn clean package -Dmaven.test.skip=true
 

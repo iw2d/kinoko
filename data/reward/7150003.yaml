@@ -1,0 +1,19 @@
+# Racaroni (7150003)
+
+rewards:
+  - [ 0, 395, 591, 0.600000 ]
+  - [ 400612, 1, 1, 0.400000 ] # Racaroni Tail
+  - [ 4032771 , 1, 1, 0.200000 ] # Racaroni Heart
+  - [ 2022000, 1, 1, 0.100000 ] # Pure Water
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 1422012, 1, 1, 0.000100 ] # The Morningstar
+  - [ 1050083, 1, 1, 0.000100 ] # Dark Battle Lord
+  - [ 1372016, 1, 1, 0.000100 ] # Phoenix Wand
+  - [ 1050072, 1, 1, 0.000100 ] # Green Enigmatic
+  - [ 1082111, 1, 1, 0.000100 ] # Green Cordon
+  - [ 1452011, 1, 1, 0.000100 ] # Golden Hinkel
+  - [ 1061102, 1, 1, 0.000100 ] # Red Mystique Pants
+  - [ 1472028, 1, 1, 0.000100 ] # Blue Scarab
+  - [ 1040105, 1, 1, 0.000100 ] # Brown Studded Top

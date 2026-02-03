@@ -1,0 +1,7 @@
+# Crocky the Gatekeeper (8210000)
+
+rewards:
+  - [ 4000625, 1, 1, 0.4 ] # Crocky's Helmet
+  - [ 4000630, 1, 1, 0.4 ]
+  - [ 1342007, 1, 1, 0.002500 ] # Bloodsoaked Katara
+  - [ 4032838, 1, 1, 0.999999, 3177 ]

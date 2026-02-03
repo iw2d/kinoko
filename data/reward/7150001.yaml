@@ -1,0 +1,23 @@
+# Big Spider (7150001)
+
+rewards:
+  - [ 0, 350, 530, 0.600000 ]
+  - [ 4000610, 1, 1, 0.400000 ] # Big Spider Tentacle
+  - [ 2000002, 1, 1, 0.010000 ] # White Potion
+  - [ 2022003, 1, 1, 0.010000 ] # Unagi
+  - [ 2001001, 1, 1, 0.010000 ] # Ice Cream Pop
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2043401, 1, 1, 0.010000 ] # Scroll for Katara for ATT 60%
+  - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
+  - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
+  - [ 1061096, 1, 1, 0.000100 ] # Aqua Platina Pants
+  - [ 1050082, 1, 1, 0.000100 ] # Blue Battle Lord
+  - [ 1382010, 1, 1, 0.000100 ] # Dark Ritual
+  - [ 1072164, 1, 1, 0.000100 ] # Blue Elf Shoes
+  - [ 1462013, 1, 1, 0.000100 ] # Dark Raven
+  - [ 1452009, 1, 1, 0.000100 ] # Red Hinkel
+  - [ 1462010, 1, 1, 0.000100 ] # Marine Raven
+  - [ 1061099, 1, 1, 0.000100 ] # Purple Mystique Pants
+  - [ 1072174, 1, 1, 0.000100 ] # Dark Pirate Boots
+  - [ 1082095, 1, 1, 0.000100 ] # Bronze Rover
+  - [ 1492010, 1, 1, 0.000100 ] # Infinity's Wrath

@@ -1,0 +1,29 @@
+# Broken DF Android (8105004)
+
+# Very Special Sundae - didn't add check
+# Scroll for Hand Cannon for ATT 60% - didn't add check
+# Mystery Mastery Book - didn't add check
+# Advanced Defense Pill VII Recipe - didn't add check
+
+rewards:
+  - [ 0, 578, 822, 0.600000 ]
+  - [ 4000617, 1, 1, 0.400000 ] # Android Bulb
+  - [ 2000006, 1, 1, 0.010000 ] # Mana Elixir
+  - [ 2022000, 1, 1, 0.100000 ] # Pure Water
+  - [ 2020014, 1, 1, 0.010000 ] # Sunrise Dew
+  - [ 2000004, 1, 1, 0.001000 ] # Elixir
+  - [ 2044701, 1, 1, 0.000100 ] # Scroll for Claw for ATT 60%
+  - [ 2044902, 1, 1, 0.001000 ] # Scroll for Gun for ATT 10%
+  - [ 2044401, 1, 1, 0.010000 ] # Scroll for Pole Arm for ATT 60%
+  - [ 2043801, 1, 1, 0.000100 ] # Scroll for Staff for Magic Attack 60%
+  - [ 1412021, 1, 1, 0.000100 ] # Tavar
+  - [ 1402016, 1, 1, 0.000200 ] # Devil's Sunrise
+  - [ 1082140, 1, 1, 0.000200 ] # Blue Korben
+  - [ 1051104, 1, 1, 0.000200 ] # Dark Bazura
+  - [ 1072224, 1, 1, 0.000100 ] # Blue Varr Shoes
+  - [ 1072205, 1, 1, 0.000100 ] # Dark Ades Shoes
+  - [ 1462015, 1, 1, 0.000100 ] # White Neschere
+  - [ 1332052, 1, 1, 0.000100 ] # Blood Dagger
+  - [ 1332027, 1, 1, 0.000100 ] # Varkit
+  - [ 1482012, 1, 1, 0.000200 ] # King Cent
+  - [ 1082210, 1, 1, 0.000100 ] # Red Martier

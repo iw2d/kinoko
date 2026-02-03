@@ -19,6 +19,7 @@ import kinoko.provider.reactor.ReactorTemplate;
 import kinoko.provider.reward.Reward;
 import kinoko.provider.skill.SkillInfo;
 import kinoko.server.dialog.ScriptDialog;
+import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.event.EventState;
 import kinoko.server.event.EventType;
 import kinoko.server.field.Instance;
@@ -52,6 +53,7 @@ import kinoko.world.user.stat.StatConstants;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -103,7 +105,7 @@ public final class ScriptManagerImpl implements ScriptManager {
 
     @Override
     public void message(String message) {
-        user.write(MessagePacket.system(message));
+        user.systemMessage(message);
     }
 
     @Override
@@ -738,12 +740,64 @@ public final class ScriptManagerImpl implements ScriptManager {
     }
 
     @Override
-    public void spawnMob(int templateId, int summonType, int x, int y, boolean isLeft) {
+    public void killMob(int mobTemplateId) {
+        final Optional<Mob> mobResult = user.getField().getMobPool().getByTemplateId(mobTemplateId);
+        if (mobResult.isEmpty()) {
+            throw new ScriptError("Could not resolve mob template ID : %d", mobTemplateId);
+        }
+
+        Mob mob = mobResult.get();
+        user.getField().getMobPool().forEach((field_mob) -> {
+            if (field_mob == mob) {
+                message("Setting HP to 0 -- mob id " + mob.getTemplateId());
+                mob.setHp(0);
+            }
+        });
+    }
+    @Override
+    public void addCooldownTimeForParty(EventType eventType, long time) {
+        final List<User> members = field.getUserPool().getPartyMembers(user.getPartyId());
+        for (User member : members) {
+            member.addCoolDown(eventType, time);
+        }
+    }
+
+    private long getMillisecondsUntilEventReset(EventType eventType) {
+        long remainingTime = user.getEventAmountDone(eventType) == 0 ? 0 : user.getCoolDownByType(eventType).getNextResetTime() - System.currentTimeMillis();
+        return remainingTime < 0 ? 0 : remainingTime;
+    }
+
+    @Override
+    public String getTimeUntilEventReset(EventType eventType) {
+        long msTillReset = getMillisecondsUntilEventReset(eventType);
+        long days = TimeUnit.MILLISECONDS.toDays(msTillReset);
+        long hours = TimeUnit.MILLISECONDS.toHours(msTillReset) % TimeUnit.DAYS.toHours(1);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(msTillReset) % TimeUnit.HOURS.toMinutes(1);
+        return (days > 0 ? days + " day(s) " : "") + (hours > 0 ? hours + " hour(s) " : "") + (minutes > 0 ? minutes + " minute(s) " : "");
+    }
+
+    @Override
+    public boolean partyHasCoolDown(EventType eventType, int runsPerDay) {
+        final List<User> members = field.getUserPool().getPartyMembers(user.getPartyId());
+        for (User member : members) {
+            if (member.isGM()) {
+                return false;
+            }
+            if (member.getEventAmountDone(eventType) >= runsPerDay) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void spawnMob(int templateId, int summonType, int x, int y, boolean isLeft, int mobType) {
         final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(templateId);
         if (mobTemplateResult.isEmpty()) {
             throw new ScriptError("Could not resolve mob template ID : %d", templateId);
         }
-        final Optional<Foothold> footholdResult = field.getFootholdBelow(x, y - GameConstants.REACTOR_SPAWN_HEIGHT);
+        final Field targetField = user.getField();
+        final Optional<Foothold> footholdResult = targetField.getFootholdBelow(x, y - GameConstants.REACTOR_SPAWN_HEIGHT);
         final Mob mob = new Mob(
                 mobTemplateResult.get(),
                 null,
@@ -753,7 +807,28 @@ public final class ScriptManagerImpl implements ScriptManager {
         );
         mob.setLeft(isLeft);
         mob.setSummonType(summonType);
-        field.getMobPool().addMob(mob);
+        mob.setMobType(mobType);
+        targetField.getMobPool().addMob(mob);
+    }
+
+    @Override
+    public void spawnMob(int templateId, int summonType, int x, int y, boolean isLeft, boolean originalField) {
+        final Optional<MobTemplate> mobTemplateResult = MobProvider.getMobTemplate(templateId);
+        if (mobTemplateResult.isEmpty()) {
+            throw new ScriptError("Could not resolve mob template ID : %d", templateId);
+        }
+        final Field targetField = originalField ? field : user.getField();
+        final Optional<Foothold> footholdResult = targetField.getFootholdBelow(x, y - GameConstants.REACTOR_SPAWN_HEIGHT);
+        final Mob mob = new Mob(
+                mobTemplateResult.get(),
+                null,
+                x,
+                y,
+                footholdResult.map(Foothold::getSn).orElse(0)
+        );
+        mob.setLeft(isLeft);
+        mob.setSummonType(summonType);
+        targetField.getMobPool().addMob(mob);
     }
 
     @Override
@@ -789,7 +864,7 @@ public final class ScriptManagerImpl implements ScriptManager {
     public void spawnReactor(int templateId, int x, int y, boolean isFlip, int reactorTime, boolean originalField) {
         final Optional<ReactorTemplate> reactorTemplateResult = ReactorProvider.getReactorTemplate(templateId);
         if (reactorTemplateResult.isEmpty()) {
-            user.write(MessagePacket.system("Could not resolve reactor template ID : %d", templateId));
+            user.systemMessage("Could not resolve reactor template ID : %d", templateId);
             return;
         }
         final Field targetField = originalField ? field : user.getField();
@@ -1152,4 +1227,23 @@ public final class ScriptManagerImpl implements ScriptManager {
                     .reduce(0, (a, b) -> a | b);
         }
     }
+    @Override
+    public void openShopNPC(int templateId) {
+        final Optional<Npc> npcResult = field.getNpcPool().getByTemplateId(templateId);
+        if (npcResult.isEmpty()) {
+            throw new ScriptError("Could not find npc with template ID : %d", templateId);
+        }
+        final Npc npc = npcResult.get();
+        if (ShopProvider.isShop(npc.getTemplateId())) {
+            final ShopDialog shopDialog = ShopDialog.from(npc.getTemplate());
+            user.setDialog(shopDialog);
+            user.write(FieldPacket.openShopDlg(user, shopDialog));
+        }
+    }
+
+    @Override
+    public int getRandomIntBelow(int number) {
+        return new Random().nextInt(number);
+    }
+
 }

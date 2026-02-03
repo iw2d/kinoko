@@ -8,11 +8,13 @@ import kinoko.util.Tuple;
 import kinoko.world.field.Field;
 import kinoko.world.field.FieldObject;
 import kinoko.world.field.mob.MobAppearType;
+import kinoko.world.field.mob.MobType;
 import kinoko.world.item.BodyPart;
 import kinoko.world.item.InventoryType;
 import kinoko.world.job.Job;
 import kinoko.world.quest.QuestRecordType;
 import kinoko.world.user.User;
+import kinoko.server.event.EventType;
 
 import java.util.List;
 import java.util.Map;
@@ -110,6 +112,14 @@ public interface ScriptManager {
     }
 
     boolean hasItem(int itemId, int quantity);
+    default boolean hasItems(List<Tuple<Integer, Integer>> items) {
+        for (var item : items) {
+            if (!hasItem(item.getLeft(), item.getRight())) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     int getItemCount(int itemId);
 
@@ -188,11 +198,27 @@ public interface ScriptManager {
 
     FieldObject getSource();
 
-    default void spawnMob(int templateId, MobAppearType appearType, int x, int y, boolean isLeft) {
-        spawnMob(templateId, appearType.getValue(), x, y, isLeft);
+    default void spawnMob(int templateId, MobAppearType appearType, int x, int y, boolean isLeft, MobType mobType) {
+        spawnMob(templateId, appearType.getValue(), x, y, isLeft, mobType.getValue());
     }
 
-    void spawnMob(int templateId, int summonType, int x, int y, boolean isLeft);
+    default void spawnMob(int templateId, MobAppearType appearType, int x, int y, boolean isLeft) {
+        spawnMob(templateId, appearType.getValue(), x, y, isLeft, false);
+    }
+
+    default void spawnMob(int templateId, int summonType, int x, int y, boolean isLeft) {
+        spawnMob(templateId, summonType, x, y, isLeft, false);
+    }
+
+    void spawnMob(int templateId, int summonType, int x, int y, boolean isLeft, int mobType);
+
+    void spawnMob(int templateId, int summonType, int x, int y, boolean isLeft, boolean originalField);
+    void killMob(int templateId);
+    void addCooldownTimeForParty(EventType eventType, long time);
+
+    String getTimeUntilEventReset(EventType eventType);
+
+    boolean partyHasCoolDown(EventType eventType, int runsPerDay);
 
     void spawnNpc(int templateId, int x, int y, boolean isFlip, boolean originalField);
 
@@ -283,4 +309,8 @@ public interface ScriptManager {
     String askText(String text, String textDefault, int textLengthMin, int textLengthMax, ScriptMessageParam... overrides);
 
     String askBoxText(String text, String textDefault, int textBoxColumns, int textBoxLines, ScriptMessageParam... overrides);
+    void openShopNPC(int templateId);
+
+    int getRandomIntBelow(int number);
+
 }

@@ -1,10 +1,13 @@
 package kinoko.script.quest;
 
+import kinoko.packet.field.FieldEffectPacket;
+import kinoko.packet.field.FieldPacket;
 import kinoko.packet.user.QuestPacket;
 import kinoko.script.common.Script;
 import kinoko.script.common.ScriptHandler;
 import kinoko.script.common.ScriptManager;
 import kinoko.script.common.ScriptMessageParam;
+import kinoko.server.node.ServerExecutor;
 import kinoko.util.Tuple;
 import kinoko.world.field.mob.MobAppearType;
 import kinoko.world.job.Job;
@@ -119,10 +122,23 @@ public final class ResistanceQuest extends ScriptHandler {
         if (sm.askAccept("Heh, you think they can frighten this old man. Nah, I trust you. You're a strong member of the Resistance. You'll keep me safe. Now, let's go someplace more secluded, where the Black Wings will feel safe enough to show their faces.")) {
             sm.forceStartQuest(23127);
             sm.warpInstance(931000441, "out00", 931000440, 60);
-            //Should start a 55 second long time limit to keep Surl safe. Referenced current GMS for this.
-            //TODO: Handle QuestCheck: fieldset, fieldsetkeeptime.
-            sm.write(QuestPacket.startTimeKeepQuestTimer(23127, 55000)); //startQuestTimer crashes the game, startTimeKeepQuestTimer doesn't end...
+            // Start 55 second quest timer
+            sm.write(QuestPacket.startTimeKeepQuestTimer(23127, 55000));
             sm.message("Protect Surl from the Black Wings for a set amount of time!");
+
+            // Schedule timer end after 55 seconds
+            final User user = sm.getUser();
+            ServerExecutor.schedule(user, () -> {
+                // End the quest timer
+                user.write(QuestPacket.endTimeKeepQuestTimer(23127, 0));
+                // Check if Surl (mob 9300415) is still alive and player is still in map
+                if (user.getField().getFieldId() == 931000441 && !user.getField().getMobPool().isEmpty()) {
+                    // Success - Surl survived
+                    user.getField().broadcastPacket(FieldEffectPacket.screen("quest/party/clear"));
+                    user.getField().broadcastPacket(FieldEffectPacket.sound("Party1/Clear"));
+                    user.getField().blowWeather(5120024, "You successfully protected Surl!", 5);
+                }
+            }, 55, java.util.concurrent.TimeUnit.SECONDS);
             return;
         }
         sm.sayOk("I think the Black Wings are too chicken to come out with you around."); //Not GMS-like, unsure what he'd say
@@ -358,6 +374,39 @@ public final class ResistanceQuest extends ScriptHandler {
         sm.sayPrev("I will see you at the next lesson. Until then, keep up the good fight!");
     }
 
+    @Script("q23033s")
+    public static void q23033s(ScriptManager sm) {
+        // Destroying the Energy Conducting Device (23033 - start) - Battle Mage
+        if (!sm.askYesNo("The Black Wings are sapping the power from our energy source at the #bPower Plant in Verne Mine#k. They're using it to power their machines. Because of this, the people of Edelstein have to ration their energy usage. It's absurd! Will you go to the Power Plant and destroy their Energy Conducting Device?")) {
+            sm.sayOk("Come back when you're ready to help Edelstein.");
+            return;
+        }
+        sm.forceStartQuest(23033);
+        sm.sayNext("You'll need a #bBlack Wings Hat#k to get past the guard at the mine entrance. I've heard there's someone who sells them... look around and see if you can find a way to get one. The Energy Conducting Device is deep inside the Power Plant. Good luck!");
+    }
+
+    @Script("q23034s")
+    public static void q23034s(ScriptManager sm) {
+        // Destroying the Energy Conducting Device (23034 - start) - Wild Hunter
+        if (!sm.askYesNo("The Black Wings are stealing power from our energy source at the #bPower Plant in Verne Mine#k. They use it to run their wicked machines while the people of Edelstein suffer from energy shortages. Will you go to the Power Plant and destroy their Energy Conducting Device?")) {
+            sm.sayOk("Come back when you're ready to help Edelstein.");
+            return;
+        }
+        sm.forceStartQuest(23034);
+        sm.sayNext("You'll need a #bBlack Wings Hat#k to get past the guard at the mine entrance. I've heard rumors of someone who might sell them... find a way to get one. Head to the Power Plant deep in Verne Mine and destroy that device!");
+    }
+
+    @Script("q23035s")
+    public static void q23035s(ScriptManager sm) {
+        // Destroying the Energy Conducting Device (23035 - start) - Mechanic
+        if (!sm.askYesNo("The Black Wings are draining power from our energy source at the #bPower Plant in Verne Mine#k for their own purposes. Meanwhile, the people of Edelstein must ration energy. This is unacceptable! Will you go to the Power Plant and destroy their Energy Conducting Device?")) {
+            sm.sayOk("Come back when you're ready to help Edelstein.");
+            return;
+        }
+        sm.forceStartQuest(23035);
+        sm.sayNext("You'll need a #bBlack Wings Hat#k to get past the gatekeeper at the mine entrance. Find someone who can get you one - I've heard there's a Black Wing watchman who might be willing to make a deal. The Energy Conducting Device is deep in the Power Plant. Destroy it and return to me!");
+    }
+
     @Script("q23033e")
     public static void q23033e(ScriptManager sm) {
         // Destroying the Energy Conducting Device (23033 - end)
@@ -536,5 +585,156 @@ public final class ResistanceQuest extends ScriptHandler {
         sm.sayNext("I've advanced you. I've also given you some sills that I know of but haven't mastered yet. I have a hunch that you'll be able to master them. After all, you are the most skilled member of the Resistance now.");
         sm.sayBoth("With this, the end of my lessons has... neared. Though you are stronger than I am, there are a lot of things you can still learn from me. I will see you at our next lesson... Whenever that may be...");
         sm.sayPrev("Until then, I look forward to seeing your accomplishments!");
+    }
+
+    @Script("q23139e")
+    public static void q23139e(ScriptManager sm) {
+        // Obtaining Antidote Herbs (23139 - end)
+        if (!sm.hasItem(4033093, 1)) {
+            sm.sayOk("Please bring me the Feather Plants so I can make the antidote.");
+            return;
+        }
+        sm.sayNext("Do you have the Feather Plants? Let me see.");
+        sm.sayBoth("...This is only enough for half the antidote we need. But if #p1061005# says this is all he has, I don't know what more we can do...");
+        sm.sayBoth("#p1061005# says they sell Feather Plants in #m130000000#... I'll try there.", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("#m130000000#? Are you suggesting we beg the #p1101000# Knights for help? No! Absolutely not! Any self-respecting member of the Resistance would rather stay poisoned then ask them for anything!");
+        sm.sayBoth("Don't you know? In #m300000000#'s time of need, we asked the #p1101000# Knights for help, and they did nothing! We're suffering under the Black Wings because of them!");
+        sm.sayPrev("Maybe I can pad the Feather Plants out with some other herbs... Thanks for your help.");
+        sm.removeItem(4033093, 1);
+        sm.addExp(3200);
+        sm.forceCompleteQuest(23139);
+    }
+
+    @Script("q23144s")
+    public static void q23144s(ScriptManager sm) {
+        // Gelimer's Trap (23144 - start)
+        sm.sayNext("We can't just stand by and do nothing! #p2159348# is a victim here! #p2151003#, you have to let me go save her! Please!", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("I can't! This is obviously a trap, and I don't have the agents to spare to send with you.");
+        sm.sayBoth("Then I'll go alone!", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("It's too dangerous!");
+        sm.sayBoth("#p2159348# is my friend!", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("......");
+        sm.sayBoth("...I understand. But if you're captured, there won't be anyone to rescue you OR #p2159348#! Don't take any risks you can avoid.");
+        sm.sayBoth("...Should I have accepted the #p1101000# Knight's offer of help?");
+        sm.forceStartQuest(23144);
+    }
+
+    @Script("q23144e")
+    public static void q23144e(ScriptManager sm) {
+        // Gelimer's Trap (23144 - end)
+        sm.sayNext("#p2159348#!", ScriptMessageParam.NOT_CANCELLABLE, ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("#h0#...?");
+        sm.sayBoth("You're back to normal? Come on, let's get out of here!", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("Why are you...? You dummy! This is a trap! #p2154009# wanted you to bring a lot of Resistance members here so he could destroy them!");
+        sm.sayBoth("We can talk later. Let's get out of here!", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("I can't! I'm...I'm #p2154009#'s test subject! Even if I run away with you, I'll only cause more trouble for the Resistance, whether I want to...or not.");
+        sm.sayBoth("Who cares about that? You're my friend!", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("......");
+        sm.sayBoth("I wasn't sure at first, to be honest. Everyone thought you might be a Black Wing spy... But now we know that's not true! This is all #p2154009#'s fault! You shouldn't blame yourself for any of this!", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("You...you're a good friend.");
+        sm.sayBoth("#p2159348#?", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("But I really can't run away. If I do, I'll blow up...");
+        sm.sayBoth("!!", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("And if you stay, you'll blow up with me! You've got to get out of here!");
+        sm.sayBoth("What?! Is there no way to stop it from happening?", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("#p2154009# used me as bait. He planned to wait for you to show up, then blow me up, along with you and everyone you brought with you. But there is one way to escape...");
+        sm.sayBoth("How? Tell me!", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("I have a Town Return Scroll. I was saving it so I could go home, but I didn't want to cause any more trouble for you. I thought if I stayed here, I could just quietly...disappear.");
+        sm.sayBoth("But seeing you now makes me miss town! Clever #p2151003#... Brave Belle... Cool Brighton... Cute Checky and Wendelline... Tough Elex... I miss them all!");
+        sm.sayBoth("And they all miss you!", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("I love them so much...and that's why I can't go back. As long as Gellimer has control of me, I'm a danger to everyone around me.");
+        sm.sayBoth("Then we just have to free you from Gellimer!", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("You're right. They'll try. But it's too dangerous... I can't put them through anything else...");
+        sm.sayBoth("If I can just save you...I'll be happy.");
+        sm.sayBoth("...#p2159348#!", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("I'm counting on you to beat the Black Wings. Don't let #p2154009# do this to anyone else!");
+        sm.sayBoth("Stop!", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.forceCompleteQuest(23144);
+        sm.warp(931000632, "sp");
+    }
+
+    @Script("q23145s")
+    public static void q23145s(ScriptManager sm) {
+        // Regret (23145 - start)
+        sm.sayNext("Where's #p2159348#? Weren't you going to get her?");
+        sm.sayBoth("(You explain #p2154009#'s trap, and the explosion that swallowed #p2159348# up...)", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("Then #p2159348# is...");
+        sm.sayBoth("......", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.sayBoth("What a fool I've been! I should have kept a closer eye on her when she first got here... I should have realized what #p2154009# was up to...");
+        sm.sayBoth("I shouldn't have been too prideful to accept the #p1101000# Knights' help when they offered to send us Feather Plant...");
+        sm.sayBoth("I thought we could take down the Black Wings on our own, but I guess I was wrong. At the end of the day, #p2154009# still fooled us, and #p2159348#...");
+        sm.sayBoth("I'm sorry, but could you give me some time alone? I'm sure you need some time, too...");
+        sm.addExp(10000);
+        sm.forceCompleteQuest(23145);
+    }
+
+    @Script("q23148s")
+    public static void q23148s(ScriptManager sm) {
+        // Time to Conclude (23148 - start)
+        sm.forceStartQuest(23148);
+        sm.warp(931000660, "sp");
+    }
+
+    @Script("q23949s")
+    public static void q23949s(ScriptManager sm) {
+        // Crime Prevention System Inspection (23949 - start)
+        sm.sayNext("Greetings. I am Android Unit 2154003, assigned to Power Plant Security monitoring. How may I assist you?");
+        sm.sayBoth("The Crime Prevention Systems require routine inspection to ensure optimal performance. Would you perform this inspection?");
+
+        if (!sm.askAccept("Inspection procedure: Navigate to Intruder Search Warrant 3 and physically test each Crime Prevention System unit. Attack each system to verify response protocols are functioning correctly.")) {
+            sm.sayOk("Understood. Please return when you are prepared to conduct the inspection.");
+            return;
+        }
+
+        sm.forceStartQuest(23949);
+        sm.sayNext("Acknowledged. Proceed to #bIntruder Search Warrant 3#k and test #r10 Crime Prevention System#k units. Use standard attack protocols to verify system responsiveness.");
+        sm.sayBoth("Return here upon completion of the inspection for analysis.");
+    }
+
+    @Script("q23949e")
+    public static void q23949e(ScriptManager sm) {
+        // Crime Prevention System Inspection (23949 - end)
+        sm.sayNext("Inspection data received. Analyzing Crime Prevention System performance metrics...");
+        sm.sayBoth("Analysis complete. All Crime Prevention Systems are functioning within normal parameters. System response time: Optimal. Threat detection accuracy: 99.7%.");
+        sm.sayBoth("Your assistance with this inspection is appreciated. The Crime Prevention Systems will continue to protect this facility efficiently.");
+        sm.addExp(7500);
+        sm.forceCompleteQuest(23949);
+    }
+
+    @Script("q23951s")
+    public static void q23951s(ScriptManager sm) {
+        // An Attempt to Escape (23951 - start)
+        sm.sayNext("I made it in! The #t1003134# worked like a charm. Those gatekeepers didn't suspect a thing.");
+        sm.sayBoth("But there's a problem... I found where they're keeping #p2154004#, but #p2154005# is guarding her. He won't leave his post, and I can't take him on alone.");
+        sm.sayBoth("I need you to create a distraction. If we can make #p2154005# think there's an intruder somewhere else, he'll have to leave his post to investigate.");
+
+        if (!sm.askAccept("Here's the plan: defeat some #r#o6150000#s#k and collect their #b#t4000608#s#k. Then show the batons to #p2154005# and tell him you found signs of an intruder. While he's distracted, I'll get #p2154004# out of there!")) {
+            sm.sayOk("What? You're backing out now? Fine, but we're running out of time here!");
+            return;
+        }
+
+        sm.forceStartQuest(23951);
+        sm.sayNext("Perfect! Get me #b30 #t4000608#s#k from the #r#o6150000#s#k, then show them to #p2154005#. Make it convincing - tell him there's been a security breach!");
+        sm.sayBoth("I'll be waiting for my chance. Don't mess this up!");
+    }
+
+    @Script("q23951e")
+    public static void q23951e(ScriptManager sm) {
+        // An Attempt to Escape (23951 - end)
+        sm.sayNext("What?! You found #b30 #t4000608#s#k? That many Guard Robots destroyed? There must be an intruder in the facility!");
+        sm.sayBoth("Come with me! We need to investigate this immediately! The security of this facility is my responsibility!");
+        sm.sayBoth("#b(#p2154005# rushes outside to investigate the supposed security breach. You successfully distracted him!)#k", ScriptMessageParam.PLAYER_AS_SPEAKER);
+        sm.addExp(9000);
+        sm.forceCompleteQuest(23951);
+    }
+
+    @Script("enter931000441")
+    public static void enter931000441(ScriptManager sm) {
+        // Resistance Hideout : Park Corner (931000441)
+        // Spawn Surl (mob 9300415) when player enters for quest 23127
+        if (sm.hasQuestStarted(23127) && sm.getField().getMobPool().isEmpty()) {
+            sm.spawnMob(9300415, MobAppearType.NORMAL, 0, 0, false);
+            sm.message("Protect Surl from the Black Wings for a set amount of time!");
+        }
     }
 }

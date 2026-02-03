@@ -24,7 +24,7 @@ rewards:
   - [ 2060000, 10, 20, 0.008000 ] # Arrow for Bow
   - [ 2061000, 10, 20, 0.008000 ] # Arrow for Crossbow
   - [ 2070003, 1, 1, 0.000400 ] # Kumbi Throwing-Stars
-  - [ 4000103, 1, 1, 0.400000 ] # Propeller
+  - [ 4000103, 1, 1, 0.400000, 3203 ] # Propeller (Quest 3203)
   - [ 4004000, 1, 1, 0.001000 ] # Power Crystal Ore
   - [ 4010003, 1, 1, 0.002000 ] # Adamantium Ore
   - [ 4020005, 1, 1, 0.002000 ] # Sapphire Ore

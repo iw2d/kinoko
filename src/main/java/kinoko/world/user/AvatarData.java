@@ -3,10 +3,11 @@ package kinoko.world.user;
 import kinoko.server.packet.OutPacket;
 import kinoko.util.Encodable;
 import kinoko.world.item.Inventory;
+import kinoko.world.item.InventoryType;
 import kinoko.world.user.stat.CharacterStat;
 
 public final class AvatarData implements Encodable {
-    private static final Inventory EMPTY_INVENTORY = new Inventory(0);
+    private static final Inventory EMPTY_INVENTORY = new Inventory(0, InventoryType.EQUIPPED);
     private final CharacterStat characterStat;
     private final AvatarLook avatarLook;
 

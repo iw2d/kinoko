@@ -7,6 +7,7 @@ import kinoko.util.Tuple;
 import kinoko.world.quest.QuestRecordType;
 
 import java.util.List;
+import java.util.Map;
 
 public final class EvanTutorial extends ScriptHandler {
     @Script("evanAlone")
@@ -452,6 +453,18 @@ public final class EvanTutorial extends ScriptHandler {
         sm.sayNext("Hurry up and head #bleft#k to feed #b#p1013102##k. He's been barking to be fed all morning.");
     }
 
+    @Script("q22001e")
+    public static void q22001e(ScriptManager sm) {
+        // Feeding Bull Dog (22001 - end)
+        sm.setPlayerAsSpeaker(true);
+        sm.sayNext("#b(You place food in #p1013102#'s bowl.)");
+        sm.sayBoth("#b(#p1013102# is totally sweet. #p1013101# is just a coward.)");
+        sm.sayBoth("#b(Looks like #p1013102# has finished eating. Return to #p1013101# and let him know.)\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 35 exp");
+        sm.removeItem(4032447, 1);
+        sm.addExp(35);
+        sm.forceCompleteQuest(22001);
+    }
+
     @Script("q22002s")
     public static void q22002s(ScriptManager sm) {
         // Sandwich for Breakfast (22002 - start)
@@ -504,6 +517,24 @@ public final class EvanTutorial extends ScriptHandler {
         sm.sayImage(List.of("UI/tutorial/evan/5/0"));
     }
 
+    @Script("q22003e")
+    public static void q22003e(ScriptManager sm) {
+        // Delivering the Lunch Box (22003 - end)
+        sm.sayNext("Oh, Evan! What are you doing here? Are you here to help your man? Hey, that's a Lunch Box you've got there!");
+        sm.sayBoth("Ah, I knew I was missing something! I always am, it seems. Today it was my #t4032448#, yesterday it was my hat, and the day before it was my shoes. I'm getting so forgetful!");
+        sm.sayBoth("In any case, since you're here, will you do me a favor?\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#i2022621# 10 #t2022621#\r\n#i2022622# 10 #t2022622#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 175 exp");
+        sm.removeItem(4032448, 1);
+        if (!sm.addItems(List.of(
+                Tuple.of(2022621, 10), // Tasty Milk
+                Tuple.of(2022622, 10) // Squeezed Juice
+        ))) {
+            sm.sayNext("Please check if your inventory is full or not.");
+            return;
+        }
+        sm.addExp(175);
+        sm.forceCompleteQuest(22003);
+    }
+
     @Script("q22004s")
     public static void q22004s(ScriptManager sm) {
         // Fixing the Fence (22004 - start)
@@ -534,6 +565,88 @@ public final class EvanTutorial extends ScriptHandler {
         sm.forceCompleteQuest(22004);
         sm.sayNext("Here. I made this new chair from the wooden boards I had left over after fixing the fence. It may not seem like much, but it's sturdy. I'm sure it'll come in handy.");
         sm.sayImage(List.of("UI/tutorial/evan/7/0"));
+    }
+
+    @Script("q22005s")
+    public static void q22005s(ScriptManager sm) {
+        // Rescuing the Piglet (22005 - start)
+        sm.sayNext("Oh no! A #b#p1013200##k ran away while the fence was broken. He's too young to find his way home, so we'll have to go find him. Do you think you can help me?");
+        if (!sm.askAccept("I think the #p1013200# ran towards the #b#m900020100##k. Please head there to look for the #p1013200#.")) {
+            sm.sayNext("Hmm. #p1013101# would have volunteered to do it even before I asked.");
+            return;
+        }
+        sm.forceStartQuest(22005);
+        sm.sayNext("The Lush Forest is towards the #bupper left#k. The recent flood washed away much of the path, so be careful.");
+    }
+
+    @Script("q22005e")
+    public static void q22005e(ScriptManager sm) {
+        // Rescuing the Piglet (22005 - end)
+        final int answer = sm.askMenu("That took a while. The #p1013200# must ran pretty far.", Map.of(
+                0, "Er, yeah. Sure... Dad, is there a strange foggy forest around here?"
+        ));
+        sm.sayNext("A foggy forest? I don't think so. It's always clear around Henesys.");
+        sm.setPlayerAsSpeaker(true);
+        sm.sayBoth("#b(Strange. Did you have another dream? What's going on... )");
+        sm.setPlayerAsSpeaker(false);
+        sm.sayBoth("Anyway, thanks for your help. Er, Evan? What has you so lost in thought?");
+        sm.setPlayerAsSpeaker(true);
+        sm.sayBoth("#b(Wait, what's this? This is the egg from earlier! Then...it wasn't a dream?!)");
+        sm.setPlayerAsSpeaker(false);
+        sm.sayBoth("Evan?");
+        sm.setPlayerAsSpeaker(true);
+        sm.sayBoth("#bDad! Quick! How do I get an egg to hatch?!");
+        sm.setPlayerAsSpeaker(false);
+        sm.sayBoth("Whoa! You scared me! You want to know how to hatch an egg? Why are you asking such a stange question...?");
+        sm.sayBoth("I don't know how to hatch an egg... Maybe your mother would know.\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 700 exp");
+        sm.removeItem(4032449, 1);
+        sm.addExp(700);
+        sm.forceCompleteQuest(22005);
+    }
+
+    @Script("q22006s")
+    public static void q22006s(ScriptManager sm) {
+        // Returning the Empty Lunch Box (22006 - start)
+        sm.sayNext("If you want to learn about hatching eggs, you should head #bhome#k and ask #bMom#k. She raises all our chickens, so she'd know. Also...");
+        if (!sm.askAccept("Since you're going home, return this #b#t4032450##k to your mother. I have so much work to do, I may not get home until late tonight.")) {
+            sm.sayNext("Hmm. #p1013101# would have been more than willing...");
+            return;
+        }
+        if (!sm.addItem(4032450, 1)) { // Empty Lunch Box
+            sm.sayOk("Please check if your inventory is full or not.");
+            return;
+        }
+        sm.forceStartQuest(22006);
+        sm.sayNext("Thanks. See you later, kiddo.");
+    }
+
+    @Script("q22006e")
+    public static void q22006e(ScriptManager sm) {
+        // Returning the Empty Lunch Box (22006 - end)
+        sm.sayNext("Evan, you're back? Ah, you brought back the #t4032450#. You're such a good kid. Huh? How do you raise an egg?");
+        sm.sayBoth("There are many ways, but the simplest is to use an Incubator. Come to think of it, I think I saw #b#p1013101##k with one. Why don't you ask #p1013101# to lend it to you?\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#i2022621# 20 #t2022621#\r\n#i2022622# 20 #t2022622#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 270 exp");
+        sm.removeItem(4032450, 1);
+        if (!sm.addItems(List.of(
+                Tuple.of(2022621, 20), // Tasty Milk
+                Tuple.of(2022622, 20) // Squeezed Juice
+        ))) {
+            sm.sayNext("Please check if your inventory is full or not.");
+            return;
+        }
+        sm.addExp(270);
+        sm.forceCompleteQuest(22006);
+    }
+
+    @Script("q22007s")
+    public static void q22007s(ScriptManager sm) {
+        // Collecting Eggs (22007 - start)
+        sm.sayNext("An Incubator? Yeah, I have one. I picked it up after an adventurer tossed it a while ago. It should still work. Why? You need it?");
+        if (!sm.askAccept("Okay, you can have the Incubator, but you have to do me a favor first. Mom wants me to collect some #t4032451#s, but it's such a bother. If you collect an #t4032451# for me, I'll give you the Incubator. Do we have a deal?")) {
+            sm.sayNext("Fine. I'll just keep the Incubator, then.");
+            return;
+        }
+        sm.forceStartQuest(22007);
+        sm.sayNext("Okay, then go to that #b#p1013104# to your right#k and bring back an #t4032451#. You can get an #t4032451# by clicking on the #p1013104#. You just need to get me #bone#k.");
     }
 
     @Script("q22007e")
@@ -598,5 +711,53 @@ public final class EvanTutorial extends ScriptHandler {
         sm.forceCompleteQuest(22008);
         sm.sayNext("#bThis is a weapon that Magicians use. It's a Wand#k. You probably won't really need it, but it'll make you look important if you carry it around. Hahahahaha.");
         sm.sayPrev("Anyway, the Foxes have increased, right? How weird is that? Why are they growing day by day? We should really look into it and get to the bottom of this.");
+    }
+
+    @Script("q22009s")
+    public static void q22009s(ScriptManager sm) {
+        // Verifying the Farm Situation (22009 - start)
+        sm.sayNext("If the number of foxes has increased near the farm just like it has near our house, that'll interfere with Dad's farm work. We should investigate this. Don't you agree?");
+        if (!sm.askAccept("Go to the #b#m100030300##k and ask #bDad#k about the situation. If the number of #o9300385#es haa increased there as well, we're going to have to conduct a major #o9300385# hunt.")) {
+            sm.sayNext("What? Think hard about this! If the farm fails, what are we going to survive on! Huh? Talk to me again and press ACCEPT this time!");
+            return;
+        }
+        sm.forceStartQuest(22009);
+    }
+
+    @Script("q22009e")
+    public static void q22009e(ScriptManager sm) {
+        // Verifying the Farm Situation (22009 - end)
+        sm.sayNext("What is it, Evan? I'm sure you're not here to deliver another #t4032448#, and I'm too busy to play with you... What? Have the number of foxes increased here?");
+        sm.sayBoth("Well, I'm not sure. I've been too busy to notice. The #b#o1210100##ks have been acting crazy, jumping all over the place. Even the foxes seem to be running away from the #o1210100#s...");
+        sm.sayBoth("Ah, maybe that is why the #o9300385# population near the house has increased. They ran there to escape from the #o1210100#s. Hmm...\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 260 exp");
+        sm.addExp(260);
+        sm.forceCompleteQuest(22009);
+    }
+
+    @Script("q22010s")
+    public static void q22010s(ScriptManager sm) {
+        // Strange Farm (22010 - start)
+        sm.sayNext("Forget about the #o9300385#es. Since you're here, want to help me out again? I think the only way to calm the #o1210100#s is by disciplining them. Why don't you go take care of a few of the #r#o1210100#s#k?");
+        if (!sm.askAccept("The crazy pigs can be found starting at the #b#m100030310##k. Head over and take care of just #r20#k of them. Hey, kiddo, you've really become a huge help to me.")) {
+            sm.sayNext("Huh? Are you scared of the #o1210100#s? They are jumping around like crazy, but you shouldn't be scared of them...");
+            return;
+        }
+        sm.forceStartQuest(22010);
+    }
+
+    @Script("q22010e")
+    public static void q22010e(ScriptManager sm) {
+        // Strange Farm (22010 - end)
+        sm.sayNext("Oh, you disciplined the #o1210100#s. Good job! Thank you.");
+        sm.sayBoth("Now I'll just get back to work.\r\n\r\n#fUI/UIWindow2.img/QuestIcon/4/0#\r\n#i2022621# 30 #t2022621#\r\n#i2022622# 30 #t2022622#\r\n#fUI/UIWindow2.img/QuestIcon/8/0# 980 exp");
+        if (!sm.addItems(List.of(
+                Tuple.of(2022621, 30), // Tasty Milk
+                Tuple.of(2022622, 30) // Squeezed Juice
+        ))) {
+            sm.sayNext("Please check if your inventory is full or not.");
+            return;
+        }
+        sm.addExp(980);
+        sm.forceCompleteQuest(22010);
     }
 }

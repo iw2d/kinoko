@@ -1,0 +1,14 @@
+# Ishirasu : Merchant (9110102) - Zipangu : Castle Corridor (800040209)
+
+recharge: true
+items:
+  - [ 2060000, 1, 1, 2000 ] # Arrow for Bow
+  - [ 2000001, 160, 1, 100 ] # Orange Potion
+  - [ 2000002, 320, 1, 100 ] # White Potion
+  - [ 2001001, 2300, 1, 100 ] # Ice Cream Pop
+  - [ 2020012, 4500, 1, 100 ] # Melting Cheese
+  - [ 2000003, 200, 1, 100 ] # Blue Potion
+  - [ 2001002, 4000, 1, 100 ] # Red Bean Sundae
+  - [ 2020014, 7695, 1, 100 ] # Sunrise Dew
+  - [ 2022002, 1000, 1, 100 ] # Cider
+  - [ 2070000, 500, 500, 500 ] # Subi Throwing-Stars
