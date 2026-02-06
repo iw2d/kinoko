@@ -20,6 +20,7 @@ public final class AccountTable {
     public static final String TRUNK_MONEY = "trunk_money";
     public static final String LOCKER_ITEMS = "locker_items";
     public static final String WISHLIST = "wishlist";
+    public static final String PIN_CODE = "pin_code";
 
     private static final String tableName = "account_table";
 
@@ -44,6 +45,7 @@ public final class AccountTable {
                         .withColumn(TRUNK_MONEY, DataTypes.INT)
                         .withColumn(LOCKER_ITEMS, DataTypes.frozenListOf(SchemaBuilder.udt(CashItemInfoUDT.getTypeName(), true)))
                         .withColumn(WISHLIST, DataTypes.frozenListOf(DataTypes.INT))
+                        .withColumn(PIN_CODE, DataTypes.TEXT)
                         .build()
         );
         session.execute(

@@ -13,6 +13,7 @@ public final class ServerConfig {
 
     public static final boolean AUTO_CREATE_ACCOUNT = Util.getEnv("AUTO_CREATE_ACCOUNT", true);
     public static final boolean REQUIRE_SECONDARY_PASSWORD = Util.getEnv("REQUIRE_SECONDARY_PASSWORD", true);
+    public static final boolean ENABLE_PIN_CODE = Util.getEnv("ENABLE_PIN_CODE", true);
     public static final String WZ_DIRECTORY = Util.getEnv("WZ_DIRECTORY", "wz");
     public static final String DATA_DIRECTORY = Util.getEnv("DATA_DIRECTORY", "data");
 
