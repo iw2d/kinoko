@@ -1,5 +1,6 @@
 package kinoko.packet;
 
+import kinoko.server.alliance.AllianceRequest;
 import kinoko.server.guild.GuildBoardRequest;
 import kinoko.server.guild.GuildRequest;
 import kinoko.server.header.CentralHeader;
@@ -236,6 +237,13 @@ public final class CentralPacket {
         if (guildInfo != null) {
             guildInfo.encode(outPacket);
         }
+        return outPacket;
+    }
+    
+    public static OutPacket allianceRequest(int characterId, AllianceRequest allianceRequest) {
+        final OutPacket outPacket = OutPacket.of(CentralHeader.AllianceRequest);
+        outPacket.encodeInt(characterId);
+        allianceRequest.encode(outPacket);
         return outPacket;
     }
 

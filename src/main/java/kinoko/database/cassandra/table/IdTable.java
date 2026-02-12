@@ -17,6 +17,7 @@ public final class IdTable {
     public static final String CHARACTER_ID = "character_id";
     public static final String PARTY_ID = "party_id";
     public static final String GUILD_ID = "guild_id";
+    public static final String ALLIANCE_ID = "alliance_id";
     public static final String MEMO_ID = "memo_id";
 
     private static final String tableName = "id_table";
@@ -40,6 +41,7 @@ public final class IdTable {
                     CHARACTER_ID,
                     PARTY_ID,
                     GUILD_ID,
+                    ALLIANCE_ID,
                     MEMO_ID
             )) {
                 session.execute(

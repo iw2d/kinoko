@@ -6,8 +6,7 @@ import kinoko.packet.world.GuildPacket;
 import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.script.GuildHQ;
-import kinoko.server.alliance.AllianceRequestType;
-import kinoko.server.alliance.AllianceResultType;
+import kinoko.server.alliance.*;
 import kinoko.server.guild.*;
 import kinoko.server.header.InHeader;
 import kinoko.server.packet.InPacket;
@@ -220,14 +219,82 @@ public final class GuildHandler {
     public static void handleAllianceRequest(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final AllianceRequestType requestType = AllianceRequestType.getByValue(type);
-        // TODO
+        switch (requestType) {
+            case Load -> {
+                // CWvsContext::OnAllianceResult
+                user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.load(user.getAllianceId()));
+            }
+            case Withdraw -> {
+                // CTabGuildAlliance::OnWithdraw
+                user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.withdraw());
+            }
+            case Invite -> {
+                // CTabGuildAlliance::OnInvite
+                final String guildName = inPacket.decodeString();
+                user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.invite(guildName));
+            }
+            case Join -> {
+                // CUIFadeYesNo::OnButtonClicked
+                final int inviterId = inPacket.decodeInt();
+                final String guildName = inPacket.decodeString();
+                user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.join(inviterId, user.getGuildInfo().getGuildName()));
+            }
+            case Kick -> {
+                // CTabGuildAlliance::OnKick
+                final int guildId = inPacket.decodeInt();
+                final int allianceId = inPacket.decodeInt();
+                user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.kick(guildId));
+            }
+            case ChangeMaster -> {
+                // CTabGuildAlliance::OnChangeMaster
+                final int targetId = inPacket.decodeInt();
+                user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.changeMaster(user.getCharacterId(), targetId));
+            }
+            case SetGradeName -> {
+                // CWndAllianceGrade::OnSaveGradeName
+                final List<String> gradeNames = new ArrayList<>();
+                for (int i = 0; i < GameConstants.UNION_GRADE_MAX; i++) {
+                    gradeNames.add(inPacket.decodeString());
+                }
+                user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.setGradeName(gradeNames));
+            }
+            case ChangeGrade -> {
+                // CTabGuildAlliance::OnGradeChange
+                final int targetId = inPacket.decodeInt();
+                final boolean gradeUp = inPacket.decodeBoolean();
+                user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.changeGrade(targetId, gradeUp));
+            }
+            case SetNotice -> {
+                // CTabGuildAlliance::OnSetNotice
+                final String notice = inPacket.decodeString();
+                user.getConnectedServer().submitAllianceRequest(user, AllianceRequest.setNotice(notice));
+            }
+            case null -> {
+                log.error("Unknown alliance request type : {}", type);
+            }
+            default -> {
+                log.error("Unhandled alliance request type : {}", requestType);
+            }
+        }
     }
 
     @Handler(InHeader.AllianceResult)
     public static void handleAllianceResult(User user, InPacket inPacket) {
         final int type = inPacket.decodeByte();
         final AllianceResultType resultType = AllianceResultType.getByValue(type);
-        // TODO
+        switch (resultType) {
+            case InviteAlliance_BlockedByOpt, InviteAlliance_AlreadyInvited, InviteAlliance_Rejected -> {
+                final String inviterName = inPacket.decodeString();
+                final String guildName = inPacket.decodeString();
+                // TODO
+            }
+            case null -> {
+                log.error("Unknown alliance result type : {}", type);
+            }
+            default -> {
+                log.error("Unhandled alliance result type : {}", resultType);
+            }
+        }
     }
 
     @Handler(InHeader.GuildBBS)

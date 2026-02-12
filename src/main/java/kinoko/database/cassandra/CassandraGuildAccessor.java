@@ -69,15 +69,28 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
     }
 
     @Override
-    public boolean checkGuildNameAvailable(String name) {
+    public Optional<Guild> getGuildByName(String guildName) {
         final ResultSet selectResult = getSession().execute(
                 selectFrom(getKeyspace(), GuildTable.getTableName()).all()
-                        .whereColumn(GuildTable.GUILD_NAME_INDEX).isEqualTo(literal(lowerName(name)))
+                        .whereColumn(GuildTable.GUILD_NAME_INDEX).isEqualTo(literal(lowerName(guildName)))
+                        .build()
+        );
+        for (Row row : selectResult) {
+            return Optional.of(loadGuild(row));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean checkGuildNameAvailable(String guildName) {
+        final ResultSet selectResult = getSession().execute(
+                selectFrom(getKeyspace(), GuildTable.getTableName()).all()
+                        .whereColumn(GuildTable.GUILD_NAME_INDEX).isEqualTo(literal(lowerName(guildName)))
                         .build()
         );
         for (Row row : selectResult) {
             final String existingName = row.getString(GuildTable.GUILD_NAME_INDEX);
-            if (existingName != null && existingName.equalsIgnoreCase(name)) {
+            if (existingName != null && existingName.equalsIgnoreCase(guildName)) {
                 return false;
             }
         }
