@@ -67,11 +67,11 @@ public final class GuildSerializer implements JsonSerializer<Guild> {
         return entries;
     }
 
-    public JSONObject serializeBoardNoticeEntry(GuildBoardEntry entry) {
+    public JSONObject serializeBoardEntryNotice(GuildBoardEntry entry) {
         return entry != null ? guildBoardEntrySerializer.serialize(entry) : null;
     }
 
-    public GuildBoardEntry deserializeBoardNoticeEntry(JSONObject object) {
+    public GuildBoardEntry deserializeBoardEntryNotice(JSONObject object) {
         return object != null ? guildBoardEntrySerializer.deserialize(object) : null;
     }
 }
