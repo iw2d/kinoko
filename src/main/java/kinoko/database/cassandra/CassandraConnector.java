@@ -15,7 +15,6 @@ import com.datastax.oss.driver.api.core.type.reflect.GenericType;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.*;
 import kinoko.database.cassandra.codec.*;
-import kinoko.database.cassandra.table.*;
 import kinoko.database.cassandra.type.*;
 import kinoko.server.ServerConstants;
 import kinoko.server.cashshop.CashItemInfo;
@@ -155,13 +154,13 @@ public final class CassandraConnector implements DatabaseConnector {
             GuildBoardEntryUDT.createUserDefinedType(cqlSession, DATABASE_KEYSPACE);
 
             // Create Tables
-            IdTable.createTable(cqlSession, DATABASE_KEYSPACE);
-            AccountTable.createTable(cqlSession, DATABASE_KEYSPACE);
-            CharacterTable.createTable(cqlSession, DATABASE_KEYSPACE);
-            FriendTable.createTable(cqlSession, DATABASE_KEYSPACE);
-            GuildTable.createTable(cqlSession, DATABASE_KEYSPACE);
-            GiftTable.createTable(cqlSession, DATABASE_KEYSPACE);
-            MemoTable.createTable(cqlSession, DATABASE_KEYSPACE);
+            CassandraIdAccessor.createTable(cqlSession, DATABASE_KEYSPACE);
+            CassandraAccountAccessor.createTable(cqlSession, DATABASE_KEYSPACE);
+            CassandraCharacterAccessor.createTable(cqlSession, DATABASE_KEYSPACE);
+            CassandraFriendAccessor.createTable(cqlSession, DATABASE_KEYSPACE);
+            CassandraGuildAccessor.createTable(cqlSession, DATABASE_KEYSPACE);
+            CassandraGiftAccessor.createTable(cqlSession, DATABASE_KEYSPACE);
+            CassandraMemoAccessor.createTable(cqlSession, DATABASE_KEYSPACE);
         }
 
         // Register Codecs

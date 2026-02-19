@@ -3,10 +3,13 @@ package kinoko.database.cassandra;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
+import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
+import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.AccountAccessor;
 import kinoko.database.DatabaseManager;
-import kinoko.database.cassandra.table.AccountTable;
+import kinoko.database.cassandra.type.CashItemInfoUDT;
+import kinoko.database.cassandra.type.ItemUDT;
 import kinoko.server.ServerConfig;
 import kinoko.server.cashshop.CashItemInfo;
 import kinoko.world.item.Item;
@@ -20,36 +23,39 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
+import static kinoko.database.schema.AccountSchema.*;
 
 public final class CassandraAccountAccessor extends CassandraAccessor implements AccountAccessor {
+    private static final String tableName = "account_Table";
+
     public CassandraAccountAccessor(CqlSession session, String keyspace) {
         super(session, keyspace);
     }
 
     private Account loadAccount(Row row) {
-        final int accountId = row.getInt(AccountTable.ACCOUNT_ID);
-        final String username = row.getString(AccountTable.USERNAME);
-        final String secondaryPassword = row.getString(AccountTable.SECONDARY_PASSWORD);
+        final int accountId = row.getInt(ACCOUNT_ID);
+        final String username = row.getString(USERNAME);
+        final String secondaryPassword = row.getString(SECONDARY_PASSWORD);
 
         final Account account = new Account(accountId, username);
         account.setHasSecondaryPassword(secondaryPassword != null && !secondaryPassword.isEmpty());
-        account.setSlotCount(row.getInt(AccountTable.CHARACTER_SLOTS));
-        account.setNxCredit(row.getInt(AccountTable.NX_CREDIT));
-        account.setNxPrepaid(row.getInt(AccountTable.NX_PREPAID));
-        account.setMaplePoint(row.getInt(AccountTable.MAPLE_POINT));
+        account.setSlotCount(row.getInt(CHARACTER_SLOTS));
+        account.setNxCredit(row.getInt(NX_CREDIT));
+        account.setNxPrepaid(row.getInt(NX_PREPAID));
+        account.setMaplePoint(row.getInt(MAPLE_POINT));
 
-        final Trunk trunk = new Trunk(row.getInt(AccountTable.TRUNK_SIZE));
-        final List<Item> items = row.getList(AccountTable.TRUNK_ITEMS, Item.class);
+        final Trunk trunk = new Trunk(row.getInt(TRUNK_SIZE));
+        final List<Item> items = row.getList(TRUNK_ITEMS, Item.class);
         if (items != null) {
             for (Item item : items) {
                 trunk.getItems().add(item);
             }
         }
-        trunk.setMoney(row.getInt(AccountTable.TRUNK_MONEY));
+        trunk.setMoney(row.getInt(TRUNK_MONEY));
         account.setTrunk(trunk);
 
         final Locker locker = new Locker();
-        final List<CashItemInfo> cashItems = row.getList(AccountTable.LOCKER_ITEMS, CashItemInfo.class);
+        final List<CashItemInfo> cashItems = row.getList(LOCKER_ITEMS, CashItemInfo.class);
         if (cashItems != null) {
             for (CashItemInfo cii : cashItems) {
                 locker.addCashItem(cii);
@@ -57,7 +63,7 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
         }
         account.setLocker(locker);
 
-        final List<Integer> wishlist = row.getList(AccountTable.WISHLIST, Integer.class);
+        final List<Integer> wishlist = row.getList(WISHLIST, Integer.class);
         account.setWishlist(Collections.unmodifiableList(wishlist != null ? wishlist : Collections.nCopies(10, 0)));
 
         return account;
@@ -78,8 +84,8 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
     @Override
     public Optional<Account> getAccountById(int accountId) {
         final ResultSet selectResult = getSession().execute(
-                selectFrom(getKeyspace(), AccountTable.getTableName()).all()
-                        .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(accountId))
+                selectFrom(getKeyspace(), tableName).all()
+                        .whereColumn(ACCOUNT_ID).isEqualTo(literal(accountId))
                         .build()
         );
         for (Row row : selectResult) {
@@ -91,8 +97,8 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
     @Override
     public Optional<Account> getAccountByUsername(String username) {
         final ResultSet selectResult = getSession().execute(
-                selectFrom(getKeyspace(), AccountTable.getTableName()).all()
-                        .whereColumn(AccountTable.USERNAME).isEqualTo(literal(lowerUsername(username)))
+                selectFrom(getKeyspace(), tableName).all()
+                        .whereColumn(USERNAME).isEqualTo(literal(lowerUsername(username)))
                         .build()
         );
         for (Row row : selectResult) {
@@ -103,11 +109,11 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
 
     @Override
     public boolean checkPassword(Account account, String password, boolean secondary) {
-        final String columnName = secondary ? AccountTable.SECONDARY_PASSWORD : AccountTable.PASSWORD;
+        final String columnName = secondary ? SECONDARY_PASSWORD : PASSWORD;
         final ResultSet selectResult = getSession().execute(
-                selectFrom(getKeyspace(), AccountTable.getTableName()).all()
+                selectFrom(getKeyspace(), tableName).all()
                         .column(columnName)
-                        .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(account.getId()))
+                        .whereColumn(ACCOUNT_ID).isEqualTo(literal(account.getId()))
                         .build()
                         .setExecutionProfileName(CassandraConnector.PROFILE_ONE)
         );
@@ -125,20 +131,20 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
 
     @Override
     public boolean savePassword(Account account, String oldPassword, String newPassword, boolean secondary) {
-        final String columnName = secondary ? AccountTable.SECONDARY_PASSWORD : AccountTable.PASSWORD;
+        final String columnName = secondary ? SECONDARY_PASSWORD : PASSWORD;
         final ResultSet selectResult = getSession().execute(
-                selectFrom(getKeyspace(), AccountTable.getTableName()).all()
+                selectFrom(getKeyspace(), tableName).all()
                         .column(columnName)
-                        .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(account.getId()))
+                        .whereColumn(ACCOUNT_ID).isEqualTo(literal(account.getId()))
                         .build()
         );
         for (Row row : selectResult) {
             final String hashedOldPassword = row.getString(columnName);
             if (hashedOldPassword == null || checkHashedPassword(oldPassword, hashedOldPassword)) {
                 final ResultSet updateResult = getSession().execute(
-                        update(getKeyspace(), AccountTable.getTableName())
+                        update(getKeyspace(), tableName)
                                 .setColumn(columnName, literal(hashPassword(newPassword)))
-                                .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(account.getId()))
+                                .whereColumn(ACCOUNT_ID).isEqualTo(literal(account.getId()))
                                 .build()
                 );
                 return updateResult.wasApplied();
@@ -157,19 +163,19 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
             return false;
         }
         final ResultSet insertResult = getSession().execute(
-                insertInto(getKeyspace(), AccountTable.getTableName())
-                        .value(AccountTable.ACCOUNT_ID, literal(accountId.get()))
-                        .value(AccountTable.USERNAME, literal(lowerUsername(username)))
-                        .value(AccountTable.PASSWORD, literal(hashPassword(password)))
-                        .value(AccountTable.CHARACTER_SLOTS, literal(ServerConfig.CHARACTER_BASE_SLOTS))
-                        .value(AccountTable.NX_CREDIT, literal(0))
-                        .value(AccountTable.NX_PREPAID, literal(0))
-                        .value(AccountTable.MAPLE_POINT, literal(0))
-                        .value(AccountTable.TRUNK_ITEMS, literal(List.of()))
-                        .value(AccountTable.TRUNK_SIZE, literal(ServerConfig.TRUNK_BASE_SLOTS))
-                        .value(AccountTable.TRUNK_MONEY, literal(0))
-                        .value(AccountTable.LOCKER_ITEMS, literal(List.of()))
-                        .value(AccountTable.WISHLIST, literal(List.of()))
+                insertInto(getKeyspace(), tableName)
+                        .value(ACCOUNT_ID, literal(accountId.get()))
+                        .value(USERNAME, literal(lowerUsername(username)))
+                        .value(PASSWORD, literal(hashPassword(password)))
+                        .value(CHARACTER_SLOTS, literal(ServerConfig.CHARACTER_BASE_SLOTS))
+                        .value(NX_CREDIT, literal(0))
+                        .value(NX_PREPAID, literal(0))
+                        .value(MAPLE_POINT, literal(0))
+                        .value(TRUNK_ITEMS, literal(List.of()))
+                        .value(TRUNK_SIZE, literal(ServerConfig.TRUNK_BASE_SLOTS))
+                        .value(TRUNK_MONEY, literal(0))
+                        .value(LOCKER_ITEMS, literal(List.of()))
+                        .value(WISHLIST, literal(List.of()))
                         .ifNotExists()
                         .build()
         );
@@ -180,19 +186,47 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
     public boolean saveAccount(Account account) {
         final CodecRegistry registry = getSession().getContext().getCodecRegistry();
         final ResultSet updateResult = getSession().execute(
-                update(getKeyspace(), AccountTable.getTableName())
-                        .setColumn(AccountTable.CHARACTER_SLOTS, literal(account.getSlotCount()))
-                        .setColumn(AccountTable.NX_CREDIT, literal(account.getNxCredit()))
-                        .setColumn(AccountTable.NX_PREPAID, literal(account.getNxPrepaid()))
-                        .setColumn(AccountTable.MAPLE_POINT, literal(account.getMaplePoint()))
-                        .setColumn(AccountTable.TRUNK_ITEMS, literal(account.getTrunk().getItems(), registry))
-                        .setColumn(AccountTable.TRUNK_SIZE, literal(account.getTrunk().getSize()))
-                        .setColumn(AccountTable.TRUNK_MONEY, literal(account.getTrunk().getMoney()))
-                        .setColumn(AccountTable.LOCKER_ITEMS, literal(account.getLocker().getCashItems(), registry))
-                        .setColumn(AccountTable.WISHLIST, literal(account.getWishlist()))
-                        .whereColumn(AccountTable.ACCOUNT_ID).isEqualTo(literal(account.getId()))
+                update(getKeyspace(), tableName)
+                        .setColumn(CHARACTER_SLOTS, literal(account.getSlotCount()))
+                        .setColumn(NX_CREDIT, literal(account.getNxCredit()))
+                        .setColumn(NX_PREPAID, literal(account.getNxPrepaid()))
+                        .setColumn(MAPLE_POINT, literal(account.getMaplePoint()))
+                        .setColumn(TRUNK_ITEMS, literal(account.getTrunk().getItems(), registry))
+                        .setColumn(TRUNK_SIZE, literal(account.getTrunk().getSize()))
+                        .setColumn(TRUNK_MONEY, literal(account.getTrunk().getMoney()))
+                        .setColumn(LOCKER_ITEMS, literal(account.getLocker().getCashItems(), registry))
+                        .setColumn(WISHLIST, literal(account.getWishlist()))
+                        .whereColumn(ACCOUNT_ID).isEqualTo(literal(account.getId()))
                         .build()
         );
         return updateResult.wasApplied();
+    }
+
+    public static void createTable(CqlSession session, String keyspace) {
+        session.execute(
+                SchemaBuilder.createTable(keyspace, tableName)
+                        .ifNotExists()
+                        .withPartitionKey(ACCOUNT_ID, DataTypes.INT)
+                        .withColumn(USERNAME, DataTypes.TEXT)
+                        .withColumn(PASSWORD, DataTypes.TEXT)
+                        .withColumn(SECONDARY_PASSWORD, DataTypes.TEXT)
+                        .withColumn(CHARACTER_SLOTS, DataTypes.INT)
+                        .withColumn(NX_CREDIT, DataTypes.INT)
+                        .withColumn(NX_PREPAID, DataTypes.INT)
+                        .withColumn(MAPLE_POINT, DataTypes.INT)
+                        .withColumn(TRUNK_ITEMS, DataTypes.frozenListOf(SchemaBuilder.udt(ItemUDT.getTypeName(), true)))
+                        .withColumn(TRUNK_SIZE, DataTypes.INT)
+                        .withColumn(TRUNK_MONEY, DataTypes.INT)
+                        .withColumn(LOCKER_ITEMS, DataTypes.frozenListOf(SchemaBuilder.udt(CashItemInfoUDT.getTypeName(), true)))
+                        .withColumn(WISHLIST, DataTypes.frozenListOf(DataTypes.INT))
+                        .build()
+        );
+        session.execute(
+                SchemaBuilder.createIndex()
+                        .ifNotExists()
+                        .onTable(keyspace, tableName)
+                        .andColumn(USERNAME)
+                        .build()
+        );
     }
 }

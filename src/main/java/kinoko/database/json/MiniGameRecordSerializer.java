@@ -3,14 +3,7 @@ package kinoko.database.json;
 import com.alibaba.fastjson2.JSONObject;
 import kinoko.world.user.data.MiniGameRecord;
 
-import static kinoko.database.schema.MiniGameRecordSchema.MEMORY_LOSSES;
-import static kinoko.database.schema.MiniGameRecordSchema.MEMORY_SCORE;
-import static kinoko.database.schema.MiniGameRecordSchema.MEMORY_TIES;
-import static kinoko.database.schema.MiniGameRecordSchema.MEMORY_WINS;
-import static kinoko.database.schema.MiniGameRecordSchema.OMOK_LOSSES;
-import static kinoko.database.schema.MiniGameRecordSchema.OMOK_SCORE;
-import static kinoko.database.schema.MiniGameRecordSchema.OMOK_TIES;
-import static kinoko.database.schema.MiniGameRecordSchema.OMOK_WINS;
+import static kinoko.database.schema.MiniGameRecordSchema.*;
 
 public final class MiniGameRecordSerializer implements JsonSerializer<MiniGameRecord> {
     @Override
