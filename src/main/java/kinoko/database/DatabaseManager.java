@@ -1,6 +1,6 @@
 package kinoko.database;
 
-import kinoko.database.cassandra.CassandraConnector;
+import kinoko.database.sqlite.SqliteConnector;
 
 public final class DatabaseManager {
     private static DatabaseConnector connector;
@@ -34,7 +34,7 @@ public final class DatabaseManager {
     }
 
     public static void initialize() {
-        connector = new CassandraConnector();
+        connector = new SqliteConnector();
         connector.initialize();
     }
 
