@@ -3,8 +3,9 @@ package kinoko.database.cassandra;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
+import com.datastax.oss.driver.api.core.type.DataTypes;
+import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.MemoAccessor;
-import kinoko.database.cassandra.table.MemoTable;
 import kinoko.server.memo.Memo;
 import kinoko.server.memo.MemoType;
 
@@ -12,8 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
+import static kinoko.database.schema.MemoSchema.*;
 
 public final class CassandraMemoAccessor extends CassandraAccessor implements MemoAccessor {
+    private static final String tableName = "memo_table";
+
     public CassandraMemoAccessor(CqlSession session, String keyspace) {
         super(session, keyspace);
     }
@@ -22,25 +26,25 @@ public final class CassandraMemoAccessor extends CassandraAccessor implements Me
     public List<Memo> getMemosByCharacterId(int characterId) {
         final List<Memo> memos = new ArrayList<>();
         final ResultSet selectResult = getSession().execute(
-                selectFrom(getKeyspace(), MemoTable.getTableName())
+                selectFrom(getKeyspace(), tableName)
                         .columns(
-                                MemoTable.MEMO_ID,
-                                MemoTable.MEMO_TYPE,
-                                MemoTable.MEMO_CONTENT,
-                                MemoTable.SENDER_NAME,
-                                MemoTable.DATE_SENT
+                                MEMO_ID,
+                                MEMO_TYPE,
+                                MEMO_CONTENT,
+                                SENDER_NAME,
+                                DATE_SENT
                         )
-                        .whereColumn(MemoTable.RECEIVER_ID).isEqualTo(literal(characterId))
+                        .whereColumn(RECEIVER_ID).isEqualTo(literal(characterId))
                         .build()
         );
         for (Row row : selectResult) {
-            final MemoType type = MemoType.getByValue(row.getInt(MemoTable.MEMO_TYPE));
+            final MemoType type = MemoType.getByValue(row.getInt(MEMO_TYPE));
             final Memo memo = new Memo(
                     type != null ? type : MemoType.DEFAULT,
-                    row.getInt(MemoTable.MEMO_ID),
-                    row.getString(MemoTable.SENDER_NAME),
-                    row.getString(MemoTable.MEMO_CONTENT),
-                    row.getInstant(MemoTable.DATE_SENT)
+                    row.getInt(MEMO_ID),
+                    row.getString(SENDER_NAME),
+                    row.getString(MEMO_CONTENT),
+                    row.getInstant(DATE_SENT)
             );
             memos.add(memo);
         }
@@ -50,15 +54,15 @@ public final class CassandraMemoAccessor extends CassandraAccessor implements Me
     @Override
     public boolean hasMemo(int characterId) {
         final ResultSet selectResult = getSession().execute(
-                selectFrom(getKeyspace(), MemoTable.getTableName())
+                selectFrom(getKeyspace(), tableName)
                         .columns(
-                                MemoTable.RECEIVER_ID
+                                RECEIVER_ID
                         )
-                        .whereColumn(MemoTable.RECEIVER_ID).isEqualTo(literal(characterId))
+                        .whereColumn(RECEIVER_ID).isEqualTo(literal(characterId))
                         .build()
         );
         for (Row row : selectResult) {
-            final int receiverId = row.getInt(MemoTable.RECEIVER_ID);
+            final int receiverId = row.getInt(RECEIVER_ID);
             if (receiverId == characterId) {
                 return true;
             }
@@ -69,13 +73,13 @@ public final class CassandraMemoAccessor extends CassandraAccessor implements Me
     @Override
     public boolean newMemo(Memo memo, int receiverId) {
         final ResultSet updateResult = getSession().execute(
-                insertInto(getKeyspace(), MemoTable.getTableName())
-                        .value(MemoTable.MEMO_ID, literal(memo.getMemoId()))
-                        .value(MemoTable.RECEIVER_ID, literal(receiverId))
-                        .value(MemoTable.MEMO_TYPE, literal(memo.getType().getValue()))
-                        .value(MemoTable.MEMO_CONTENT, literal(memo.getContent()))
-                        .value(MemoTable.SENDER_NAME, literal(memo.getSender()))
-                        .value(MemoTable.DATE_SENT, literal(memo.getDateSent()))
+                insertInto(getKeyspace(), tableName)
+                        .value(MEMO_ID, literal(memo.getMemoId()))
+                        .value(RECEIVER_ID, literal(receiverId))
+                        .value(MEMO_TYPE, literal(memo.getType().getValue()))
+                        .value(MEMO_CONTENT, literal(memo.getContent()))
+                        .value(SENDER_NAME, literal(memo.getSender()))
+                        .value(DATE_SENT, literal(memo.getDateSent()))
                         .ifNotExists()
                         .build()
         );
@@ -85,10 +89,31 @@ public final class CassandraMemoAccessor extends CassandraAccessor implements Me
     @Override
     public boolean deleteMemo(int memoId, int receiverId) {
         final ResultSet updateResult = getSession().execute(
-                deleteFrom(getKeyspace(), MemoTable.getTableName())
-                        .whereColumn(MemoTable.MEMO_ID).isEqualTo(literal(memoId))
+                deleteFrom(getKeyspace(), tableName)
+                        .whereColumn(MEMO_ID).isEqualTo(literal(memoId))
                         .build()
         );
         return updateResult.wasApplied();
+    }
+
+    public static void createTable(CqlSession session, String keyspace) {
+        session.execute(
+                SchemaBuilder.createTable(keyspace, tableName)
+                        .ifNotExists()
+                        .withPartitionKey(MEMO_ID, DataTypes.INT)
+                        .withColumn(RECEIVER_ID, DataTypes.INT)
+                        .withColumn(MEMO_TYPE, DataTypes.INT)
+                        .withColumn(MEMO_CONTENT, DataTypes.TEXT)
+                        .withColumn(SENDER_NAME, DataTypes.TEXT)
+                        .withColumn(DATE_SENT, DataTypes.TIMESTAMP)
+                        .build()
+        );
+        session.execute(
+                SchemaBuilder.createIndex()
+                        .ifNotExists()
+                        .onTable(keyspace, tableName)
+                        .andColumn(RECEIVER_ID)
+                        .build()
+        );
     }
 }

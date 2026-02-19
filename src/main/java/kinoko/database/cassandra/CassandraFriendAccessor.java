@@ -3,9 +3,10 @@ package kinoko.database.cassandra;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
+import com.datastax.oss.driver.api.core.type.DataTypes;
+import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import com.datastax.oss.driver.api.querybuilder.insert.Insert;
 import kinoko.database.FriendAccessor;
-import kinoko.database.cassandra.table.FriendTable;
 import kinoko.world.user.friend.Friend;
 import kinoko.world.user.friend.FriendStatus;
 
@@ -13,18 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
+import static kinoko.database.schema.FriendSchema.*;
 
 public final class CassandraFriendAccessor extends CassandraAccessor implements FriendAccessor {
+    private static final String tableName = "friend_table";
+
     public CassandraFriendAccessor(CqlSession session, String keyspace) {
         super(session, keyspace);
     }
 
     private Friend loadFriend(Row row) {
-        final int characterId = row.getInt(FriendTable.CHARACTER_ID);
-        final int friendId = row.getInt(FriendTable.FRIEND_ID);
-        final String friendName = row.getString(FriendTable.FRIEND_NAME);
-        final String friendGroup = row.getString(FriendTable.FRIEND_GROUP);
-        final FriendStatus status = FriendStatus.getByValue(row.getInt(FriendTable.FRIEND_STATUS));
+        final int characterId = row.getInt(CHARACTER_ID);
+        final int friendId = row.getInt(FRIEND_ID);
+        final String friendName = row.getString(FRIEND_NAME);
+        final String friendGroup = row.getString(FRIEND_GROUP);
+        final FriendStatus status = FriendStatus.getByValue(row.getInt(FRIEND_STATUS));
         return new Friend(characterId, friendId, friendName, friendGroup, status);
     }
 
@@ -32,8 +36,8 @@ public final class CassandraFriendAccessor extends CassandraAccessor implements 
     public List<Friend> getFriendsByCharacterId(int characterId) {
         final List<Friend> friends = new ArrayList<>();
         final ResultSet selectResult = getSession().execute(
-                selectFrom(getKeyspace(), FriendTable.getTableName()).all()
-                        .whereColumn(FriendTable.CHARACTER_ID).isEqualTo(literal(characterId))
+                selectFrom(getKeyspace(), tableName).all()
+                        .whereColumn(CHARACTER_ID).isEqualTo(literal(characterId))
                         .build()
         );
         for (Row row : selectResult) {
@@ -46,8 +50,8 @@ public final class CassandraFriendAccessor extends CassandraAccessor implements 
     public List<Friend> getFriendsByFriendId(int friendId) {
         final List<Friend> friends = new ArrayList<>();
         final ResultSet selectResult = getSession().execute(
-                selectFrom(getKeyspace(), FriendTable.getTableName()).all()
-                        .whereColumn(FriendTable.FRIEND_ID).isEqualTo(literal(friendId))
+                selectFrom(getKeyspace(), tableName).all()
+                        .whereColumn(FRIEND_ID).isEqualTo(literal(friendId))
                         .build()
         );
         for (Row row : selectResult) {
@@ -58,12 +62,12 @@ public final class CassandraFriendAccessor extends CassandraAccessor implements 
 
     @Override
     public boolean saveFriend(Friend friend, boolean force) {
-        Insert insert = insertInto(getKeyspace(), FriendTable.getTableName())
-                .value(FriendTable.CHARACTER_ID, literal(friend.getCharacterId()))
-                .value(FriendTable.FRIEND_ID, literal(friend.getFriendId()))
-                .value(FriendTable.FRIEND_NAME, literal(friend.getFriendName()))
-                .value(FriendTable.FRIEND_GROUP, literal(friend.getFriendGroup()))
-                .value(FriendTable.FRIEND_STATUS, literal(friend.getStatus().getValue()));
+        Insert insert = insertInto(getKeyspace(), tableName)
+                .value(CHARACTER_ID, literal(friend.getCharacterId()))
+                .value(FRIEND_ID, literal(friend.getFriendId()))
+                .value(FRIEND_NAME, literal(friend.getFriendName()))
+                .value(FRIEND_GROUP, literal(friend.getFriendGroup()))
+                .value(FRIEND_STATUS, literal(friend.getStatus().getValue()));
         if (!force) {
             insert = insert.ifNotExists();
         }
@@ -74,11 +78,31 @@ public final class CassandraFriendAccessor extends CassandraAccessor implements 
     @Override
     public boolean deleteFriend(int characterId, int friendId) {
         final ResultSet deleteResult = getSession().execute(
-                deleteFrom(getKeyspace(), FriendTable.getTableName())
-                        .whereColumn(FriendTable.CHARACTER_ID).isEqualTo(literal(characterId))
-                        .whereColumn(FriendTable.FRIEND_ID).isEqualTo(literal(friendId))
+                deleteFrom(getKeyspace(), tableName)
+                        .whereColumn(CHARACTER_ID).isEqualTo(literal(characterId))
+                        .whereColumn(FRIEND_ID).isEqualTo(literal(friendId))
                         .build()
         );
         return deleteResult.wasApplied();
+    }
+
+    public static void createTable(CqlSession session, String keyspace) {
+        session.execute(
+                SchemaBuilder.createTable(keyspace, tableName)
+                        .ifNotExists()
+                        .withPartitionKey(CHARACTER_ID, DataTypes.INT)
+                        .withClusteringColumn(FRIEND_ID, DataTypes.INT)
+                        .withColumn(FRIEND_NAME, DataTypes.TEXT)
+                        .withColumn(FRIEND_GROUP, DataTypes.TEXT)
+                        .withColumn(FRIEND_STATUS, DataTypes.INT)
+                        .build()
+        );
+        session.execute(
+                SchemaBuilder.createIndex()
+                        .ifNotExists()
+                        .onTable(keyspace, tableName)
+                        .andColumn(FRIEND_ID)
+                        .build()
+        );
     }
 }

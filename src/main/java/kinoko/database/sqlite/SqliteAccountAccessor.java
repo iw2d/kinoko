@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import kinoko.database.AccountAccessor;
 import kinoko.database.DatabaseManager;
-import kinoko.database.cassandra.table.AccountTable;
 import kinoko.database.json.CashItemInfoSerializer;
 import kinoko.database.json.ItemSerializer;
 import kinoko.server.ServerConfig;
@@ -31,7 +30,7 @@ public final class SqliteAccountAccessor extends SqliteAccessor implements Accou
     private Account loadAccount(ResultSet rs) throws SQLException {
         final int accountId = rs.getInt(ACCOUNT_ID);
         final String username = rs.getString(USERNAME);
-        final String secondaryPassword = rs.getString(AccountTable.SECONDARY_PASSWORD);
+        final String secondaryPassword = rs.getString(SECONDARY_PASSWORD);
 
         final Account account = new Account(accountId, username);
         account.setHasSecondaryPassword(secondaryPassword != null && !secondaryPassword.isEmpty());
