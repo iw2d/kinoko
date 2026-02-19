@@ -24,12 +24,12 @@ public final class CharacterDataSerializer implements JsonSerializer<CharacterDa
 
     @Override
     public JSONObject serialize(CharacterData value) {
-        return null;
+        throw new IllegalStateException(); // TODO
     }
 
     @Override
     public CharacterData deserialize(JSONObject object) {
-        return null;
+        throw new IllegalStateException(); // TODO
     }
 
     public JSONObject serializeSkillCooltimes(Map<Integer, Instant> skillCooltimes) {

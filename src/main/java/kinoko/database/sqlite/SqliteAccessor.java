@@ -12,7 +12,7 @@ import java.time.Instant;
 
 public abstract class SqliteAccessor {
     public static final String INSTANT_TYPE = "BIGINT";
-    public static final String JSON_TYPE = "TEXT NOT NULL";
+    public static final String JSON_TYPE = "TEXT";
 
     private final Connection connection;
 

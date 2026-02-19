@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import static kinoko.database.schema.IdSchema.*;
 
-public class SqliteIdAccessor extends SqliteAccessor implements IdAccessor {
+public final class SqliteIdAccessor extends SqliteAccessor implements IdAccessor {
     private static final String tableName = "id_table";
 
     public SqliteIdAccessor(Connection connection) {
