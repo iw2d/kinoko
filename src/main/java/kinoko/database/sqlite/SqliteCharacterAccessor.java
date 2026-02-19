@@ -2,7 +2,9 @@ package kinoko.database.sqlite;
 
 import kinoko.database.CharacterAccessor;
 import kinoko.database.CharacterInfo;
-import kinoko.database.json.*;
+import kinoko.database.json.CharacterDataSerializer;
+import kinoko.database.json.CharacterStatSerializer;
+import kinoko.database.json.InventorySerializer;
 import kinoko.server.rank.CharacterRank;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryManager;
@@ -25,7 +27,6 @@ import static kinoko.database.schema.CharacterDataSchema.*;
 
 public final class SqliteCharacterAccessor extends SqliteAccessor implements CharacterAccessor {
     private static final String tableName = "character_table";
-
     private final CharacterDataSerializer characterDataSerializer = new CharacterDataSerializer();
     private final CharacterStatSerializer characterStatSerializer = new CharacterStatSerializer();
     private final InventorySerializer inventorySerializer = new InventorySerializer();
@@ -373,23 +374,23 @@ public final class SqliteCharacterAccessor extends SqliteAccessor implements Cha
                             CHARACTER_ID + " INTEGER PRIMARY KEY, " +
                             ACCOUNT_ID + " INTEGER NOT NULL, " +
                             CHARACTER_NAME + " TEXT NOT NULL COLLATE NOCASE UNIQUE, " +
-                            CHARACTER_STAT + " " + JSON_TYPE + ", " +
-                            CHARACTER_EQUIPPED + " " + JSON_TYPE + ", " +
-                            EQUIP_INVENTORY + " " + JSON_TYPE + ", " +
-                            CONSUME_INVENTORY + " " + JSON_TYPE + ", " +
-                            INSTALL_INVENTORY + " " + JSON_TYPE + ", " +
-                            ETC_INVENTORY + " " + JSON_TYPE + ", " +
-                            CASH_INVENTORY + " " + JSON_TYPE + ", " +
+                            CHARACTER_STAT + " " + JSON_TYPE + " NOT NULL, " +
+                            CHARACTER_EQUIPPED + " " + JSON_TYPE + " NOT NULL, " +
+                            EQUIP_INVENTORY + " " + JSON_TYPE + " NOT NULL, " +
+                            CONSUME_INVENTORY + " " + JSON_TYPE + " NOT NULL, " +
+                            INSTALL_INVENTORY + " " + JSON_TYPE + " NOT NULL, " +
+                            ETC_INVENTORY + " " + JSON_TYPE + " NOT NULL, " +
+                            CASH_INVENTORY + " " + JSON_TYPE + " NOT NULL, " +
                             MONEY + " INTEGER NOT NULL, " +
                             EXT_SLOT_EXPIRE + " " + INSTANT_TYPE + ", " +
-                            SKILL_COOLTIMES + " " + JSON_TYPE + ", " +
-                            SKILL_RECORDS + " " + JSON_TYPE + ", " +
-                            QUEST_RECORDS + " " + JSON_TYPE + ", " +
-                            CONFIG + " " + JSON_TYPE + ", " +
-                            POPULARITY_RECORD + " " + JSON_TYPE + ", " +
-                            MINIGAME_RECORD + " " + JSON_TYPE + ", " +
-                            MAP_TRANSFER_INFO + " " + JSON_TYPE + ", " +
-                            WILD_HUNTER_INFO + " " + JSON_TYPE + ", " +
+                            SKILL_COOLTIMES + " " + JSON_TYPE + " NOT NULL, " +
+                            SKILL_RECORDS + " " + JSON_TYPE + " NOT NULL, " +
+                            QUEST_RECORDS + " " + JSON_TYPE + " NOT NULL, " +
+                            CONFIG + " " + JSON_TYPE + " NOT NULL, " +
+                            POPULARITY_RECORD + " " + JSON_TYPE + " NOT NULL, " +
+                            MINIGAME_RECORD + " " + JSON_TYPE + " NOT NULL, " +
+                            MAP_TRANSFER_INFO + " " + JSON_TYPE + " NOT NULL, " +
+                            WILD_HUNTER_INFO + " " + JSON_TYPE + " NOT NULL, " +
                             ITEM_SN_COUNTER + " INTEGER NOT NULL, " +
                             FRIEND_MAX + " INTEGER NOT NULL, " +
                             PARTY_ID + " INTEGER NOT NULL, " +

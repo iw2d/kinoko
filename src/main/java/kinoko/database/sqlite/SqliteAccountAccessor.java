@@ -21,7 +21,6 @@ import static kinoko.database.schema.AccountSchema.*;
 
 public final class SqliteAccountAccessor extends SqliteAccessor implements AccountAccessor {
     private static final String tableName = "account_table";
-
     private final ItemSerializer itemSerializer = new ItemSerializer();
     private final CashItemInfoSerializer cashItemInfoSerializer = new CashItemInfoSerializer();
 
@@ -250,11 +249,11 @@ public final class SqliteAccountAccessor extends SqliteAccessor implements Accou
                             NX_CREDIT + " INTEGER NOT NULL, " +
                             NX_PREPAID + " INTEGER NOT NULL, " +
                             MAPLE_POINT + " INTEGER NOT NULL, " +
-                            TRUNK_ITEMS + " " + JSON_TYPE + ", " +
+                            TRUNK_ITEMS + " " + JSON_TYPE + " NOT NULL, " +
                             TRUNK_SIZE + " INTEGER NOT NULL, " +
                             TRUNK_MONEY + " INTEGER NOT NULL, " +
-                            LOCKER_ITEMS + " " + JSON_TYPE + ", " +
-                            WISHLIST + " " + JSON_TYPE + ")"
+                            LOCKER_ITEMS + " " + JSON_TYPE + " NOT NULL, " +
+                            WISHLIST + " " + JSON_TYPE + " NOT NULL)"
             );
         }
     }

@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 /**
  * Unit tests for PopularityRecord, validating fame/popularity interaction timing rules.
  */
-public class PopularityRecordTest {
+public final class PopularityRecordTest {
     /**
      * Tests whether PopularityRecord correctly detects if popularity was given today.
      * <p>
