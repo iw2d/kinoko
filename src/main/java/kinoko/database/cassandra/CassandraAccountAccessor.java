@@ -1,18 +1,15 @@
 package kinoko.database.cassandra;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.type.DataTypes;
-import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.AccountAccessor;
 import kinoko.database.DatabaseManager;
-import kinoko.database.cassandra.type.CashItemInfoUDT;
-import kinoko.database.cassandra.type.ItemUDT;
+import kinoko.database.json.AccountSerializer;
 import kinoko.server.ServerConfig;
-import kinoko.server.cashshop.CashItemInfo;
-import kinoko.world.item.Item;
 import kinoko.world.item.Trunk;
 import kinoko.world.user.Account;
 import kinoko.world.user.Locker;
@@ -27,6 +24,7 @@ import static kinoko.database.schema.AccountSchema.*;
 
 public final class CassandraAccountAccessor extends CassandraAccessor implements AccountAccessor {
     private static final String tableName = "account_Table";
+    private final AccountSerializer accountSerializer = new AccountSerializer();
 
     public CassandraAccountAccessor(CqlSession session, String keyspace) {
         super(session, keyspace);
@@ -45,22 +43,12 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
         account.setMaplePoint(row.getInt(MAPLE_POINT));
 
         final Trunk trunk = new Trunk(row.getInt(TRUNK_SIZE));
-        final List<Item> items = row.getList(TRUNK_ITEMS, Item.class);
-        if (items != null) {
-            for (Item item : items) {
-                trunk.getItems().add(item);
-            }
-        }
+        trunk.getItems().addAll(accountSerializer.deserializeTrunkItems(getJsonArray(row, TRUNK_ITEMS)));
         trunk.setMoney(row.getInt(TRUNK_MONEY));
         account.setTrunk(trunk);
 
         final Locker locker = new Locker();
-        final List<CashItemInfo> cashItems = row.getList(LOCKER_ITEMS, CashItemInfo.class);
-        if (cashItems != null) {
-            for (CashItemInfo cii : cashItems) {
-                locker.addCashItem(cii);
-            }
-        }
+        locker.getCashItems().addAll(accountSerializer.deserializeLockerItems(getJsonArray(row, LOCKER_ITEMS)));
         account.setLocker(locker);
 
         final List<Integer> wishlist = row.getList(WISHLIST, Integer.class);
@@ -171,10 +159,10 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
                         .value(NX_CREDIT, literal(0))
                         .value(NX_PREPAID, literal(0))
                         .value(MAPLE_POINT, literal(0))
-                        .value(TRUNK_ITEMS, literal(List.of()))
+                        .value(TRUNK_ITEMS, literalJsonArray(new JSONArray()))
                         .value(TRUNK_SIZE, literal(ServerConfig.TRUNK_BASE_SLOTS))
                         .value(TRUNK_MONEY, literal(0))
-                        .value(LOCKER_ITEMS, literal(List.of()))
+                        .value(LOCKER_ITEMS, literalJsonArray(new JSONArray()))
                         .value(WISHLIST, literal(List.of()))
                         .ifNotExists()
                         .build()
@@ -184,17 +172,16 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
 
     @Override
     public boolean saveAccount(Account account) {
-        final CodecRegistry registry = getSession().getContext().getCodecRegistry();
         final ResultSet updateResult = getSession().execute(
                 update(getKeyspace(), tableName)
                         .setColumn(CHARACTER_SLOTS, literal(account.getSlotCount()))
                         .setColumn(NX_CREDIT, literal(account.getNxCredit()))
                         .setColumn(NX_PREPAID, literal(account.getNxPrepaid()))
                         .setColumn(MAPLE_POINT, literal(account.getMaplePoint()))
-                        .setColumn(TRUNK_ITEMS, literal(account.getTrunk().getItems(), registry))
+                        .setColumn(TRUNK_ITEMS, literalJsonArray(accountSerializer.serializeTrunkItems(account.getTrunk().getItems())))
                         .setColumn(TRUNK_SIZE, literal(account.getTrunk().getSize()))
                         .setColumn(TRUNK_MONEY, literal(account.getTrunk().getMoney()))
-                        .setColumn(LOCKER_ITEMS, literal(account.getLocker().getCashItems(), registry))
+                        .setColumn(LOCKER_ITEMS, literalJsonArray(accountSerializer.serializeLockerItems(account.getLocker().getCashItems())))
                         .setColumn(WISHLIST, literal(account.getWishlist()))
                         .whereColumn(ACCOUNT_ID).isEqualTo(literal(account.getId()))
                         .build()
@@ -214,10 +201,10 @@ public final class CassandraAccountAccessor extends CassandraAccessor implements
                         .withColumn(NX_CREDIT, DataTypes.INT)
                         .withColumn(NX_PREPAID, DataTypes.INT)
                         .withColumn(MAPLE_POINT, DataTypes.INT)
-                        .withColumn(TRUNK_ITEMS, DataTypes.frozenListOf(SchemaBuilder.udt(ItemUDT.getTypeName(), true)))
+                        .withColumn(TRUNK_ITEMS, JSON_TYPE)
                         .withColumn(TRUNK_SIZE, DataTypes.INT)
                         .withColumn(TRUNK_MONEY, DataTypes.INT)
-                        .withColumn(LOCKER_ITEMS, DataTypes.frozenListOf(SchemaBuilder.udt(CashItemInfoUDT.getTypeName(), true)))
+                        .withColumn(LOCKER_ITEMS, JSON_TYPE)
                         .withColumn(WISHLIST, DataTypes.frozenListOf(DataTypes.INT))
                         .build()
         );

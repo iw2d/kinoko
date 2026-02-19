@@ -1,11 +1,9 @@
 package kinoko.database.sqlite;
 
 import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import kinoko.database.AccountAccessor;
 import kinoko.database.DatabaseManager;
-import kinoko.database.json.CashItemInfoSerializer;
-import kinoko.database.json.ItemSerializer;
+import kinoko.database.json.AccountSerializer;
 import kinoko.server.ServerConfig;
 import kinoko.world.item.Trunk;
 import kinoko.world.user.Account;
@@ -20,8 +18,7 @@ import static kinoko.database.schema.AccountSchema.*;
 
 public final class SqliteAccountAccessor extends SqliteAccessor implements AccountAccessor {
     private static final String tableName = "account_table";
-    private final ItemSerializer itemSerializer = new ItemSerializer();
-    private final CashItemInfoSerializer cashItemInfoSerializer = new CashItemInfoSerializer();
+    private final AccountSerializer accountSerializer = new AccountSerializer();
 
     public SqliteAccountAccessor(Connection connection) {
         super(connection);
@@ -40,16 +37,12 @@ public final class SqliteAccountAccessor extends SqliteAccessor implements Accou
         account.setMaplePoint(rs.getInt(MAPLE_POINT));
 
         final Trunk trunk = new Trunk(rs.getInt(TRUNK_SIZE));
-        for (var itemObject : getJsonArray(rs, TRUNK_ITEMS)) {
-            trunk.getItems().add(itemSerializer.deserialize((JSONObject) itemObject));
-        }
+        trunk.getItems().addAll(accountSerializer.deserializeTrunkItems(getJsonArray(rs, TRUNK_ITEMS)));
         trunk.setMoney(rs.getInt(TRUNK_MONEY));
         account.setTrunk(trunk);
 
         final Locker locker = new Locker();
-        for (var ciiObject : getJsonArray(rs, LOCKER_ITEMS)) {
-            locker.addCashItem(cashItemInfoSerializer.deserialize((JSONObject) ciiObject));
-        }
+        locker.getCashItems().addAll(accountSerializer.deserializeLockerItems(getJsonArray(rs, LOCKER_ITEMS)));
         account.setLocker(locker);
 
         account.setWishlist(getJsonArray(rs, WISHLIST).toList(Integer.class));
@@ -209,24 +202,18 @@ public final class SqliteAccountAccessor extends SqliteAccessor implements Accou
                         LOCKER_ITEMS + " = ?, " +
                         WISHLIST + " = ? WHERE " + ACCOUNT_ID + " = ?"
         )) {
-            ps.setInt(1, account.getSlotCount());
-            ps.setInt(2, account.getNxCredit());
-            ps.setInt(3, account.getNxPrepaid());
-            ps.setInt(4, account.getMaplePoint());
-            final JSONArray trunkArray = new JSONArray();
-            for (var item : account.getTrunk().getItems()) {
-                trunkArray.add(itemSerializer.serialize(item));
-            }
-            setJsonArray(ps, 5, trunkArray);
-            ps.setInt(6, account.getTrunk().getSize());
-            ps.setInt(7, account.getTrunk().getMoney());
-            final JSONArray lockerArray = new JSONArray();
-            for (var cii : account.getLocker().getCashItems()) {
-                lockerArray.add(cashItemInfoSerializer.serialize(cii));
-            }
-            setJsonArray(ps, 8, lockerArray);
-            setJsonArray(ps, 9, new JSONArray(account.getWishlist()));
-            ps.setInt(10, account.getId());
+            int i = 1;
+            ps.setInt(i++, account.getSlotCount());
+            ps.setInt(i++, account.getNxCredit());
+            ps.setInt(i++, account.getNxPrepaid());
+            ps.setInt(i++, account.getMaplePoint());
+            setJsonArray(ps, i++, accountSerializer.serializeTrunkItems(account.getTrunk().getItems()));
+            ps.setInt(i++, account.getTrunk().getSize());
+            ps.setInt(i++, account.getTrunk().getMoney());
+            setJsonArray(ps, i++, accountSerializer.serializeLockerItems(account.getLocker().getCashItems()));
+            setJsonArray(ps, i++, new JSONArray(account.getWishlist()));
+
+            ps.setInt(i, account.getId());
             if (ps.executeUpdate() > 0) {
                 return true;
             }

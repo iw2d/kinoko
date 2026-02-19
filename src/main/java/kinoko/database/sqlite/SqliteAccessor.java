@@ -11,8 +11,8 @@ import java.sql.SQLException;
 import java.time.Instant;
 
 public abstract class SqliteAccessor {
-    public static final String INSTANT_TYPE = "BIGINT";
-    public static final String JSON_TYPE = "TEXT";
+    protected static final String INSTANT_TYPE = "BIGINT";
+    protected static final String JSON_TYPE = "TEXT";
 
     private final Connection connection;
 

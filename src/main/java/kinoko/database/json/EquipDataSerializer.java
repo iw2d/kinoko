@@ -3,7 +3,7 @@ package kinoko.database.json;
 import com.alibaba.fastjson2.JSONObject;
 import kinoko.world.item.EquipData;
 
-import static kinoko.database.cassandra.type.EquipDataUDT.*;
+import static kinoko.database.schema.EquipDataSchema.*;
 
 public final class EquipDataSerializer implements JsonSerializer<EquipData> {
     public void putIfNotZero(JSONObject object, String key, int value) {

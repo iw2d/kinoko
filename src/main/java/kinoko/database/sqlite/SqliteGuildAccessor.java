@@ -39,7 +39,7 @@ public final class SqliteGuildAccessor extends SqliteAccessor implements GuildAc
         guild.setLevel(rs.getByte(LEVEL));
 
         guild.getBoardEntries().addAll(guildSerializer.deserializeBoardEntryList(getJsonArray(rs, BOARD_ENTRY_LIST)));
-        guild.setBoardNoticeEntry(guildSerializer.deserializeBoardNoticeEntry(getJsonObject(rs, BOARD_ENTRY_NOTICE)));
+        guild.setBoardNoticeEntry(guildSerializer.deserializeBoardEntryNotice(getJsonObject(rs, BOARD_ENTRY_NOTICE)));
         guild.setBoardEntryCounter(new AtomicInteger(rs.getInt(BOARD_ENTRY_COUNTER)));
         return guild;
     }
@@ -113,7 +113,7 @@ public final class SqliteGuildAccessor extends SqliteAccessor implements GuildAc
             ps.setInt(i++, guild.getPoints());
             ps.setByte(i++, guild.getLevel());
             setJsonArray(ps, i++, guildSerializer.serializeBoardEntryList(guild.getBoardEntries()));
-            setJsonObject(ps, i++, guildSerializer.serializeBoardNoticeEntry(guild.getBoardNoticeEntry()));
+            setJsonObject(ps, i++, guildSerializer.serializeBoardEntryNotice(guild.getBoardNoticeEntry()));
             ps.setInt(i++, guild.getBoardEntryCounter().get());
             if (ps.executeUpdate() > 0) {
                 return true;
@@ -156,7 +156,7 @@ public final class SqliteGuildAccessor extends SqliteAccessor implements GuildAc
             ps.setInt(i++, guild.getPoints());
             ps.setByte(i++, guild.getLevel());
             setJsonArray(ps, i++, guildSerializer.serializeBoardEntryList(guild.getBoardEntries()));
-            setJsonObject(ps, i++, guildSerializer.serializeBoardNoticeEntry(guild.getBoardNoticeEntry()));
+            setJsonObject(ps, i++, guildSerializer.serializeBoardEntryNotice(guild.getBoardNoticeEntry()));
             ps.setInt(i++, guild.getBoardEntryCounter().get());
 
             ps.setInt(i, guild.getGuildId());

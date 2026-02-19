@@ -4,18 +4,18 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.type.DataTypes;
-import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.CharacterAccessor;
 import kinoko.database.CharacterInfo;
 import kinoko.database.CharacterRankData;
-import kinoko.database.cassandra.type.*;
+import kinoko.database.json.CharacterDataSerializer;
+import kinoko.database.json.CharacterStatSerializer;
+import kinoko.database.json.InventorySerializer;
 import kinoko.server.rank.CharacterRank;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryManager;
 import kinoko.world.job.JobConstants;
 import kinoko.world.quest.QuestManager;
-import kinoko.world.quest.QuestRecord;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.AvatarData;
@@ -33,6 +33,9 @@ import static kinoko.database.schema.CharacterDataSchema.*;
 public final class CassandraCharacterAccessor extends CassandraAccessor implements CharacterAccessor {
     private static final String tableName = "character_table";
     private static final String characterNameIndex = "character_name_index";
+    private final CharacterDataSerializer characterDataSerializer = new CharacterDataSerializer();
+    private final CharacterStatSerializer characterStatSerializer = new CharacterStatSerializer();
+    private final InventorySerializer inventorySerializer = new InventorySerializer();
 
     public CassandraCharacterAccessor(CqlSession session, String keyspace) {
         super(session, keyspace);
@@ -43,64 +46,53 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
 
         final CharacterData cd = new CharacterData(accountId);
 
-        final CharacterStat cs = row.get(CHARACTER_STAT, CharacterStat.class);
+        final CharacterStat cs = characterStatSerializer.deserialize(getJsonObject(row, CHARACTER_STAT));
         cs.setId(row.getInt(CHARACTER_ID));
         cs.setName(row.getString(CHARACTER_NAME));
         cd.setCharacterStat(cs);
 
         final InventoryManager im = new InventoryManager();
-        im.setEquipped(row.get(CHARACTER_EQUIPPED, Inventory.class));
-        im.setEquipInventory(row.get(EQUIP_INVENTORY, Inventory.class));
-        im.setConsumeInventory(row.get(CONSUME_INVENTORY, Inventory.class));
-        im.setInstallInventory(row.get(INSTALL_INVENTORY, Inventory.class));
-        im.setEtcInventory(row.get(ETC_INVENTORY, Inventory.class));
-        im.setCashInventory(row.get(CASH_INVENTORY, Inventory.class));
+        im.setEquipped(inventorySerializer.deserialize(getJsonObject(row, CHARACTER_EQUIPPED)));
+        im.setEquipInventory(inventorySerializer.deserialize(getJsonObject(row, EQUIP_INVENTORY)));
+        im.setConsumeInventory(inventorySerializer.deserialize(getJsonObject(row, CONSUME_INVENTORY)));
+        im.setInstallInventory(inventorySerializer.deserialize(getJsonObject(row, INSTALL_INVENTORY)));
+        im.setEtcInventory(inventorySerializer.deserialize(getJsonObject(row, ETC_INVENTORY)));
+        im.setCashInventory(inventorySerializer.deserialize(getJsonObject(row, CASH_INVENTORY)));
         im.setMoney(row.getInt(MONEY));
         im.setExtSlotExpire(row.getInstant(EXT_SLOT_EXPIRE));
         cd.setInventoryManager(im);
 
         final SkillManager sm = new SkillManager();
-        final Map<Integer, Instant> skillCooltimes = row.getMap(SKILL_COOLTIMES, Integer.class, Instant.class);
-        if (skillCooltimes != null) {
-            sm.getSkillCooltimes().putAll(skillCooltimes);
+        for (var entry : characterDataSerializer.deserializeSkillCooltimes(getJsonObject(row, SKILL_COOLTIMES)).entrySet()) {
+            sm.setSkillCooltime(entry.getKey(), entry.getValue());
         }
-        final List<SkillRecord> skillRecords = row.getList(SKILL_RECORDS, SkillRecord.class);
-        if (skillRecords != null) {
-            for (SkillRecord sr : skillRecords) {
-                sm.addSkill(sr);
-            }
+        for (SkillRecord record : characterDataSerializer.deserializeSkillRecords(getJsonArray(row, SKILL_RECORDS))) {
+            sm.addSkill(record);
         }
         cd.setSkillManager(sm);
 
         final QuestManager qm = new QuestManager();
-        final List<QuestRecord> questRecords = row.getList(QUEST_RECORDS, QuestRecord.class);
-        if (questRecords != null) {
-            for (QuestRecord qr : questRecords) {
-                qm.addQuestRecord(qr);
-            }
+        for (var record : characterDataSerializer.deserializeQuestRecords(getJsonArray(row, QUEST_RECORDS))) {
+            qm.addQuestRecord(record);
         }
         cd.setQuestManager(qm);
 
-        final ConfigManager cm = row.get(CONFIG, ConfigManager.class);
+        final ConfigManager cm = characterDataSerializer.deserializeConfigManager(getJsonObject(row, CONFIG));
         cd.setConfigManager(cm);
 
-        final PopularityRecord pr = new PopularityRecord();
-        final Map<Integer, Instant> popularityRecords = row.getMap(POPULARITY_RECORD, Integer.class, Instant.class);
-        if (popularityRecords != null) {
-            pr.getRecords().putAll(popularityRecords);
-        }
+        final PopularityRecord pr = characterDataSerializer.deserializePopularityRecord(getJsonObject(row, POPULARITY_RECORD));
         cd.setPopularityRecord(pr);
 
-        final MiniGameRecord mgr = row.get(MINIGAME_RECORD, MiniGameRecord.class);
+        final MiniGameRecord mgr = characterDataSerializer.deserializeMiniGameRecord(getJsonObject(row, MINIGAME_RECORD));
         cd.setMiniGameRecord(mgr);
 
         final CoupleRecord cr = CoupleRecord.from(im.getEquipped(), im.getEquipInventory());
         cd.setCoupleRecord(cr);
 
-        final MapTransferInfo mti = row.get(MAP_TRANSFER_INFO, MapTransferInfo.class);
+        final MapTransferInfo mti = characterDataSerializer.deserializeMapTransferInfo(getJsonObject(row, MAP_TRANSFER_INFO));
         cd.setMapTransferInfo(mti);
 
-        final WildHunterInfo whi = row.get(WILD_HUNTER_INFO, WildHunterInfo.class);
+        final WildHunterInfo whi = characterDataSerializer.deserializeWildHunterInfo(getJsonObject(row, WILD_HUNTER_INFO));
         cd.setWildHunterInfo(whi);
 
         cd.setItemSnCounter(new AtomicInteger(row.getInt(ITEM_SN_COUNTER)));
@@ -209,10 +201,10 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .build()
         );
         for (Row row : selectResult) {
-            final CharacterStat characterStat = row.get(CHARACTER_STAT, CharacterStat.class);
+            final CharacterStat characterStat = characterStatSerializer.deserialize(getJsonObject(row, CHARACTER_STAT));
             characterStat.setId(row.getInt(CHARACTER_ID));
             characterStat.setName(row.getString(CHARACTER_NAME));
-            final Inventory equipped = row.get(CHARACTER_EQUIPPED, Inventory.class);
+            final Inventory equipped = inventorySerializer.deserialize(getJsonObject(row, CHARACTER_EQUIPPED));
             avatarDataList.add(AvatarData.from(characterStat, equipped));
         }
         return avatarDataList;
@@ -227,37 +219,36 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
     }
 
     @Override
-    public boolean saveCharacter(CharacterData characterData) {
-        final CodecRegistry registry = getSession().getContext().getCodecRegistry();
+    public boolean saveCharacter(CharacterData cd) {
         final ResultSet updateResult = getSession().execute(
                 update(getKeyspace(), tableName)
-                        .setColumn(ACCOUNT_ID, literal(characterData.getAccountId()))
-                        .setColumn(CHARACTER_NAME, literal(characterData.getCharacterName()))
-                        .setColumn(characterNameIndex, literal(lowerName(characterData.getCharacterName())))
-                        .setColumn(CHARACTER_STAT, literal(characterData.getCharacterStat(), registry))
-                        .setColumn(CHARACTER_EQUIPPED, literal(characterData.getInventoryManager().getEquipped(), registry))
-                        .setColumn(EQUIP_INVENTORY, literal(characterData.getInventoryManager().getEquipInventory(), registry))
-                        .setColumn(CONSUME_INVENTORY, literal(characterData.getInventoryManager().getConsumeInventory(), registry))
-                        .setColumn(INSTALL_INVENTORY, literal(characterData.getInventoryManager().getInstallInventory(), registry))
-                        .setColumn(ETC_INVENTORY, literal(characterData.getInventoryManager().getEtcInventory(), registry))
-                        .setColumn(CASH_INVENTORY, literal(characterData.getInventoryManager().getCashInventory(), registry))
-                        .setColumn(MONEY, literal(characterData.getInventoryManager().getMoney()))
-                        .setColumn(EXT_SLOT_EXPIRE, literal(characterData.getInventoryManager().getExtSlotExpire()))
-                        .setColumn(SKILL_COOLTIMES, literal(characterData.getSkillManager().getSkillCooltimes()))
-                        .setColumn(SKILL_RECORDS, literal(characterData.getSkillManager().getSkillRecords(), registry))
-                        .setColumn(QUEST_RECORDS, literal(characterData.getQuestManager().getQuestRecords(), registry))
-                        .setColumn(CONFIG, literal(characterData.getConfigManager(), registry))
-                        .setColumn(POPULARITY_RECORD, literal(characterData.getPopularityRecord().getRecords(), registry))
-                        .setColumn(MINIGAME_RECORD, literal(characterData.getMiniGameRecord(), registry))
-                        .setColumn(MAP_TRANSFER_INFO, literal(characterData.getMapTransferInfo(), registry))
-                        .setColumn(WILD_HUNTER_INFO, literal(characterData.getWildHunterInfo(), registry))
-                        .setColumn(ITEM_SN_COUNTER, literal(characterData.getItemSnCounter().get()))
-                        .setColumn(FRIEND_MAX, literal(characterData.getFriendMax()))
-                        .setColumn(PARTY_ID, literal(characterData.getPartyId()))
-                        .setColumn(GUILD_ID, literal(characterData.getGuildId()))
-                        .setColumn(CREATION_TIME, literal(characterData.getCreationTime()))
-                        .setColumn(MAX_LEVEL_TIME, literal(characterData.getMaxLevelTime()))
-                        .whereColumn(CHARACTER_ID).isEqualTo(literal(characterData.getCharacterId()))
+                        .setColumn(ACCOUNT_ID, literal(cd.getAccountId()))
+                        .setColumn(CHARACTER_NAME, literal(cd.getCharacterName()))
+                        .setColumn(characterNameIndex, literal(lowerName(cd.getCharacterName())))
+                        .setColumn(CHARACTER_STAT, literalJsonObject(characterStatSerializer.serialize(cd.getCharacterStat())))
+                        .setColumn(CHARACTER_EQUIPPED, literalJsonObject(inventorySerializer.serialize(cd.getInventoryManager().getEquipped())))
+                        .setColumn(EQUIP_INVENTORY, literalJsonObject(inventorySerializer.serialize(cd.getInventoryManager().getEquipInventory())))
+                        .setColumn(CONSUME_INVENTORY, literalJsonObject(inventorySerializer.serialize(cd.getInventoryManager().getConsumeInventory())))
+                        .setColumn(INSTALL_INVENTORY, literalJsonObject(inventorySerializer.serialize(cd.getInventoryManager().getInstallInventory())))
+                        .setColumn(ETC_INVENTORY, literalJsonObject(inventorySerializer.serialize(cd.getInventoryManager().getEtcInventory())))
+                        .setColumn(CASH_INVENTORY, literalJsonObject(inventorySerializer.serialize(cd.getInventoryManager().getCashInventory())))
+                        .setColumn(MONEY, literal(cd.getInventoryManager().getMoney()))
+                        .setColumn(EXT_SLOT_EXPIRE, literal(cd.getInventoryManager().getExtSlotExpire()))
+                        .setColumn(SKILL_COOLTIMES, literalJsonObject(characterDataSerializer.serializeSkillCooltimes(cd.getSkillManager().getSkillCooltimes())))
+                        .setColumn(SKILL_RECORDS, literalJsonArray(characterDataSerializer.serializeSkillRecords(cd.getSkillManager().getSkillRecords())))
+                        .setColumn(QUEST_RECORDS, literalJsonArray(characterDataSerializer.serializeQuestRecords(cd.getQuestManager().getQuestRecords())))
+                        .setColumn(CONFIG, literalJsonObject(characterDataSerializer.serializeConfigManager(cd.getConfigManager())))
+                        .setColumn(POPULARITY_RECORD, literalJsonObject(characterDataSerializer.serializePopularityRecord(cd.getPopularityRecord())))
+                        .setColumn(MINIGAME_RECORD, literalJsonObject(characterDataSerializer.serializeMiniGameRecord(cd.getMiniGameRecord())))
+                        .setColumn(MAP_TRANSFER_INFO, literalJsonObject(characterDataSerializer.serializeMapTransferInfo(cd.getMapTransferInfo())))
+                        .setColumn(WILD_HUNTER_INFO, literalJsonObject(characterDataSerializer.serializeWildHunterInfo(cd.getWildHunterInfo())))
+                        .setColumn(ITEM_SN_COUNTER, literal(cd.getItemSnCounter().get()))
+                        .setColumn(FRIEND_MAX, literal(cd.getFriendMax()))
+                        .setColumn(PARTY_ID, literal(cd.getPartyId()))
+                        .setColumn(GUILD_ID, literal(cd.getGuildId()))
+                        .setColumn(CREATION_TIME, literal(cd.getCreationTime()))
+                        .setColumn(MAX_LEVEL_TIME, literal(cd.getMaxLevelTime()))
+                        .whereColumn(CHARACTER_ID).isEqualTo(literal(cd.getCharacterId()))
                         .build()
         );
         return updateResult.wasApplied();
@@ -289,7 +280,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
         final List<CharacterRankData> rankDataList = new ArrayList<>();
         for (Row row : selectResult) {
             final int characterId = row.getInt(CHARACTER_ID);
-            final CharacterStat characterStat = row.get(CHARACTER_STAT, CharacterStat.class);
+            final CharacterStat characterStat = characterStatSerializer.deserialize(getJsonObject(row, CHARACTER_STAT));
             final Instant maxLevelTime = row.getInstant(MAX_LEVEL_TIME);
             final int jobId = characterStat.getJob();
             if (JobConstants.isAdminJob(jobId) || JobConstants.isManagerJob(jobId)) {
@@ -329,23 +320,23 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .withColumn(ACCOUNT_ID, DataTypes.INT)
                         .withColumn(CHARACTER_NAME, DataTypes.TEXT)
                         .withColumn(characterNameIndex, DataTypes.TEXT)
-                        .withColumn(CHARACTER_STAT, SchemaBuilder.udt(CharacterStatUDT.getTypeName(), false)) // to allow fixing characters in DB
-                        .withColumn(CHARACTER_EQUIPPED, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
-                        .withColumn(EQUIP_INVENTORY, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
-                        .withColumn(CONSUME_INVENTORY, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
-                        .withColumn(INSTALL_INVENTORY, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
-                        .withColumn(ETC_INVENTORY, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
-                        .withColumn(CASH_INVENTORY, SchemaBuilder.udt(InventoryUDT.getTypeName(), true))
+                        .withColumn(CHARACTER_STAT, JSON_TYPE)
+                        .withColumn(CHARACTER_EQUIPPED, JSON_TYPE)
+                        .withColumn(EQUIP_INVENTORY, JSON_TYPE)
+                        .withColumn(CONSUME_INVENTORY, JSON_TYPE)
+                        .withColumn(INSTALL_INVENTORY, JSON_TYPE)
+                        .withColumn(ETC_INVENTORY, JSON_TYPE)
+                        .withColumn(CASH_INVENTORY, JSON_TYPE)
                         .withColumn(MONEY, DataTypes.INT)
                         .withColumn(EXT_SLOT_EXPIRE, DataTypes.TIMESTAMP)
-                        .withColumn(SKILL_COOLTIMES, DataTypes.frozenMapOf(DataTypes.INT, DataTypes.TIMESTAMP))
-                        .withColumn(SKILL_RECORDS, DataTypes.frozenListOf(SchemaBuilder.udt(SkillRecordUDT.getTypeName(), true)))
-                        .withColumn(QUEST_RECORDS, DataTypes.frozenListOf(SchemaBuilder.udt(QuestRecordUDT.getTypeName(), true)))
-                        .withColumn(POPULARITY_RECORD, DataTypes.frozenMapOf(DataTypes.INT, DataTypes.TIMESTAMP))
-                        .withColumn(MINIGAME_RECORD, SchemaBuilder.udt(MiniGameRecordUDT.getTypeName(), true))
-                        .withColumn(MAP_TRANSFER_INFO, SchemaBuilder.udt(MapTransferInfoUDT.getTypeName(), true))
-                        .withColumn(WILD_HUNTER_INFO, SchemaBuilder.udt(WildHunterInfoUDT.getTypeName(), true))
-                        .withColumn(CONFIG, SchemaBuilder.udt(ConfigUDT.getTypeName(), true))
+                        .withColumn(SKILL_COOLTIMES, JSON_TYPE)
+                        .withColumn(SKILL_RECORDS, JSON_TYPE)
+                        .withColumn(QUEST_RECORDS, JSON_TYPE)
+                        .withColumn(POPULARITY_RECORD, JSON_TYPE)
+                        .withColumn(MINIGAME_RECORD, JSON_TYPE)
+                        .withColumn(MAP_TRANSFER_INFO, JSON_TYPE)
+                        .withColumn(WILD_HUNTER_INFO, JSON_TYPE)
+                        .withColumn(CONFIG, JSON_TYPE)
                         .withColumn(ITEM_SN_COUNTER, DataTypes.INT)
                         .withColumn(FRIEND_MAX, DataTypes.INT)
                         .withColumn(PARTY_ID, DataTypes.INT)

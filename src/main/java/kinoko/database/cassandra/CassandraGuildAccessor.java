@@ -4,13 +4,10 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.core.type.DataTypes;
-import com.datastax.oss.driver.api.core.type.codec.registry.CodecRegistry;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import kinoko.database.GuildAccessor;
-import kinoko.database.cassandra.type.GuildBoardEntryUDT;
-import kinoko.database.cassandra.type.GuildMemberUDT;
+import kinoko.database.json.GuildSerializer;
 import kinoko.server.guild.Guild;
-import kinoko.server.guild.GuildBoardEntry;
 import kinoko.server.guild.GuildMember;
 import kinoko.server.guild.GuildRanking;
 
@@ -26,6 +23,7 @@ import static kinoko.database.schema.GuildSchema.*;
 public final class CassandraGuildAccessor extends CassandraAccessor implements GuildAccessor {
     private static final String tableName = "guild_table";
     private static final String guildNameIndex = "guild_name_index";
+    private final GuildSerializer guildSerializer = new GuildSerializer();
 
     public CassandraGuildAccessor(CqlSession session, String keyspace) {
         super(session, keyspace);
@@ -35,15 +33,9 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
         final int guildId = row.getInt(GUILD_ID);
         final String guildName = row.getString(GUILD_NAME);
         final Guild guild = new Guild(guildId, guildName);
-        final List<String> gradeNames = row.getList(GRADE_NAMES, String.class);
-        if (gradeNames != null) {
-            guild.setGradeNames(gradeNames);
-        }
-        final List<GuildMember> members = row.getList(MEMBERS, GuildMember.class);
-        if (members != null) {
-            for (GuildMember member : members) {
-                guild.addMember(member);
-            }
+        guild.setGradeNames(guildSerializer.deserializeGradeNames(getJsonArray(row, GRADE_NAMES)));
+        for (GuildMember member : guildSerializer.deserializeGuildMembers(getJsonArray(row, MEMBERS))) {
+            guild.addMember(member);
         }
         guild.setMemberMax(row.getInt(MEMBER_MAX));
         guild.setMarkBg(row.getShort(MARK_BG));
@@ -53,11 +45,9 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
         guild.setNotice(row.getString(NOTICE));
         guild.setPoints(row.getInt(POINTS));
         guild.setLevel(row.getByte(LEVEL));
-        final List<GuildBoardEntry> boardEntries = row.getList(BOARD_ENTRY_LIST, GuildBoardEntry.class);
-        if (boardEntries != null) {
-            guild.getBoardEntries().addAll(boardEntries);
-        }
-        guild.setBoardNoticeEntry(row.get(BOARD_ENTRY_NOTICE, GuildBoardEntry.class));
+
+        guild.getBoardEntries().addAll(guildSerializer.deserializeBoardEntryList(getJsonArray(row, BOARD_ENTRY_LIST)));
+        guild.setBoardNoticeEntry(guildSerializer.deserializeBoardEntryNotice(getJsonObject(row, BOARD_ENTRY_NOTICE)));
         guild.setBoardEntryCounter(new AtomicInteger(row.getInt(BOARD_ENTRY_COUNTER)));
         return guild;
     }
@@ -101,13 +91,12 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
 
     @Override
     public boolean saveGuild(Guild guild) {
-        final CodecRegistry registry = getSession().getContext().getCodecRegistry();
         final ResultSet updateResult = getSession().execute(
                 update(getKeyspace(), tableName)
                         .setColumn(GUILD_NAME, literal(guild.getGuildName()))
                         .setColumn(guildNameIndex, literal(lowerName(guild.getGuildName())))
-                        .setColumn(GRADE_NAMES, literal(guild.getGradeNames()))
-                        .setColumn(MEMBERS, literal(guild.getGuildMembers(), registry))
+                        .setColumn(GRADE_NAMES, literalJsonArray(guildSerializer.serializeGradeNames(guild.getGradeNames())))
+                        .setColumn(MEMBERS, literalJsonArray(guildSerializer.serializeGuildMembers(guild.getGuildMembers())))
                         .setColumn(MEMBER_MAX, literal(guild.getMemberMax()))
                         .setColumn(MARK_BG, literal(guild.getMarkBg()))
                         .setColumn(MARK_BG_COLOR, literal(guild.getMarkBgColor()))
@@ -116,8 +105,8 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
                         .setColumn(NOTICE, literal(guild.getNotice()))
                         .setColumn(POINTS, literal(guild.getPoints()))
                         .setColumn(LEVEL, literal(guild.getLevel()))
-                        .setColumn(BOARD_ENTRY_LIST, literal(guild.getBoardEntries(), registry))
-                        .setColumn(BOARD_ENTRY_NOTICE, literal(guild.getBoardNoticeEntry(), registry))
+                        .setColumn(BOARD_ENTRY_LIST, literalJsonArray(guildSerializer.serializeBoardEntryList(guild.getBoardEntries())))
+                        .setColumn(BOARD_ENTRY_NOTICE, literalJsonObject(guildSerializer.serializeBoardEntryNotice(guild.getBoardNoticeEntry())))
                         .setColumn(BOARD_ENTRY_COUNTER, literal(guild.getBoardEntryCounter().get()))
                         .whereColumn(GUILD_ID).isEqualTo(literal(guild.getGuildId()))
                         .build()
@@ -174,8 +163,8 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
                         .withPartitionKey(GUILD_ID, DataTypes.INT)
                         .withColumn(GUILD_NAME, DataTypes.TEXT)
                         .withColumn(guildNameIndex, DataTypes.TEXT)
-                        .withColumn(GRADE_NAMES, DataTypes.frozenListOf(DataTypes.TEXT))
-                        .withColumn(MEMBERS, DataTypes.frozenListOf(SchemaBuilder.udt(GuildMemberUDT.getTypeName(), true)))
+                        .withColumn(GRADE_NAMES, JSON_TYPE)
+                        .withColumn(MEMBERS, JSON_TYPE)
                         .withColumn(MEMBER_MAX, DataTypes.INT)
                         .withColumn(MARK_BG, DataTypes.SMALLINT)
                         .withColumn(MARK_BG_COLOR, DataTypes.TINYINT)
@@ -184,8 +173,8 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
                         .withColumn(NOTICE, DataTypes.TEXT)
                         .withColumn(POINTS, DataTypes.INT)
                         .withColumn(LEVEL, DataTypes.TINYINT)
-                        .withColumn(BOARD_ENTRY_LIST, DataTypes.frozenListOf(SchemaBuilder.udt(GuildBoardEntryUDT.getTypeName(), true)))
-                        .withColumn(BOARD_ENTRY_NOTICE, SchemaBuilder.udt(GuildBoardEntryUDT.getTypeName(), true))
+                        .withColumn(BOARD_ENTRY_LIST, JSON_TYPE)
+                        .withColumn(BOARD_ENTRY_NOTICE, JSON_TYPE)
                         .withColumn(BOARD_ENTRY_COUNTER, DataTypes.INT)
                         .build()
         );
