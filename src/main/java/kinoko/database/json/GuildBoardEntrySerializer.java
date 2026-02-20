@@ -7,7 +7,14 @@ import kinoko.server.guild.GuildBoardEntry;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static kinoko.database.schema.GuildBoardEntrySchema.*;
+import static kinoko.database.schema.GuildBoardEntrySchema.CHARACTER_ID;
+import static kinoko.database.schema.GuildBoardEntrySchema.COMMENTS;
+import static kinoko.database.schema.GuildBoardEntrySchema.COMMENT_SN_COUNTER;
+import static kinoko.database.schema.GuildBoardEntrySchema.DATE;
+import static kinoko.database.schema.GuildBoardEntrySchema.EMOTICON;
+import static kinoko.database.schema.GuildBoardEntrySchema.ENTRY_ID;
+import static kinoko.database.schema.GuildBoardEntrySchema.TEXT;
+import static kinoko.database.schema.GuildBoardEntrySchema.TITLE;
 
 public final class GuildBoardEntrySerializer implements JsonSerializer<GuildBoardEntry> {
     private final GuildBoardCommentSerializer guildBoardCommentSerializer = new GuildBoardCommentSerializer();

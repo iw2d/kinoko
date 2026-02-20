@@ -24,7 +24,10 @@ import kinoko.world.user.data.*;
 import kinoko.world.user.stat.CharacterStat;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.*;
@@ -267,6 +270,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
 
     @Override
     public Map<Integer, CharacterRank> getCharacterRanks() {
+        final List<CharacterRankData> rankDataList = new ArrayList<>();
         final ResultSet selectResult = getSession().execute(
                 selectFrom(getKeyspace(), tableName)
                         .columns(
@@ -277,15 +281,11 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                         .build()
                         .setExecutionProfileName(CassandraConnector.PROFILE_ONE)
         );
-        final List<CharacterRankData> rankDataList = new ArrayList<>();
         for (Row row : selectResult) {
             final int characterId = row.getInt(CHARACTER_ID);
             final CharacterStat characterStat = characterStatSerializer.deserialize(getJsonObject(row, CHARACTER_STAT));
             final Instant maxLevelTime = row.getInstant(MAX_LEVEL_TIME);
             final int jobId = characterStat.getJob();
-            if (JobConstants.isAdminJob(jobId) || JobConstants.isManagerJob(jobId)) {
-                continue;
-            }
             rankDataList.add(new CharacterRankData(
                     characterId,
                     JobConstants.getJobCategory(jobId),
@@ -293,23 +293,7 @@ public final class CassandraCharacterAccessor extends CassandraAccessor implemen
                     maxLevelTime
             ));
         }
-        // Sort and process rank data
-        rankDataList.sort(Comparator.comparing(CharacterRankData::getCumulativeExp).reversed().thenComparing(CharacterRankData::getMaxLevelTime));
-        final Map<Integer, Integer> jobRanks = new HashMap<>(); // job rank counter
-        final Map<Integer, CharacterRank> characterRanks = new HashMap<>(); // character id -> character rank
-        for (CharacterRankData rankData : rankDataList) {
-            final int characterId = rankData.getCharacterId();
-            final int jobCategory = rankData.getJobCategory();
-            final int worldRank = characterRanks.size() + 1;
-            final int jobRank = jobRanks.getOrDefault(jobCategory, 0) + 1;
-            jobRanks.put(jobCategory, jobRank);
-            characterRanks.put(characterId, new CharacterRank(
-                    characterId,
-                    worldRank,
-                    jobRank
-            ));
-        }
-        return characterRanks;
+        return CharacterRankData.processCharacterRanks(rankDataList);
     }
 
     public static void createTable(CqlSession session, String keyspace) {

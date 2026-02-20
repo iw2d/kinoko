@@ -7,6 +7,7 @@ import kinoko.server.guild.GuildMember;
 import kinoko.server.guild.GuildRanking;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -186,7 +187,31 @@ public final class SqliteGuildAccessor extends SqliteAccessor implements GuildAc
 
     @Override
     public List<GuildRanking> getGuildRankings() {
-        return List.of(); // TODO
+        final List<GuildRanking> guildRankings = new ArrayList<>();
+        try (Statement s = getConnection().createStatement();
+             ResultSet rs = s.executeQuery(
+                     "SELECT " +
+                             GUILD_NAME + ", " +
+                             POINTS + ", " +
+                             MARK + ", " +
+                             MARK_COLOR + ", " +
+                             MARK_BG + ", " +
+                             MARK_BG_COLOR + " FROM " + tableName + " ORDER BY " + POINTS + " DESC"
+             )) {
+            while (rs.next()) {
+                guildRankings.add(new GuildRanking(
+                        rs.getString(GUILD_NAME),
+                        rs.getInt(POINTS),
+                        rs.getShort(MARK),
+                        rs.getByte(MARK_COLOR),
+                        rs.getShort(MARK_BG),
+                        rs.getByte(MARK_BG_COLOR)
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return guildRankings;
     }
 
     public static void createTable(Connection connection) throws SQLException {
@@ -212,6 +237,9 @@ public final class SqliteGuildAccessor extends SqliteAccessor implements GuildAc
 
             s.executeUpdate(
                     "CREATE INDEX IF NOT EXISTS idx_guild_name ON " + tableName + "(" + GUILD_NAME + ")"
+            );
+            s.executeUpdate(
+                    "CREATE INDEX IF NOT EXISTS idx_guild_points ON " + tableName + "(" + POINTS + " DESC)"
             );
         }
     }
