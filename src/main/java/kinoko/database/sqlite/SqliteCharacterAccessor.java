@@ -2,12 +2,14 @@ package kinoko.database.sqlite;
 
 import kinoko.database.CharacterAccessor;
 import kinoko.database.CharacterInfo;
+import kinoko.database.CharacterRankData;
 import kinoko.database.json.CharacterDataSerializer;
 import kinoko.database.json.CharacterStatSerializer;
 import kinoko.database.json.InventorySerializer;
 import kinoko.server.rank.CharacterRank;
 import kinoko.world.item.Inventory;
 import kinoko.world.item.InventoryManager;
+import kinoko.world.job.JobConstants;
 import kinoko.world.quest.QuestManager;
 import kinoko.world.skill.SkillManager;
 import kinoko.world.skill.SkillRecord;
@@ -27,6 +29,8 @@ import static kinoko.database.schema.CharacterDataSchema.*;
 
 public final class SqliteCharacterAccessor extends SqliteAccessor implements CharacterAccessor {
     private static final String tableName = "character_table";
+    private static final String cumulativeExp = "cumulative_exp";
+    private static final String jobCategory = "job_category";
     private final CharacterDataSerializer characterDataSerializer = new CharacterDataSerializer();
     private final CharacterStatSerializer characterStatSerializer = new CharacterStatSerializer();
     private final InventorySerializer inventorySerializer = new InventorySerializer();
@@ -243,7 +247,9 @@ public final class SqliteCharacterAccessor extends SqliteAccessor implements Cha
                         PARTY_ID + ", " +
                         GUILD_ID + ", " +
                         CREATION_TIME + ", " +
-                        MAX_LEVEL_TIME + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                        MAX_LEVEL_TIME + ", " +
+                        cumulativeExp + ", " +
+                        jobCategory + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         )) {
             int i = 1;
             ps.setInt(i++, cd.getCharacterId());
@@ -272,6 +278,8 @@ public final class SqliteCharacterAccessor extends SqliteAccessor implements Cha
             ps.setInt(i++, cd.getGuildId());
             setInstant(ps, i++, cd.getCreationTime());
             setInstant(ps, i++, cd.getMaxLevelTime());
+            ps.setLong(i++, cd.getCharacterStat().getCumulativeExp());
+            ps.setInt(i++, JobConstants.getJobCategory(cd.getCharacterStat().getJob()));
             if (ps.executeUpdate() > 0) {
                 return true;
             }
@@ -309,7 +317,9 @@ public final class SqliteCharacterAccessor extends SqliteAccessor implements Cha
                         PARTY_ID + " = ?," +
                         GUILD_ID + " = ?," +
                         CREATION_TIME + " = ?," +
-                        MAX_LEVEL_TIME + " = ? WHERE " + CHARACTER_ID + " = ?"
+                        MAX_LEVEL_TIME + " = ?," +
+                        cumulativeExp + " = ?," +
+                        jobCategory + " = ? WHERE " + CHARACTER_ID + " = ?"
         )) {
             int i = 1;
             ps.setInt(i++, cd.getAccountId());
@@ -337,6 +347,8 @@ public final class SqliteCharacterAccessor extends SqliteAccessor implements Cha
             ps.setInt(i++, cd.getGuildId());
             setInstant(ps, i++, cd.getCreationTime());
             setInstant(ps, i++, cd.getMaxLevelTime());
+            ps.setLong(i++, cd.getCharacterStat().getCumulativeExp());
+            ps.setInt(i++, JobConstants.getJobCategory(cd.getCharacterStat().getJob()));
 
             ps.setInt(i, cd.getCharacterId());
             if (ps.executeUpdate() > 0) {
@@ -364,7 +376,28 @@ public final class SqliteCharacterAccessor extends SqliteAccessor implements Cha
 
     @Override
     public Map<Integer, CharacterRank> getCharacterRanks() {
-        return Map.of(); // TODO
+        final List<CharacterRankData> rankDataList = new ArrayList<>();
+        try (Statement s = getConnection().createStatement()) {
+            try (ResultSet rs = s.executeQuery(
+                    "SELECT " +
+                            CHARACTER_ID + ", " +
+                            MAX_LEVEL_TIME + ", " +
+                            cumulativeExp + ", " +
+                            jobCategory + " FROM " + tableName + " ORDER BY " + cumulativeExp + " DESC, " + MAX_LEVEL_TIME + " ASC"
+            )) {
+                while (rs.next()) {
+                    rankDataList.add(new CharacterRankData(
+                            rs.getInt(CHARACTER_ID),
+                            rs.getInt(jobCategory),
+                            rs.getLong(cumulativeExp),
+                            getInstant(rs, MAX_LEVEL_TIME)
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return CharacterRankData.processCharacterRanks(rankDataList);
     }
 
     public static void createTable(Connection connection) throws SQLException {
@@ -396,12 +429,19 @@ public final class SqliteCharacterAccessor extends SqliteAccessor implements Cha
                             PARTY_ID + " INTEGER NOT NULL, " +
                             GUILD_ID + " INTEGER NOT NULL, " +
                             CREATION_TIME + " " + INSTANT_TYPE + ", " +
-                            MAX_LEVEL_TIME + " " + INSTANT_TYPE + ")"
+                            MAX_LEVEL_TIME + " " + INSTANT_TYPE + ", " +
+                            cumulativeExp + " BIGINT NOT NULL, " +
+                            jobCategory + " INTEGER NOT NULL)"
             );
 
             s.executeUpdate(
                     "CREATE INDEX IF NOT EXISTS idx_character_account_id ON " +
                             tableName + "(" + ACCOUNT_ID + ")"
+            );
+
+            s.executeUpdate(
+                    "CREATE INDEX IF NOT EXISTS idx_character_cumulative_exp ON " +
+                            tableName + "(" + cumulativeExp + " DESC, " + MAX_LEVEL_TIME + " ASC)"
             );
         }
     }

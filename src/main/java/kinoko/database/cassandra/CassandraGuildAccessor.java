@@ -126,6 +126,7 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
 
     @Override
     public List<GuildRanking> getGuildRankings() {
+        final List<GuildRanking> guildRankings = new ArrayList<>();
         final ResultSet selectResult = getSession().execute(
                 selectFrom(getKeyspace(), tableName)
                         .columns(
@@ -139,7 +140,6 @@ public final class CassandraGuildAccessor extends CassandraAccessor implements G
                         .build()
                         .setExecutionProfileName(CassandraConnector.PROFILE_ONE)
         );
-        final List<GuildRanking> guildRankings = new ArrayList<>();
         for (Row row : selectResult) {
             guildRankings.add(new GuildRanking(
                     row.getString(GUILD_NAME),
