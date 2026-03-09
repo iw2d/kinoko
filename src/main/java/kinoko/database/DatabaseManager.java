@@ -1,6 +1,8 @@
 package kinoko.database;
 
+import kinoko.database.cassandra.CassandraConnector;
 import kinoko.database.sqlite.SqliteConnector;
+import kinoko.server.ServerConstants;
 
 public final class DatabaseManager {
     private static DatabaseConnector connector;
@@ -34,7 +36,17 @@ public final class DatabaseManager {
     }
 
     public static void initialize() {
-        connector = new SqliteConnector();
+        switch (ServerConstants.DATABASE_PROVIDER) {
+            case "cassandra" -> {
+                connector = new CassandraConnector();
+            }
+            case "sqlite" -> {
+                connector = new SqliteConnector();
+            }
+            default -> {
+                throw new IllegalArgumentException("Unknown database provider : " + ServerConstants.DATABASE_PROVIDER);
+            }
+        }
         connector.initialize();
     }
 

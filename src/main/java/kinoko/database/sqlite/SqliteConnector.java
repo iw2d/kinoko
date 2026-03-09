@@ -1,14 +1,15 @@
 package kinoko.database.sqlite;
 
 import kinoko.database.*;
+import kinoko.server.ServerConfig;
 
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public final class SqliteConnector implements DatabaseConnector {
-
-    public static final String DATABASE_FILE = "kinoko.db";
+    public static final Path DATABASE_PATH = Path.of(ServerConfig.DATA_DIRECTORY, "kinoko.db");
 
     private Connection connection;
     private IdAccessor idAccessor;
@@ -58,7 +59,7 @@ public final class SqliteConnector implements DatabaseConnector {
     public void initialize() {
         try {
             // Connect to SQLite database (creates file if it does not exist)
-            connection = DriverManager.getConnection("jdbc:sqlite:" + DATABASE_FILE);
+            connection = DriverManager.getConnection("jdbc:sqlite:" + DATABASE_PATH);
 
             // Create Tables
             SqliteIdAccessor.createTable(connection);
