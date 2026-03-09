@@ -25,7 +25,7 @@ public class Effect implements Encodable {
         outPacket.encodeByte(type.getValue());
         switch (type) {
             case LevelUp, PlayPortalSE, JobChanged, QuestComplete, MonsterBookCardGet, ItemLevelUp,
-                    ExpItemConsumed, Buff, SoulStoneUse, RepeatEffectRemove, EvolRing -> {
+                 ExpItemConsumed, Buff, SoulStoneUse, RepeatEffectRemove, EvolRing -> {
                 // no encodes
             }
             case Quest -> {

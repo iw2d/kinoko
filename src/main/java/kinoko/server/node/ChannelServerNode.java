@@ -14,6 +14,7 @@ import kinoko.server.field.Instance;
 import kinoko.server.field.InstanceStorage;
 import kinoko.server.guild.GuildBoardRequest;
 import kinoko.server.guild.GuildRequest;
+import kinoko.server.handler.ChannelServerHandler;
 import kinoko.server.messenger.MessengerRequest;
 import kinoko.server.migration.MigrationInfo;
 import kinoko.server.migration.TransferInfo;

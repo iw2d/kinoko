@@ -230,7 +230,8 @@ public final class ScriptManagerImpl implements ScriptManager {
                 cs.setMaxHp(cs.getMaxHp() + Util.getRandom(100, 150));
                 cs.setMaxMp(cs.getMaxMp() + Util.getRandom(25, 50));
             }
-            case HUNTER, CROSSBOWMAN, ASSASSIN, BANDIT, BRAWLER, GUNSLINGER, WIND_ARCHER_2, NIGHT_WALKER_2, THUNDER_BREAKER_2 -> {
+            case HUNTER, CROSSBOWMAN, ASSASSIN, BANDIT, BRAWLER, GUNSLINGER, WIND_ARCHER_2, NIGHT_WALKER_2,
+                 THUNDER_BREAKER_2 -> {
                 cs.setMaxHp(cs.getMaxHp() + Util.getRandom(300, 350));
                 cs.setMaxMp(cs.getMaxMp() + Util.getRandom(150, 200));
             }
