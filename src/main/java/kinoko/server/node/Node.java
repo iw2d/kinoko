@@ -2,11 +2,8 @@ package kinoko.server.node;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -15,8 +12,9 @@ import java.net.InetAddress;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class Node {
-    private final EventLoopGroup bossGroup = new NioEventLoopGroup();
-    private final EventLoopGroup workerGroup = new NioEventLoopGroup();
+    private static final IoHandlerFactory handlerFactory = NioIoHandler.newFactory();
+    private final EventLoopGroup bossGroup = new MultiThreadIoEventLoopGroup(handlerFactory);
+    private final EventLoopGroup workerGroup = new MultiThreadIoEventLoopGroup(handlerFactory);
     private final CompletableFuture<Void> shutdownFuture = new CompletableFuture<>();
     private boolean shutdown = false;
 

@@ -1,4 +1,4 @@
-package kinoko.server.netty;
+package kinoko.server.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

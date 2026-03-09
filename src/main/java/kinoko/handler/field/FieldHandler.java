@@ -118,7 +118,7 @@ public final class FieldHandler {
         final EventType eventType;
         switch (fieldId) {
             case ContiMoveVictoria.ORBIS_STATION_VICTORIA_BOUND, ContiMoveVictoria.STATION_TO_ORBIS,
-                    ContiMoveVictoria.DURING_THE_RIDE_VICTORIA_BOUND, ContiMoveVictoria.DURING_THE_RIDE_TO_ORBIS -> {
+                 ContiMoveVictoria.DURING_THE_RIDE_VICTORIA_BOUND, ContiMoveVictoria.DURING_THE_RIDE_TO_ORBIS -> {
                 eventType = EventType.CM_VICTORIA;
             }
             case ContiMoveLudibrium.ORBIS_STATION_LUDIBRIUM, ContiMoveLudibrium.LUDIBRIUM_STATION_ORBIS -> {

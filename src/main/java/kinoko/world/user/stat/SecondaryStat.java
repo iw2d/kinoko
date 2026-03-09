@@ -214,8 +214,8 @@ public final class SecondaryStat {
                         outPacket.encodeInt(getOption(cts).nOption);
                     }
                     case WeaponCharge, Stun, Darkness, Seal, Weakness, Curse, ShadowPartner, Attract, BanMap, Barrier,
-                            DojangShield, ReverseInput, RepeatEffect, StopPortion, StopMotion, Fear, Frozen,
-                            SuddenDeath, FinalCut, Mechanic, DarkAura, BlueAura, YellowAura -> {
+                         DojangShield, ReverseInput, RepeatEffect, StopPortion, StopMotion, Fear, Frozen,
+                         SuddenDeath, FinalCut, Mechanic, DarkAura, BlueAura, YellowAura -> {
                         outPacket.encodeInt(getOption(cts).rOption);
                     }
                     case Poison -> {
@@ -344,7 +344,7 @@ public final class SecondaryStat {
                     this.mad += si.getValue(SkillStat.mad, slv);
                 }
                 case Beginner.BLESSING_OF_THE_FAIRY, Noblesse.BLESSING_OF_THE_FAIRY, Citizen.BLESSING_OF_THE_FAIRY,
-                        Aran.BLESSING_OF_THE_FAIRY, Evan.BLESSING_OF_THE_FAIRY -> {
+                     Aran.BLESSING_OF_THE_FAIRY, Evan.BLESSING_OF_THE_FAIRY -> {
                     this.pad += si.getValue(SkillStat.x, slv);
                     this.mad += si.getValue(SkillStat.y, slv);
                     this.acc += si.getValue(SkillStat.z, slv);
@@ -561,19 +561,19 @@ public final class SecondaryStat {
             }
             switch (skillId) {
                 case Warrior.WEAPON_MASTERY_HERO, Warrior.WEAPON_MASTERY_PALADIN, DawnWarrior.SWORD_MASTERY,
-                        Thief.KATARA_MASTERY, Thief.DAGGER_MASTERY, Warrior.WEAPON_MASTERY_DRK, Aran.POLEARM_MASTERY,
-                        WindArcher.BOW_MASTERY, Bowman.BOW_MASTERY, WildHunter.CROSSBOW_MASTERY,
-                        Bowman.CROSSBOW_MASTERY, NightWalker.CLAW_MASTERY, Thief.CLAW_MASTERY,
-                        ThunderBreaker.KNUCKLE_MASTERY, Pirate.KNUCKLE_MASTERY, Mechanic.EXTREME_MECH,
-                        Mechanic.MECHANIC_MASTERY, Pirate.GUN_MASTERY -> {
+                     Thief.KATARA_MASTERY, Thief.DAGGER_MASTERY, Warrior.WEAPON_MASTERY_DRK, Aran.POLEARM_MASTERY,
+                     WindArcher.BOW_MASTERY, Bowman.BOW_MASTERY, WildHunter.CROSSBOW_MASTERY,
+                     Bowman.CROSSBOW_MASTERY, NightWalker.CLAW_MASTERY, Thief.CLAW_MASTERY,
+                     ThunderBreaker.KNUCKLE_MASTERY, Pirate.KNUCKLE_MASTERY, Mechanic.EXTREME_MECH,
+                     Mechanic.MECHANIC_MASTERY, Pirate.GUN_MASTERY -> {
                     this.acc += si.getValue(SkillStat.x, slv);
                 }
                 case Aran.HIGH_MASTERY, WindArcher.BOW_EXPERT, Bowman.BOW_EXPERT, WildHunter.CROSSBOW_EXPERT,
-                        Bowman.MARKSMAN_BOOST -> {
+                     Bowman.MARKSMAN_BOOST -> {
                     this.pad += si.getValue(SkillStat.x, slv);
                 }
                 case Evan.SPELL_MASTERY, Evan.MAGIC_MASTERY, BattleMage.STAFF_MASTERY, BlazeWizard.SPELL_MASTERY,
-                        Magician.SPELL_MASTERY_BISH, Magician.SPELL_MASTERY_IL, Magician.SPELL_MASTERY_FP -> {
+                     Magician.SPELL_MASTERY_BISH, Magician.SPELL_MASTERY_IL, Magician.SPELL_MASTERY_FP -> {
                     this.mad += si.getValue(SkillStat.x, slv);
                 }
                 case Bowman.THRUST_BM, Bowman.THRUST_MM, WindArcher.THRUST -> {

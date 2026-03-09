@@ -88,7 +88,7 @@ public final class PartyHandler {
         final PartyResultType resultType = PartyResultType.getByValue(type);
         switch (resultType) {
             case InviteParty_Sent, InviteParty_BlockedUser, InviteParty_AlreadyInvited,
-                    InviteParty_AlreadyInvitedByInviter, InviteParty_Rejected -> {
+                 InviteParty_AlreadyInvitedByInviter, InviteParty_Rejected -> {
                 final int inviterId = inPacket.decodeInt();
                 final String message = switch (resultType) {
                     // These messages are from the client string pool, but are not used (except for InviteParty_Sent)

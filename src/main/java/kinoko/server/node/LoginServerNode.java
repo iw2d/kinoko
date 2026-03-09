@@ -6,6 +6,7 @@ import io.netty.channel.socket.SocketChannel;
 import kinoko.packet.CentralPacket;
 import kinoko.server.ServerConfig;
 import kinoko.server.ServerConstants;
+import kinoko.server.handler.LoginServerHandler;
 import kinoko.server.migration.MigrationInfo;
 import kinoko.server.migration.TransferInfo;
 import kinoko.server.netty.*;
