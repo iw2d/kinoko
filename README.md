@@ -36,7 +36,9 @@ $ mvn clean package
 
 #### Database setup
 
-It is possible to use either CassandraDB or ScyllaDB, no setup is required other than starting the database.
+Kinoko defaults to using SQLite as the database provider for ease of use. No setup is required in this case.
+
+It is possible to use either CassandraDB or ScyllaDB instead of SQLite, which requires starting the database using the commands below.
 
 ```bash
 # Start CassandraDB
@@ -50,13 +52,16 @@ You can use [Docker Desktop](https://www.docker.com/products/docker-desktop/) or
 
 #### Docker setup
 
-Alternatively, docker can be used to build and start the server and the database using
-the [docker-compose.yml](docker-compose.yml) file. The requirements are as follows:
-
-- docker : required for building and running the server and database containers
-- cqlsh : required for the health check for the database container
+Alternatively, docker can be used to build and start the server using the [docker-compose.yml](docker-compose.yml) file.
 
 ```bash
 # Build and start containers
 $ docker compose up -d
+```
+
+
+To start the server with CassandraDB, the [docker-compose.cassandra.yml](docker-compose.cassandra.yml) file can be used as follows:
+
+```bash
+$ docker compose -f docker-compose.cassandra.yml up -d
 ```
