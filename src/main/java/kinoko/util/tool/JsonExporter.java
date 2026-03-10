@@ -1,5 +1,9 @@
 package kinoko.util.tool;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONWriter;
 import kinoko.provider.SkillProvider;
 import kinoko.provider.StringProvider;
 import kinoko.provider.skill.SkillInfo;
@@ -7,11 +11,10 @@ import kinoko.provider.skill.SkillStringInfo;
 import kinoko.util.Rect;
 import kinoko.world.job.Job;
 import kinoko.world.job.JobConstants;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -138,7 +141,7 @@ final class JsonExporter {
                     skillObject.put("invisible", si.isInvisible());
                     skillObject.put("psd", si.isPsd());
                     final JSONArray psdArray = new JSONArray();
-                    psdArray.putAll(si.getPsdSkills());
+                    psdArray.addAll(si.getPsdSkills());
                     skillObject.put("psd_skills", psdArray);
 
                     // Skill stats
@@ -174,12 +177,12 @@ final class JsonExporter {
                     }
 
                     // Add to array
-                    skillArray.put(skillObject);
+                    skillArray.add(skillObject);
                 }
 
                 // Add to array
                 jobObject.put("skills", skillArray);
-                jobArray.put(jobObject);
+                jobArray.add(jobObject);
             }
 
             // Add to class object
@@ -187,8 +190,8 @@ final class JsonExporter {
 
             // Write to file
             final String fileName = className.toLowerCase().replaceAll("\\s", "_").replaceAll("[\\(\\)\\/]", "");
-            try (BufferedWriter bw = Files.newBufferedWriter(Path.of(JSON_DIRECTORY, CLASSES_DIR, fileName + FILE_EXTENSION))) {
-                classObject.write(bw, 2, 0);
+            try (OutputStream os = Files.newOutputStream(Path.of(JSON_DIRECTORY, CLASSES_DIR, fileName + FILE_EXTENSION))) {
+                JSON.writeTo(os, classObject, JSONWriter.Feature.PrettyFormat);
             }
         }
     }

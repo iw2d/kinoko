@@ -15,10 +15,10 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <mainClass>kinoko.server.Server</mainClass>
 
-        <netty.version>4.2.0.Final</netty.version>
+        <netty.version>4.2.5.Final</netty.version>
         <driver.version>4.18.1</driver.version>
         <slfj4.version>2.0.9</slfj4.version>
-        <log4j.version>2.20.0</log4j.version>
+        <log4j.version>2.25.3</log4j.version>
         <junit.version>5.10.0</junit.version>
     </properties>
 
@@ -62,11 +62,6 @@
             <groupId>net.objecthunter</groupId>
             <artifactId>exp4j</artifactId>
             <version>0.4.8</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20240205</version>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>
