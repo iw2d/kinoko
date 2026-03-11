@@ -70,11 +70,51 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket viewAllCharResult() {
+    public static OutPacket viewAllCharResult(List<AvatarData> avatarDataList, ViewAllCharOpt viewAllCharOpt) {
         final OutPacket outPacket = OutPacket.of(OutHeader.ViewAllCharResult);
-        outPacket.encodeByte(6);
-        outPacket.encodeByte(true);
-        outPacket.encodeString("This feature is disabled");
+        outPacket.encodeByte(viewAllCharOpt.getValue());
+        switch (viewAllCharOpt) {
+            case ViewAllCharOpt.SUMMARY_INFO: {
+                int countRelatedSvrs = 1; // There is currently only one world
+                outPacket.encodeInt(countRelatedSvrs); // m_nCountRelatedSvrs
+                outPacket.encodeByte(avatarDataList.size()); // m_nCountCharacters
+            }
+            case ViewAllCharOpt.DETAIL_INFO: {
+                outPacket.encodeByte(ServerConfig.WORLD_ID); // nWorldID
+                outPacket.encodeByte(avatarDataList.size());
+                avatarDataList.forEach(avatarData -> {
+                    avatarData.encode(outPacket);
+                    final Optional<CharacterRank> characterRankResult = RankManager.getCharacterRank(avatarData);
+                    final boolean showRankInfo = characterRankResult.isPresent();
+                    outPacket.encodeByte(showRankInfo);
+                    if (showRankInfo) {
+                        characterRankResult.get().encode(outPacket);
+                    }
+                });
+                outPacket.encodeByte(LoginOpt.CHECK_SECONDARY_PASSWORD.getValue());
+                break;
+            }
+            case ViewAllCharOpt.ALREADY_CONNECTED_TO_SERVER: {
+                // The client will display "You are already connected to server." and no further action is required.
+                break;
+            }
+            case ViewAllCharOpt.ERROR_OCCURRED: {
+                // In the client, the default error message is: "Unknown Error: View-All-Characters."
+                boolean useCustomErrorMessage = false;
+                outPacket.encodeByte(useCustomErrorMessage);
+                if (useCustomErrorMessage) {
+                    outPacket.encodeString("Hello ~");
+                }
+                break;
+            }
+            case WAITING_TO_RECEIVE_DATA_OR_EMPTY_DATA: {
+                // In the client-side, this branch indicates either waiting for data or that the data is empty; here, it's used to indicate that the data is empty.
+                int countRelatedSvrs = 1; // There is currently only one world
+                outPacket.encodeInt(countRelatedSvrs); // m_nCountRelatedSvrs
+                outPacket.encodeByte(0); // m_nCountCharacters
+                break;
+            }
+        }
         return outPacket;
     }
 
@@ -143,8 +183,8 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket selectCharacterResultSuccess(byte[] channelHost, int channelPort, int characterId) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SelectCharacterResult);
+    public static OutPacket selectCharacterResultSuccess(byte[] channelHost, int channelPort, int characterId, boolean byVAC) {
+        final OutPacket outPacket = OutPacket.of(byVAC ? OutHeader.SelectCharacterByVACResult : OutHeader.SelectCharacterResult);
         outPacket.encodeByte(LoginResultType.Success.getValue());
         outPacket.encodeByte(0);
 
@@ -156,8 +196,8 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket selectCharacterResultFail(LoginResultType resultType) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SelectCharacterResult);
+    public static OutPacket selectCharacterResultFail(LoginResultType resultType, boolean byVAC) {
+        final OutPacket outPacket = OutPacket.of(byVAC ? OutHeader.SelectCharacterByVACResult : OutHeader.SelectCharacterResult);
         outPacket.encodeByte(resultType.getValue());
         outPacket.encodeByte(0); // Trouble logging in?
         return outPacket;
