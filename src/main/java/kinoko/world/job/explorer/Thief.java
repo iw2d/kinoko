@@ -206,7 +206,7 @@ public final class Thief extends SkillProcessor {
                 user.setTemporaryStat(CharacterTemporaryStat.MesoUp, TemporaryStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)));
                 return;
             case SHADOW_STARS:
-                user.setTemporaryStat(CharacterTemporaryStat.SpiritJavelin, TemporaryStatOption.of(skill.spiritJavelinItemId - 2069999, skillId, si.getDuration(slv)));
+                user.setTemporaryStat(CharacterTemporaryStat.SpiritJavelin, TemporaryStatOption.of(skill.spiritJavelinItemId % 10000 + 1, skillId, si.getDuration(slv)));
                 return;
 
             // SHAD

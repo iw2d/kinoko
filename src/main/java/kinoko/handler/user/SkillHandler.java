@@ -38,10 +38,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public final class SkillHandler {
     private static final Logger log = LogManager.getLogger(SkillHandler.class);
@@ -325,36 +322,31 @@ public final class SkillHandler {
             }
             user.write(WvsContext.inventoryOperation(removeResult.get(), false));
         }
-        final int bulletCon = si.getBulletCon(skill.slv);
-        if (bulletCon > 0) {
-            // Resolve bullet item
-            final Item weaponItem = user.getInventoryManager().getEquipped().getItem(BodyPart.WEAPON.getValue());
-            if (weaponItem == null) {
-                log.error("Tried to use skill {} without a weapon", skill.skillId);
+        if (skill.spiritJavelinItemId != 0) {
+            if (!ItemConstants.isJavelinItem(skill.spiritJavelinItemId)) {
+                log.error("Tried to use spirit javelin skill with invalid item id : {}", skill.spiritJavelinItemId);
                 return;
             }
-            final Optional<Map.Entry<Integer, Item>> bulletEntryResult = user.getInventoryManager().getConsumeInventory().getItems().entrySet().stream()
-                    .filter((entry) -> {
-                        final Item bulletItem = entry.getValue();
-                        if (!ItemConstants.isCorrectBulletItem(weaponItem.getItemId(), bulletItem.getItemId())) {
-                            return false;
-                        }
-                        final Optional<ItemInfo> itemInfoResult = ItemProvider.getItemInfo(bulletItem.getItemId());
-                        if (itemInfoResult.isEmpty() || itemInfoResult.get().getReqLevel() > user.getLevel()) {
-                            return false;
-                        }
-                        return bulletItem.getQuantity() >= bulletCon;
-                    })
-                    .findFirst();
-            if (bulletEntryResult.isEmpty()) {
-                log.error("Tried to use skill {} without enough bullets", skill.skillId);
+            final List<InventoryOperation> inventoryOperations = new ArrayList<>();
+            int bulletCon = si.getBulletCon(skill.slv);
+            for (var entry : user.getInventoryManager().getConsumeInventory().getItems().entrySet()) {
+                final Item bulletItem = entry.getValue();
+                if (bulletItem.getItemId() != skill.spiritJavelinItemId) {
+                    continue;
+                }
+                final int newQuantity = Math.max(bulletItem.getQuantity() - bulletCon, 0);
+                inventoryOperations.add(InventoryOperation.itemNumber(InventoryType.CONSUME, entry.getKey(), newQuantity));
+                bulletCon -= bulletItem.getQuantity();
+                if (bulletCon <= 0) {
+                    break;
+                }
+            }
+            if (bulletCon > 0) {
+                log.error("Tried to use spirit javelin skill {} without enough bullets", skill.skillId);
                 return;
             }
-            final int position = bulletEntryResult.get().getKey();
-            final Item bulletItem = bulletEntryResult.get().getValue();
-            // Consume bullets
-            bulletItem.setQuantity((short) (bulletItem.getQuantity() - bulletCon));
-            user.write(WvsContext.inventoryOperation(InventoryOperation.itemNumber(InventoryType.CONSUME, position, bulletItem.getQuantity()), false));
+            user.getInventoryManager().applyInventoryOperations(inventoryOperations);
+            user.write(WvsContext.inventoryOperation(inventoryOperations, false));
         }
 
         // Consume hp/mp
