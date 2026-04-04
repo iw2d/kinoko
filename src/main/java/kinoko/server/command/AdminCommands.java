@@ -124,7 +124,7 @@ public final class AdminCommands {
         }
     }
 
-    @Command({ "find", "lookup" })
+    @Command({ "find", "lookup", "search" })
     @Arguments({ "item/map/mob/npc/skill/quest/commodity", "id or query" })
     public static void find(User user, String[] args) {
         final String type = args[1];

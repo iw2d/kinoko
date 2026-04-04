@@ -13,6 +13,7 @@ import kinoko.world.field.Field;
 import kinoko.world.field.OpenGate;
 import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.field.affectedarea.AffectedAreaType;
+import kinoko.world.field.mob.BurnedInfo;
 import kinoko.world.field.mob.Mob;
 import kinoko.world.field.mob.MobStatOption;
 import kinoko.world.field.mob.MobTemporaryStat;
@@ -92,6 +93,9 @@ public final class Mechanic extends SkillProcessor {
                 if (!mob.isBoss()) {
                     mob.setTemporaryStat(MobTemporaryStat.Stun, MobStatOption.of(1, skillId, si.getDuration(slv)), delay);
                 }
+                break;
+            case ENHANCED_FLAME_LAUNCHER:
+                mob.setBurnedInfo(BurnedInfo.from(user, si, slv, mob), delay);
                 break;
         }
     }
