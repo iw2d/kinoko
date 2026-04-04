@@ -14,10 +14,12 @@ import kinoko.packet.world.MessagePacket;
 import kinoko.packet.world.WvsContext;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.NpcProvider;
+import kinoko.provider.SkillProvider;
 import kinoko.provider.StringProvider;
 import kinoko.provider.item.*;
 import kinoko.provider.map.PortalInfo;
 import kinoko.provider.npc.NpcTemplate;
+import kinoko.provider.skill.SkillInfo;
 import kinoko.server.dialog.shop.ShopDialog;
 import kinoko.server.dialog.trunk.TrunkDialog;
 import kinoko.server.header.InHeader;
@@ -30,6 +32,8 @@ import kinoko.world.field.Field;
 import kinoko.world.field.MapleTvMessage;
 import kinoko.world.field.affectedarea.AffectedArea;
 import kinoko.world.item.*;
+import kinoko.world.skill.SkillConstants;
+import kinoko.world.skill.SkillRecord;
 import kinoko.world.user.AvatarLook;
 import kinoko.world.user.Pet;
 import kinoko.world.user.User;
@@ -565,6 +569,51 @@ public final class CashItemHandler extends ItemHandler {
                 // Update client
                 user.validateStat();
                 user.write(WvsContext.statChanged(statMap, true));
+            }
+            case SKILLCHANGE -> {
+                final int incSkillId = inPacket.decodeInt();
+                final int decSkillId = inPacket.decodeInt();
+                // Resolve incSkill
+                final Optional<SkillRecord> incSkillResult = user.getSkillManager().getSkill(incSkillId);
+                if (incSkillResult.isEmpty()) {
+                    log.error("Received invalid incSkillId {} for skill change item ID : {}", decSkillId, itemId);
+                    user.dispose();
+                    return;
+                }
+                final SkillRecord incSkill = incSkillResult.get();
+                final Optional<SkillInfo> incSkillInfoResult = SkillProvider.getSkillInfoById(incSkillId);
+                if (incSkillInfoResult.isEmpty()) {
+                    log.error("Could not resolve skill info for skill ID : {}", incSkillId);
+                    user.dispose();
+                    return;
+                }
+                final SkillInfo incSkillInfo = incSkillInfoResult.get();
+                final int incSkillMax = SkillConstants.isSkillNeedMasterLevel(incSkillId) ? incSkill.getMasterLevel() : incSkillInfo.getMaxLevel();
+                // Resolve decSkill
+                final Optional<SkillRecord> decSkillResult = user.getSkillManager().getSkill(decSkillId);
+                if (decSkillResult.isEmpty()) {
+                    log.error("Received invalid decSkillId {} for skill change item ID : {}", decSkillId, itemId);
+                    user.dispose();
+                    return;
+                }
+                final SkillRecord decSkill = decSkillResult.get();
+                // Validate request - TODO: check skill root job level based on item ID?
+                if (incSkill.getSkillLevel() >= incSkillMax || decSkill.getSkillLevel() <= 0) {
+                    log.error("Tried to use skill change item with invalid skill levels");
+                    user.dispose();
+                    return;
+                }
+                // Consume item
+                final Optional<InventoryOperation> removeItemResult = im.removeItem(position, item, 1);
+                if (removeItemResult.isEmpty()) {
+                    throw new IllegalStateException(String.format("Could not remove skill change item %d in position %d", item.getItemId(), position));
+                }
+                user.write(WvsContext.inventoryOperation(removeItemResult.get(), false));
+                // Update client
+                incSkill.setSkillLevel(incSkill.getSkillLevel() + 1);
+                decSkill.setSkillLevel(decSkill.getSkillLevel() - 1);
+                user.validateStat();
+                user.write(WvsContext.changeSkillRecordResult(List.of(incSkill, decSkill), true));
             }
             case COLORLENS -> {
                 // Resolve face
