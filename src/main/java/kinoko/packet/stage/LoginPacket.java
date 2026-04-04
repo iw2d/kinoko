@@ -70,53 +70,41 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket viewAllCharResult(List<AvatarData> avatarDataList, ViewAllCharOpt viewAllCharOpt) {
+    public static OutPacket viewAllCharResultSuccess(Account account) {
         final OutPacket outPacket = OutPacket.of(OutHeader.ViewAllCharResult);
-        outPacket.encodeByte(viewAllCharOpt.getValue());
-        switch (viewAllCharOpt) {
-            case ViewAllCharOpt.SUMMARY_INFO: {
-                int countRelatedSvrs = 1; // There is currently only one world
-                outPacket.encodeInt(countRelatedSvrs); // m_nCountRelatedSvrs
-                outPacket.encodeByte(avatarDataList.size()); // m_nCountCharacters
-            }
-            case ViewAllCharOpt.DETAIL_INFO: {
-                outPacket.encodeByte(ServerConfig.WORLD_ID); // nWorldID
-                outPacket.encodeByte(avatarDataList.size());
-                avatarDataList.forEach(avatarData -> {
-                    avatarData.encode(outPacket);
-                    final Optional<CharacterRank> characterRankResult = RankManager.getCharacterRank(avatarData);
-                    final boolean showRankInfo = characterRankResult.isPresent();
-                    outPacket.encodeByte(showRankInfo);
-                    if (showRankInfo) {
-                        characterRankResult.get().encode(outPacket);
-                    }
-                });
-                outPacket.encodeByte(LoginOpt.CHECK_SECONDARY_PASSWORD.getValue());
-                break;
-            }
-            case ViewAllCharOpt.ALREADY_CONNECTED_TO_SERVER: {
-                // The client will display "You are already connected to server." and no further action is required.
-                break;
-            }
-            case ViewAllCharOpt.ERROR_OCCURRED: {
-                // In the client, the default error message is: "Unknown Error: View-All-Characters."
-                boolean useCustomErrorMessage = false;
-                outPacket.encodeByte(useCustomErrorMessage);
-                if (useCustomErrorMessage) {
-                    outPacket.encodeString("Hello ~");
-                }
-                break;
-            }
-            case WAITING_TO_RECEIVE_DATA_OR_EMPTY_DATA: {
-                // In the client-side, this branch indicates either waiting for data or that the data is empty; here, it's used to indicate that the data is empty.
-                int countRelatedSvrs = 1; // There is currently only one world
-                outPacket.encodeInt(countRelatedSvrs); // m_nCountRelatedSvrs
-                outPacket.encodeByte(0); // m_nCountCharacters
-                break;
+        outPacket.encodeByte(ViewAllCharResultType.Success.getValue());
+        outPacket.encodeByte(ServerConfig.WORLD_ID); // nWorldID
+        final List<AvatarData> characterList = account.getCharacterList().subList(0, 60); // client only allocates memory for 60 characters
+        outPacket.encodeByte(characterList.size());
+        for (AvatarData avatarData : characterList) {
+            avatarData.encode(outPacket);
+            final Optional<CharacterRank> characterRankResult = RankManager.getCharacterRank(avatarData);
+            if (characterRankResult.isPresent()) {
+                outPacket.encodeByte(true);
+                characterRankResult.get().encode(outPacket);
+            } else {
+                outPacket.encodeByte(false);
             }
         }
+        outPacket.encodeByte(LoginOpt.getLoginOpt(account).getValue()); // bLoginOpt
         return outPacket;
     }
+
+    public static OutPacket viewAllCharResultCount(int serverCount, int characterCount) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.ViewAllCharResult);
+        outPacket.encodeByte(ViewAllCharResultType.CountRelatedSvrs.getValue());
+        outPacket.encodeInt(serverCount); // nCountRelatedSvrs
+        outPacket.encodeInt(characterCount); // nCountCharacters
+        return outPacket;
+    }
+
+    public static OutPacket viewAllCharResultFail(ViewAllCharResultType resultType) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.ViewAllCharResult);
+        outPacket.encodeByte(resultType.getValue());
+        outPacket.encodeByte(false);
+        return outPacket;
+    }
+
 
     public static OutPacket worldInformation(List<ChannelInfo> channels) {
         final OutPacket outPacket = OutPacket.of(OutHeader.WorldInformation);

@@ -4,7 +4,7 @@ import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
 import kinoko.packet.stage.LoginPacket;
 import kinoko.packet.stage.LoginResultType;
-import kinoko.packet.stage.ViewAllCharOpt;
+import kinoko.packet.stage.ViewAllCharResultType;
 import kinoko.provider.EtcProvider;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.SkillProvider;
@@ -98,26 +98,13 @@ public final class LoginHandler {
 
     @Handler(InHeader.ViewAllChar)
     public static void handleViewAllChar(Client c, InPacket inPacket) {
-        // If the number exceeds 60, the client will crash.
-        final int characterListMaxSize = 60;
-
-        final byte gameStartMode = inPacket.decodeByte();
-        if (gameStartMode == 1) {
-            final String string = inPacket.decodeString();
-            final byte[] machineId = inPacket.decodeArray(16);
-            final int gameRoomClient = inPacket.decodeInt();
-        }
         loadCharacterList(c);
-        List<AvatarData> characterList = c.getAccount().getCharacterList();
-        if (characterList.isEmpty()) {
-            c.write(LoginPacket.viewAllCharResult(characterList, ViewAllCharOpt.WAITING_TO_RECEIVE_DATA_OR_EMPTY_DATA));
-        } else {
-            if (characterList.size() > characterListMaxSize) {
-                characterList = characterList.subList(0, characterListMaxSize);
-            }
-            c.write(LoginPacket.viewAllCharResult(characterList, ViewAllCharOpt.SUMMARY_INFO));
-            c.write(LoginPacket.viewAllCharResult(characterList, ViewAllCharOpt.DETAIL_INFO));
+        if (c.getAccount().getCharacterList().isEmpty()) {
+            c.write(LoginPacket.viewAllCharResultFail(ViewAllCharResultType.HasNoCharacterInAllWorld));
+            return;
         }
+        c.write(LoginPacket.viewAllCharResultCount(1, c.getAccount().getCharacterList().size()));
+        c.write(LoginPacket.viewAllCharResultSuccess(c.getAccount()));
     }
 
     @Handler(InHeader.CheckUserLimit)
@@ -358,6 +345,21 @@ public final class LoginHandler {
         } else {
             c.write(LoginPacket.createNewCharacterResultFail(LoginResultType.DBFail));
         }
+    }
+
+    @Handler(InHeader.SelectCharacterByVAC)
+    public static void handleSelectCharacterByVAC(Client c, InPacket inPacket) {
+        final int characterId = inPacket.decodeInt();
+        final int worldId = inPacket.decodeInt();
+        final String macAddress = inPacket.decodeString(); // CLogin::GetLocalMacAddress
+        final String macAddressWithHddSerial = inPacket.decodeString(); // CLogin::GetLocalMacAddressWithHDDSerialNo
+
+        final Account account = c.getAccount();
+        if (ServerConfig.REQUIRE_SECONDARY_PASSWORD || account == null || !account.canSelectCharacter(characterId)) {
+            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown, false));
+            return;
+        }
+        handleMigration(c, account, characterId, true);
     }
 
     @Handler(InHeader.SelectCharacter)
