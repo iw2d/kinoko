@@ -70,13 +70,41 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket viewAllCharResult() {
+    public static OutPacket viewAllCharResultSuccess(Account account) {
         final OutPacket outPacket = OutPacket.of(OutHeader.ViewAllCharResult);
-        outPacket.encodeByte(6);
-        outPacket.encodeByte(true);
-        outPacket.encodeString("This feature is disabled");
+        outPacket.encodeByte(ViewAllCharResultType.Success.getValue());
+        outPacket.encodeByte(ServerConfig.WORLD_ID); // nWorldID
+        final List<AvatarData> characterList = account.getCharacterList().subList(0, 60); // client only allocates memory for 60 characters
+        outPacket.encodeByte(characterList.size());
+        for (AvatarData avatarData : characterList) {
+            avatarData.encode(outPacket);
+            final Optional<CharacterRank> characterRankResult = RankManager.getCharacterRank(avatarData);
+            if (characterRankResult.isPresent()) {
+                outPacket.encodeByte(true);
+                characterRankResult.get().encode(outPacket);
+            } else {
+                outPacket.encodeByte(false);
+            }
+        }
+        outPacket.encodeByte(LoginOpt.getLoginOpt(account).getValue()); // bLoginOpt
         return outPacket;
     }
+
+    public static OutPacket viewAllCharResultCount(int serverCount, int characterCount) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.ViewAllCharResult);
+        outPacket.encodeByte(ViewAllCharResultType.CountRelatedSvrs.getValue());
+        outPacket.encodeInt(serverCount); // nCountRelatedSvrs
+        outPacket.encodeInt(characterCount); // nCountCharacters
+        return outPacket;
+    }
+
+    public static OutPacket viewAllCharResultFail(ViewAllCharResultType resultType) {
+        final OutPacket outPacket = OutPacket.of(OutHeader.ViewAllCharResult);
+        outPacket.encodeByte(resultType.getValue());
+        outPacket.encodeByte(false);
+        return outPacket;
+    }
+
 
     public static OutPacket worldInformation(List<ChannelInfo> channels) {
         final OutPacket outPacket = OutPacket.of(OutHeader.WorldInformation);
@@ -143,8 +171,8 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket selectCharacterResultSuccess(byte[] channelHost, int channelPort, int characterId) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SelectCharacterResult);
+    public static OutPacket selectCharacterResultSuccess(byte[] channelHost, int channelPort, int characterId, boolean byVAC) {
+        final OutPacket outPacket = OutPacket.of(byVAC ? OutHeader.SelectCharacterByVACResult : OutHeader.SelectCharacterResult);
         outPacket.encodeByte(LoginResultType.Success.getValue());
         outPacket.encodeByte(0);
 
@@ -156,8 +184,8 @@ public final class LoginPacket {
         return outPacket;
     }
 
-    public static OutPacket selectCharacterResultFail(LoginResultType resultType) {
-        final OutPacket outPacket = OutPacket.of(OutHeader.SelectCharacterResult);
+    public static OutPacket selectCharacterResultFail(LoginResultType resultType, boolean byVAC) {
+        final OutPacket outPacket = OutPacket.of(byVAC ? OutHeader.SelectCharacterByVACResult : OutHeader.SelectCharacterResult);
         outPacket.encodeByte(resultType.getValue());
         outPacket.encodeByte(0); // Trouble logging in?
         return outPacket;

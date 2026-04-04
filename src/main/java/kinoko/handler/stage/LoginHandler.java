@@ -4,6 +4,7 @@ import kinoko.database.DatabaseManager;
 import kinoko.handler.Handler;
 import kinoko.packet.stage.LoginPacket;
 import kinoko.packet.stage.LoginResultType;
+import kinoko.packet.stage.ViewAllCharResultType;
 import kinoko.provider.EtcProvider;
 import kinoko.provider.ItemProvider;
 import kinoko.provider.SkillProvider;
@@ -97,7 +98,13 @@ public final class LoginHandler {
 
     @Handler(InHeader.ViewAllChar)
     public static void handleViewAllChar(Client c, InPacket inPacket) {
-        c.write(LoginPacket.viewAllCharResult());
+        loadCharacterList(c);
+        if (c.getAccount().getCharacterList().isEmpty()) {
+            c.write(LoginPacket.viewAllCharResultFail(ViewAllCharResultType.HasNoCharacterInAllWorld));
+            return;
+        }
+        c.write(LoginPacket.viewAllCharResultCount(1, c.getAccount().getCharacterList().size()));
+        c.write(LoginPacket.viewAllCharResultSuccess(c.getAccount()));
     }
 
     @Handler(InHeader.CheckUserLimit)
@@ -340,6 +347,21 @@ public final class LoginHandler {
         }
     }
 
+    @Handler(InHeader.SelectCharacterByVAC)
+    public static void handleSelectCharacterByVAC(Client c, InPacket inPacket) {
+        final int characterId = inPacket.decodeInt();
+        final int worldId = inPacket.decodeInt();
+        final String macAddress = inPacket.decodeString(); // CLogin::GetLocalMacAddress
+        final String macAddressWithHddSerial = inPacket.decodeString(); // CLogin::GetLocalMacAddressWithHDDSerialNo
+
+        final Account account = c.getAccount();
+        if (ServerConfig.REQUIRE_SECONDARY_PASSWORD || account == null || !account.canSelectCharacter(characterId)) {
+            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown, false));
+            return;
+        }
+        handleMigration(c, account, characterId, true);
+    }
+
     @Handler(InHeader.SelectCharacter)
     public static void handleSelectCharacter(Client c, InPacket inPacket) {
         final int characterId = inPacket.decodeInt();
@@ -348,10 +370,10 @@ public final class LoginHandler {
 
         final Account account = c.getAccount();
         if (ServerConfig.REQUIRE_SECONDARY_PASSWORD || account == null || !account.canSelectCharacter(characterId)) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown));
+            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown, false));
             return;
         }
-        handleMigration(c, account, characterId);
+        handleMigration(c, account, characterId, false);
     }
 
     @Handler(InHeader.DeleteCharacter)
@@ -389,10 +411,38 @@ public final class LoginHandler {
         final Account account = c.getAccount();
         if (account == null || !account.canSelectCharacter(characterId) || !c.getServerNode().isConnected(account) ||
                 account.hasSecondaryPassword() || !DatabaseManager.accountAccessor().savePassword(account, "", secondaryPassword, true)) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown));
+            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown, false));
             return;
         }
-        handleMigration(c, account, characterId);
+        handleMigration(c, account, characterId, false);
+    }
+
+    @Handler(InHeader.CheckSPWRequestByVAC)
+    public static void handleCheckSpwRequestByACV(Client c, InPacket inPacket) {
+        final String secondaryPassword = inPacket.decodeString(); // sSPW
+        final int characterId = inPacket.decodeInt(); // dwCharacterID
+        final int charSelectedWorldId = inPacket.decodeInt();
+        final String macAddress = inPacket.decodeString(); // CLogin::GetLocalMacAddress
+        final String macAddressWithHddSerial = inPacket.decodeString(); // CLogin::GetLocalMacAddressWithHDDSerialNo
+
+        final Account account = c.getAccount();
+        if (account == null || !account.canSelectCharacter(characterId) || !c.getServerNode().isConnected(account) ||
+                !account.hasSecondaryPassword()) {
+            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown, true));
+            return;
+        }
+        if (!DatabaseManager.accountAccessor().checkPassword(account, secondaryPassword, true)) {
+            c.write(LoginPacket.checkSecondaryPasswordResult());
+            return;
+        }
+
+        final LoginServerNode loginServerNode = (LoginServerNode) c.getServerNode();
+        final List<ChannelInfo> channels = loginServerNode.getChannels();
+        if (!channels.isEmpty()) {
+            final ChannelInfo channelInfo = channels.getFirst();
+            account.setChannelId(channelInfo.getId());
+        }
+        handleMigration(c, account, characterId, true);
     }
 
     @Handler(InHeader.CheckSPWRequest)
@@ -405,14 +455,14 @@ public final class LoginHandler {
         final Account account = c.getAccount();
         if (account == null || !account.canSelectCharacter(characterId) || !c.getServerNode().isConnected(account) ||
                 !account.hasSecondaryPassword()) {
-            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown));
+            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown, false));
             return;
         }
         if (!DatabaseManager.accountAccessor().checkPassword(account, secondaryPassword, true)) {
             c.write(LoginPacket.checkSecondaryPasswordResult());
             return;
         }
-        handleMigration(c, account, characterId);
+        handleMigration(c, account, characterId, false);
     }
 
     private static void loadCharacterList(Client c) {
@@ -422,11 +472,11 @@ public final class LoginHandler {
         account.setCharacterList(characterList.stream().sorted(Comparator.comparingInt(AvatarData::getLevel).reversed()).toList());
     }
 
-    private static void handleMigration(Client c, Account account, int characterId) {
+    private static void handleMigration(Client c, Account account, int characterId, boolean byVAC) {
         // Check that client requirements are set
         if (c.getMachineId() == null || c.getMachineId().length != 16 || c.getClientKey() == null || c.getClientKey().length != 8) {
             log.error("Tried to submit migration request without client requirements for character ID : {}", characterId);
-            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown));
+            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown, byVAC));
             return;
         }
 
@@ -436,7 +486,7 @@ public final class LoginHandler {
         final Optional<ChannelInfo> channelInfoResult = loginServerNode.getChannelById(targetChannelId);
         if (channelInfoResult.isEmpty()) {
             log.error("Could not resolve target channel for migration request for character ID : {}", characterId);
-            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown));
+            c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown, byVAC));
             return;
         }
 
@@ -445,11 +495,11 @@ public final class LoginHandler {
         loginServerNode.submitLoginRequest(migrationInfo, (transferResult) -> {
             if (transferResult.isEmpty()) {
                 log.error("Failed to submit migration request for character ID : {}", characterId);
-                c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown));
+                c.write(LoginPacket.selectCharacterResultFail(LoginResultType.Unknown, byVAC));
                 return;
             }
             final TransferInfo transferInfo = transferResult.get();
-            c.write(LoginPacket.selectCharacterResultSuccess(transferInfo.getChannelHost(), transferInfo.getChannelPort(), characterId));
+            c.write(LoginPacket.selectCharacterResultSuccess(transferInfo.getChannelHost(), transferInfo.getChannelPort(), characterId, byVAC));
         });
     }
 }
