@@ -630,8 +630,9 @@ public abstract class SkillProcessor {
                     if (!member.getSecondaryStat().hasOption(cts)) {
                         member.setTemporaryStat(cts, TemporaryStatOption.of(x, skillId, 0));
                     }
-                } else {
-                    if (member.getSecondaryStat().hasOption(cts)) {
+                } else if (member.getSecondaryStat().hasOption(cts)){
+                    final TemporaryStatOption memberOption = member.getSecondaryStat().getOption(CharacterTemporaryStat.Aura);
+                    if (memberOption.rOption != option.rOption) {
                         member.resetTemporaryStat(Set.of(cts));
                     }
                 }
