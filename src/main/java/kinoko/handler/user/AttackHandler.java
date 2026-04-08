@@ -321,6 +321,9 @@ public final class AttackHandler {
                 case Mechanic.ENHANCED_GATLING_GUN -> {
                     attack.slv = user.getSkillLevel(Mechanic.GATLING_GUN);
                 }
+                case Mechanic.MECH_SIEGE_MODE_2 -> {
+                    attack.slv = user.getSkillLevel(Mechanic.MECH_SIEGE_MODE);
+                }
                 case 35111008, 35111009, 35111010 -> {
                     attack.slv = user.getSkillLevel(Mechanic.SATELLITE);
                 }
