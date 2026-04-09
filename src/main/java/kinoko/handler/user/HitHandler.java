@@ -156,7 +156,8 @@ public final class HitHandler {
                 return;
             }
         }
-        user.setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(Math.max(si.getValue(SkillStat.x, slv), 1), skillId, slv, si.getDuration(slv)));
+        final TemporaryStatOption option = TemporaryStatOption.ofMobSkill(Math.max(si.getValue(SkillStat.x, slv), 1), skillId, slv, si.getDuration(slv));
+        user.setTemporaryStat(Map.of(cts, option), 0);
     }
 
     private static void handleHit(User user, HitInfo hitInfo) {

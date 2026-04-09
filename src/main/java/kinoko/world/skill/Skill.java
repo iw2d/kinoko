@@ -15,6 +15,7 @@ public final class Skill {
 
     public int positionX;
     public int positionY;
+    public int delay;
 
     public int affectedMemberBitMap = Byte.MIN_VALUE; // default when nPartyID = 0 (CUserLocal::FindParty)
 
@@ -100,8 +101,9 @@ public final class Skill {
                 ", slv=" + slv +
                 ", positionX=" + positionX +
                 ", positionY=" + positionY +
+                ", delay=" + delay +
                 ", affectedMemberBitMap=" + affectedMemberBitMap +
-                ", mobIds=" + Arrays.toString(targetIds) +
+                ", targetIds=" + Arrays.toString(targetIds) +
                 ", captureTargetMobId=" + captureTargetMobId +
                 ", randomCapturedMobId=" + randomCapturedMobId +
                 ", spiritJavelinItemId=" + spiritJavelinItemId +
@@ -112,6 +114,7 @@ public final class Skill {
                 ", summonLeft=" + summonLeft +
                 ", summonBuffType=" + summonBuffType +
                 ", keyDown=" + keyDown +
+                ", summoned=" + summoned +
                 '}';
     }
 }

@@ -238,7 +238,7 @@ public abstract class SkillProcessor {
             case BlazeWizard.SLOW:
                 skill.forEachAffectedMob(field, (mob) -> {
                     if (!mob.isSlowUsed()) {
-                        mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)), 0);
+                        mob.setTemporaryStat(MobTemporaryStat.Speed, MobStatOption.of(si.getValue(SkillStat.x, slv), skillId, si.getDuration(slv)), skill.delay);
                         mob.setSlowUsed(true); // cannot be used on the same monsters more than twice in a row
                     }
                 });
@@ -248,7 +248,7 @@ public abstract class SkillProcessor {
             case BlazeWizard.SEAL:
                 skill.forEachAffectedMob(field, (mob) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Seal, MobStatOption.of(1, skillId, si.getDuration(slv)), 0);
+                        mob.setTemporaryStat(MobTemporaryStat.Seal, MobStatOption.of(1, skillId, si.getDuration(slv)), skill.delay);
                     }
                 });
                 return;
@@ -332,7 +332,7 @@ public abstract class SkillProcessor {
             case NightWalker.SHADOW_WEB:
                 skill.forEachAffectedMob(field, (mob) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Web, MobStatOption.of(1, skillId, si.getDuration(slv)), 0);
+                        mob.setTemporaryStat(MobTemporaryStat.Web, MobStatOption.of(1, skillId, si.getDuration(slv)), skill.delay);
                     }
                 });
                 return;

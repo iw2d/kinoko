@@ -102,7 +102,9 @@ public final class SkillHandler {
             // CUserLocal::TryDoingMonsterMagnet || CUserLocal::DoActiveSkill_SummonMonster || CUserLocal::DoActiveSkill_Summon
             skill.left = inPacket.decodeBoolean(); // nMoveAction & 1
         }
-        // ignore tDelay
+        if (inPacket.getRemaining() == 2) {
+            skill.delay = inPacket.decodeShort();
+        }
 
         // Check skill root
         final int skillRoot = SkillConstants.getSkillRoot(skill.skillId);

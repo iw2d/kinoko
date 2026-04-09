@@ -162,7 +162,7 @@ public final class Warrior extends SkillProcessor {
             case MAGIC_CRASH_DRK:
                 skill.forEachAffectedMob(field, (mob) -> {
                     if (Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.MagicCrash, MobStatOption.of(1, skillId, si.getDuration(slv)), 0);
+                        mob.setTemporaryStat(MobTemporaryStat.MagicCrash, MobStatOption.of(1, skillId, si.getDuration(slv)), skill.delay);
                     }
                 });
                 return;

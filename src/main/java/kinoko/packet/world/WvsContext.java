@@ -65,10 +65,10 @@ public final class WvsContext {
         return outPacket;
     }
 
-    public static OutPacket temporaryStatSet(SecondaryStat secondaryStat, BitFlag<CharacterTemporaryStat> flag) {
+    public static OutPacket temporaryStatSet(SecondaryStat secondaryStat, BitFlag<CharacterTemporaryStat> flag, int delay) {
         final OutPacket outPacket = OutPacket.of(OutHeader.TemporaryStatSet);
         secondaryStat.encodeForLocal(flag, outPacket);
-        outPacket.encodeShort(0); // tDelay
+        outPacket.encodeShort(delay); // tDelay
         outPacket.encodeByte(0); // SecondaryStat::IsMovementAffectingStat -> bSN
         return outPacket;
     }

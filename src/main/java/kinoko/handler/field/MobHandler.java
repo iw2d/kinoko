@@ -262,7 +262,7 @@ public final class MobHandler {
         } else if (mai.isSkill) {
             final int skillId = mai.targetInfo & 0xFF;
             final int slv = (mai.targetInfo >> 8) & 0xFF;
-            final int option = (mai.targetInfo >> 16) & 0xFFFF; // delay
+            final int option = (mai.targetInfo >> 16) & 0xFFFF; // tDelay
 
             final Optional<MobSkill> mobSkillResult = mob.getSkill(skillId);
             if (mobSkillResult.isEmpty()) {
@@ -344,7 +344,8 @@ public final class MobHandler {
                         continue;
                     }
                 }
-                targetUser.setTemporaryStat(cts, TemporaryStatOption.ofMobSkill(Math.max(si.getValue(SkillStat.x, slv), 1), skillId, slv, si.getDuration(slv)));
+                final TemporaryStatOption option = TemporaryStatOption.ofMobSkill(Math.max(si.getValue(SkillStat.x, slv), 1), skillId, slv, si.getDuration(slv));
+                targetUser.setTemporaryStat(Map.of(cts, option), delay);
             }
             return true;
         }

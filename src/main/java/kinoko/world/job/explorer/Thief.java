@@ -243,7 +243,7 @@ public final class Thief extends SkillProcessor {
             case MONSTER_BOMB:
                 skill.forEachAffectedMob(field, (mob) -> {
                     field.broadcastPacket(MobPacket.mobAffected(mob, skillId, 0));
-                    mob.setTemporaryStat(MobTemporaryStat.TimeBomb, MobStatOption.of(1, skillId, si.getDuration(slv) + ServerConfig.FIELD_TICK_INTERVAL), 0); // for MobTimeBombEnd check
+                    mob.setTemporaryStat(MobTemporaryStat.TimeBomb, MobStatOption.of(1, skillId, si.getDuration(slv) + ServerConfig.FIELD_TICK_INTERVAL), skill.delay); // for MobTimeBombEnd check
                 });
                 return;
             case CHAINS_OF_HELL:
