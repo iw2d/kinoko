@@ -480,10 +480,14 @@ public final class User extends Life {
     }
 
     public void setTemporaryStat(CharacterTemporaryStat cts, TemporaryStatOption option) {
-        setTemporaryStat(Map.of(cts, option));
+        setTemporaryStat(Map.of(cts, option), 0);
     }
 
     public void setTemporaryStat(Map<CharacterTemporaryStat, TemporaryStatOption> setStats) {
+        setTemporaryStat(setStats, 0);
+    }
+
+    public void setTemporaryStat(Map<CharacterTemporaryStat, TemporaryStatOption> setStats, int delay) {
         for (var entry : setStats.entrySet()) {
             getSecondaryStat().getTemporaryStats().put(entry.getKey(), entry.getValue());
         }
@@ -491,7 +495,7 @@ public final class User extends Life {
         validateStat();
         final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(setStats.keySet(), CharacterTemporaryStat.FLAG_SIZE);
         if (!flag.isEmpty()) {
-            write(WvsContext.temporaryStatSet(getSecondaryStat(), flag));
+            write(WvsContext.temporaryStatSet(getSecondaryStat(), flag, delay));
             getField().broadcastPacket(UserRemote.temporaryStatSet(this, getSecondaryStat(), flag), this);
         }
     }

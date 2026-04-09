@@ -221,7 +221,7 @@ public final class Magician extends SkillProcessor {
             case DOOM:
                 skill.forEachAffectedMob(field, (mob) -> {
                     if (!mob.isBoss() && Util.succeedProp(si.getValue(SkillStat.prop, slv))) {
-                        mob.setTemporaryStat(MobTemporaryStat.Doom, MobStatOption.of(1, skillId, si.getDuration(slv)), 0);
+                        mob.setTemporaryStat(MobTemporaryStat.Doom, MobStatOption.of(1, skillId, si.getDuration(slv)), skill.delay);
                     }
                 });
                 return;

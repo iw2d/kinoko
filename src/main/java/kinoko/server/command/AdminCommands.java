@@ -766,7 +766,7 @@ public final class AdminCommands {
         final SecondaryStat ss = user.getSecondaryStat();
         final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(Set.of(CharacterTemporaryStat.Morph), CharacterTemporaryStat.FLAG_SIZE);
         ss.getTemporaryStats().put(CharacterTemporaryStat.Morph, TemporaryStatOption.of(morphId, -5300000, 0));
-        user.write(WvsContext.temporaryStatSet(ss, flag));
+        user.write(WvsContext.temporaryStatSet(ss, flag, 0));
         user.getField().broadcastPacket(UserRemote.temporaryStatSet(user, ss, flag));
     }
 
@@ -781,7 +781,7 @@ public final class AdminCommands {
         final SecondaryStat ss = user.getSecondaryStat();
         final BitFlag<CharacterTemporaryStat> flag = BitFlag.from(Set.of(CharacterTemporaryStat.RideVehicle), CharacterTemporaryStat.FLAG_SIZE);
         ss.getTemporaryStats().put(CharacterTemporaryStat.RideVehicle, TwoStateTemporaryStat.ofTwoState(CharacterTemporaryStat.RideVehicle, vehicleId, Beginner.MONSTER_RIDER, 0));
-        user.write(WvsContext.temporaryStatSet(ss, flag));
+        user.write(WvsContext.temporaryStatSet(ss, flag, 0));
         user.getField().broadcastPacket(UserRemote.temporaryStatSet(user, ss, flag));
     }
 
