@@ -309,6 +309,9 @@ public final class AttackHandler {
         if (attack.skillId != 0) {
             attack.slv = user.getSkillLevel(attack.skillId);
             switch (attack.skillId) {
+                case Thief.TORNADO_SPIN_ATTACK ->{
+                    attack.slv = user.getSkillLevel(Thief.TORNADO_SPIN);
+                }
                 case Aran.FULL_SWING_DOUBLE_SWING, Aran.FULL_SWING_TRIPLE_SWING -> {
                     attack.slv = user.getSkillLevel(Aran.FULL_SWING);
                 }
