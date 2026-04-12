@@ -101,11 +101,10 @@ public final class ServerExecutor {
     // HELPER METHODS --------------------------------------------------------------------------------------------------
 
     public static GameExecutor getExecutor(Field field) {
-        if (field.getFieldStorage() instanceof InstanceFieldStorage instanceFieldStorage) {
-            return gameExecutors.get(instanceFieldStorage.getInstance().getInstanceId() % gameExecutors.size());
-        } else {
-            return gameExecutors.get(field.getExecutorIndex() % gameExecutors.size());
-        }
+        final int executorIndex = field.getFieldStorage() instanceof InstanceFieldStorage instanceFieldStorage ?
+                instanceFieldStorage.getInstance().getInstanceId() :
+                field.getExecutorIndex();
+        return gameExecutors.get(Math.floorMod(executorIndex, gameExecutors.size()));
     }
 
     public static void lockExecutor(Field field) {

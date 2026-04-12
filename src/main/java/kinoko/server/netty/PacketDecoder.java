@@ -19,6 +19,7 @@ import java.util.List;
 public final class PacketDecoder extends ByteToMessageDecoder {
     public static final short RECV_VERSION = ServerConstants.GAME_VERSION;
     private static final Logger log = LogManager.getLogger(PacketDecoder.class);
+    private final byte[] header = new byte[4];
     private final byte[] iv;
     private int length = -1;
 
@@ -37,7 +38,6 @@ public final class PacketDecoder extends ByteToMessageDecoder {
             if (in.readableBytes() < 4) {
                 return;
             }
-            final byte[] header = new byte[4];
             in.readBytes(header);
 
             final int version = ((header[0] ^ iv[2]) & 0xFF) | (((header[1] ^ iv[3]) << 8) & 0xFF00);
