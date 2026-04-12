@@ -24,13 +24,13 @@ public final class MapleCrypto {
         // Run static initialization block
     }
 
-    public static void crypt(byte[] data, byte[] iv) {
+    public static void crypt(byte[] data, byte[] seq) {
         final byte[] block = new byte[BLOCK_SIZE];
         int a = data.length;
         int b = 0x5B0;
         int c = 0;
         while (a > 0) {
-            fillBlock(block, iv);
+            fillBlock(block, seq);
             if (a < b) {
                 b = a;
             }
@@ -50,9 +50,9 @@ public final class MapleCrypto {
         }
     }
 
-    private static void fillBlock(byte[] block, byte[] iv) {
-        for (int i = 0; i < block.length; i += iv.length) {
-            System.arraycopy(iv, 0, block, i, iv.length);
+    private static void fillBlock(byte[] block, byte[] seq) {
+        for (int i = 0; i < block.length; i += seq.length) {
+            System.arraycopy(seq, 0, block, i, seq.length);
         }
     }
 }

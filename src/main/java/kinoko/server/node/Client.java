@@ -13,8 +13,8 @@ public final class Client extends NettyClient {
     private byte[] machineId;
     private byte[] clientKey;
 
-    public Client(ServerNode serverNode, SocketChannel socketChannel) {
-        super(serverNode, socketChannel);
+    public Client(ServerNode serverNode, SocketChannel socketChannel, byte[] recvSeq, byte[] sendSeq) {
+        super(serverNode, socketChannel, recvSeq, sendSeq);
     }
 
     public Account getAccount() {

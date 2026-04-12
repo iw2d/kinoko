@@ -32,8 +32,7 @@ public final class PlainPacketDecoder extends ByteToMessageDecoder {
             in.readBytes(data);
             length = -1;
 
-            final InPacket inPacket = new NioBufferInPacket(data);
-            out.add(inPacket);
+            out.add(data);
         }
     }
 }

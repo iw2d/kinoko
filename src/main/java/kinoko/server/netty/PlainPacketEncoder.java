@@ -11,21 +11,17 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public final class PlainPacketEncoder extends MessageToByteEncoder<OutPacket> {
+public final class PlainPacketEncoder extends MessageToByteEncoder<byte[]> {
     private static final Logger log = LogManager.getLogger(PlainPacketEncoder.class);
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, OutPacket outPacket, ByteBuf out) {
+    protected void encode(ChannelHandlerContext ctx, byte[] data, ByteBuf out) {
         final NettyClient c = ctx.channel().attr(NettyClient.CLIENT_KEY).get();
-        final OutHeader header = outPacket.getHeader();
-        final byte[] data = outPacket.getData();
         if (c == null) {
-            log.log(ServerConfig.DEBUG_MODE && !header.isIgnoreHeader() ? Level.DEBUG : Level.TRACE, "[Out] | Plain sending " + Util.readableByteArray(data));
             out.writeShortLE(data.length);
             out.writeBytes(data);
             return;
         }
-        log.log(ServerConfig.DEBUG_MODE && !header.isIgnoreHeader() ? Level.DEBUG : Level.TRACE, "[Out] | {}", outPacket);
         out.writeShortLE(0);
         out.writeShortLE(data.length);
         out.writeBytes(data);

@@ -22,7 +22,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 @ChannelHandler.Sharable
-public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket> {
+public abstract class PacketHandler extends SimpleChannelInboundHandler<byte[]> {
     private static final Logger log = LogManager.getLogger(PacketHandler.class);
     private final Map<InHeader, Method> handlerMap;
 
@@ -31,21 +31,22 @@ public abstract class PacketHandler extends SimpleChannelInboundHandler<InPacket
     }
 
     @Override
-    public final void channelRead0(ChannelHandlerContext ctx, InPacket inPacket) {
+    public final void channelRead0(ChannelHandlerContext ctx, byte[] data) {
         final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
-        final short op = inPacket.decodeShort();
-        final InHeader header = InHeader.getByValue(op);
-        if (header == null) {
-            log.error("Unknown opcode {} | {}", Util.opToString(op), inPacket);
-            return;
-        }
-        final Method handler = handlerMap.get(header);
-        if (handler == null) {
-            log.log(!header.isIgnoreHeader() ? Level.DEBUG : Level.TRACE, "Unhandled header {}({}) | {}", header, Util.opToString(op), inPacket);
-            return;
-        }
-        log.log(ServerConfig.DEBUG_MODE && !header.isIgnoreHeader() ? Level.DEBUG : Level.TRACE, "[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
         ServerExecutor.submit(client, () -> {
+            final InPacket inPacket = client.read(data);
+            final short op = inPacket.decodeShort();
+            final InHeader header = InHeader.getByValue(op);
+            if (header == null) {
+                log.error("Unknown opcode {} | {}", Util.opToString(op), inPacket);
+                return;
+            }
+            final Method handler = handlerMap.get(header);
+            if (handler == null) {
+                log.log(!header.isIgnoreHeader() ? Level.DEBUG : Level.TRACE, "Unhandled header {}({}) | {}", header, Util.opToString(op), inPacket);
+                return;
+            }
+            log.log(ServerConfig.DEBUG_MODE && !header.isIgnoreHeader() ? Level.DEBUG : Level.TRACE, "[In]  | {}({}) {}", header, Util.opToString(op), inPacket);
             try {
                 if (handler.getParameterTypes()[0] == Client.class) {
                     handler.invoke(null, client, inPacket);

@@ -3,10 +3,11 @@ package kinoko.server.netty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
-import kinoko.packet.stage.LoginPacket;
 import kinoko.server.ServerConfig;
+import kinoko.server.ServerConstants;
 import kinoko.server.node.Client;
 import kinoko.server.node.ServerNode;
+import kinoko.server.packet.OutPacket;
 import kinoko.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,12 +24,12 @@ public final class PacketChannelInitializer extends ChannelInitializer<SocketCha
 
     @Override
     public void initChannel(SocketChannel c) {
-        final byte[] recvIv = getNewIv();
-        final byte[] sendIv = getNewIv();
+        final byte[] recvSeq = getNewIv();
+        final byte[] sendSeq = getNewIv();
         if (ServerConfig.PLAIN_TRAFFIC) {
             c.pipeline().addLast(new PlainPacketDecoder(), handler, new PlainPacketEncoder());
         } else {
-            c.pipeline().addLast(new PacketDecoder(recvIv), handler, new PacketEncoder(sendIv));
+            c.pipeline().addLast(new PacketDecoder(recvSeq.clone()), handler, new PacketEncoder(sendSeq.clone()));
         }
 
         if (!node.isInitialized()) {
@@ -36,9 +37,9 @@ public final class PacketChannelInitializer extends ChannelInitializer<SocketCha
             return;
         }
 
-        final Client client = new Client(node, c);
+        final Client client = new Client(node, c, recvSeq.clone(), sendSeq.clone());
         client.setClientKey(getNewClientKey());
-        client.write(LoginPacket.connect(recvIv, sendIv));
+        c.writeAndFlush(connect(recvSeq, sendSeq));
         c.attr(NettyClient.CLIENT_KEY).set(client);
     }
 
@@ -59,5 +60,15 @@ public final class PacketChannelInitializer extends ChannelInitializer<SocketCha
         final byte[] clientKey = new byte[8];
         Util.getRandom().nextBytes(clientKey);
         return clientKey;
+    }
+
+    public static byte[] connect(byte[] recvSeq, byte[] sendSeq) {
+        final OutPacket outPacket = OutPacket.of();
+        outPacket.encodeShort(ServerConstants.GAME_VERSION);
+        outPacket.encodeString(ServerConstants.PATCH);
+        outPacket.encodeArray(recvSeq);
+        outPacket.encodeArray(sendSeq);
+        outPacket.encodeByte(ServerConstants.LOCALE);
+        return outPacket.getData();
     }
 }

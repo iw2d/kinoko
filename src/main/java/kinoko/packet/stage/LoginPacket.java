@@ -18,16 +18,6 @@ import java.util.Optional;
 public final class LoginPacket {
     // CLogin::OnPacket ------------------------------------------------------------------------------------------------
 
-    public static OutPacket connect(byte[] sendIv, byte[] recvIv) {
-        final OutPacket outPacket = OutPacket.of();
-        outPacket.encodeShort(ServerConstants.GAME_VERSION);
-        outPacket.encodeString(ServerConstants.PATCH);
-        outPacket.encodeArray(sendIv); // sendIv for client (recvIv for server)
-        outPacket.encodeArray(recvIv); // recvIv for client (sendIv for server)
-        outPacket.encodeByte(ServerConstants.LOCALE);
-        return outPacket;
-    }
-
     public static OutPacket checkPasswordResultSuccess(Account account, byte[] clientKey) {
         final OutPacket outPacket = OutPacket.of(OutHeader.CheckPasswordResult);
         outPacket.encodeByte(LoginResultType.Success.getValue());
