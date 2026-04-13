@@ -20,16 +20,16 @@ import java.util.Random;
 @Fork(2)
 public class CryptoBenchmark {
     private byte[] data;
-    private byte[] iv;
+    private byte[] seq;
 
     @Setup(Level.Iteration)
     public void setup() {
         data = new byte[1024]; // simulate packet size
-        iv = new byte[4];
+        seq = new byte[4];
 
         Random r = new Random(123);
         r.nextBytes(data);
-        r.nextBytes(iv);
+        r.nextBytes(seq);
     }
 
     // --- Individual benchmarks ---
@@ -37,12 +37,12 @@ public class CryptoBenchmark {
     @Benchmark
     public void mapleCrypto(Blackhole bh) {
         byte[] localData = data.clone();
-        byte[] localIv = iv.clone();
+        byte[] localSeq = seq.clone();
 
-        MapleCrypto.crypt(localData, localIv);
+        MapleCrypto.crypt(localData, localSeq);
 
         bh.consume(localData);
-        bh.consume(localIv);
+        bh.consume(localSeq);
     }
 
     @Benchmark
@@ -56,11 +56,11 @@ public class CryptoBenchmark {
 
     @Benchmark
     public void innoHash(Blackhole bh) {
-        byte[] localIv = iv.clone();
+        byte[] localSeq = seq.clone();
 
-        IGCipher.innoHash(localIv);
+        IGCipher.innoHash(localSeq);
 
-        bh.consume(localIv);
+        bh.consume(localSeq);
     }
 
     // --- Combined pipeline (realistic usage) ---
@@ -68,14 +68,14 @@ public class CryptoBenchmark {
     @Benchmark
     public void fullPipeline(Blackhole bh) {
         byte[] localData = data.clone();
-        byte[] localIv = iv.clone();
+        byte[] localSeq = seq.clone();
 
-        MapleCrypto.crypt(localData, localIv);
+        MapleCrypto.crypt(localData, localSeq);
         ShandaCrypto.decrypt(localData);
-        IGCipher.innoHash(localIv);
+        IGCipher.innoHash(localSeq);
 
         bh.consume(localData);
-        bh.consume(localIv);
+        bh.consume(localSeq);
     }
 
     public static void main(String[] args) throws Exception {
