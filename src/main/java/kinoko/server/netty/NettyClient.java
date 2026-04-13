@@ -8,6 +8,7 @@ import kinoko.server.node.ServerNode;
 import kinoko.server.packet.InPacket;
 import kinoko.server.packet.NioBufferInPacket;
 import kinoko.server.packet.OutPacket;
+import kinoko.util.Util;
 import kinoko.util.crypto.IGCipher;
 import kinoko.util.crypto.MapleCrypto;
 import kinoko.util.crypto.ShandaCrypto;
@@ -20,14 +21,12 @@ public abstract class NettyClient {
     private static final Logger log = LogManager.getLogger(NettyClient.class);
     private final ServerNode serverNode;
     private final SocketChannel socketChannel;
-    private final byte[] recvSeq;
-    private final byte[] sendSeq;
+    private final byte[] recvSeq = initSequence();
+    private final byte[] sendSeq = initSequence();
 
-    public NettyClient(ServerNode serverNode, SocketChannel socketChannel, byte[] recvSeq, byte[] sendSeq) {
+    public NettyClient(ServerNode serverNode, SocketChannel socketChannel) {
         this.serverNode = serverNode;
         this.socketChannel = socketChannel;
-        this.recvSeq = recvSeq;
-        this.sendSeq = sendSeq;
     }
 
     public ServerNode getServerNode() {
@@ -36,6 +35,14 @@ public abstract class NettyClient {
 
     public SocketChannel getSocketChannel() {
         return socketChannel;
+    }
+
+    public final byte[] getRecvSeq() {
+        return recvSeq;
+    }
+
+    public final byte[] getSendSeq() {
+        return sendSeq;
     }
 
     public final synchronized InPacket read(byte[] data) {
@@ -62,5 +69,11 @@ public abstract class NettyClient {
 
     public void close() {
         socketChannel.close();
+    }
+
+    private static byte[] initSequence() {
+        final byte[] seq = new byte[4];
+        Util.getRandom().nextBytes(seq);
+        return seq;
     }
 }

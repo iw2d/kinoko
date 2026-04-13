@@ -26,10 +26,6 @@ public final class PacketDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-        final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
-        if (client == null) {
-            return;
-        }
         if (storedLength < 0) {
             if (in.readableBytes() < 4) {
                 return;
@@ -39,6 +35,7 @@ public final class PacketDecoder extends ByteToMessageDecoder {
             final int version = ((header[0] ^ recvSeq[2]) & 0xFF) | (((header[1] ^ recvSeq[3]) << 8) & 0xFF00);
             if (version != RECV_VERSION) {
                 log.warn("Incorrect packet seq, dropping client");
+                final Client client = (Client) ctx.channel().attr(NettyClient.CLIENT_KEY).get();
                 ServerExecutor.submit(client, client::close);
                 return;
             }

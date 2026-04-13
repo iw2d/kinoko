@@ -16,13 +16,6 @@ public final class PacketEncoder extends MessageToByteEncoder<byte[]> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, byte[] data, ByteBuf out) {
-        final NettyClient c = ctx.channel().attr(NettyClient.CLIENT_KEY).get();
-        if (c == null) {
-            // TODO: replace null check with custom handler and pipeline.replace
-            out.writeShortLE(data.length);
-            out.writeBytes(data);
-            return;
-        }
         final int rawSeq = ((sendSeq[2] & 0xFF) | ((sendSeq[3] << 8) & 0xFF00)) ^ SEND_VERSION;
         final int dataLen = data.length ^ rawSeq;
 

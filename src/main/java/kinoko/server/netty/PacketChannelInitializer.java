@@ -23,24 +23,22 @@ public final class PacketChannelInitializer extends ChannelInitializer<SocketCha
     }
 
     @Override
-    public void initChannel(SocketChannel c) {
-        final byte[] recvSeq = getNewIv();
-        final byte[] sendSeq = getNewIv();
-        if (ServerConfig.PLAIN_TRAFFIC) {
-            c.pipeline().addLast(new PlainPacketDecoder(), handler, new PlainPacketEncoder());
-        } else {
-            c.pipeline().addLast(new PacketDecoder(recvSeq.clone()), handler, new PacketEncoder(sendSeq.clone()));
-        }
-
+    public void initChannel(SocketChannel channel) {
         if (!node.isInitialized()) {
-            c.close();
+            channel.close();
             return;
         }
 
-        final Client client = new Client(node, c, recvSeq.clone(), sendSeq.clone());
+        final Client client = new Client(node, channel);
+        final byte[] recvSeq = client.getRecvSeq().clone();
+        final byte[] sendSeq = client.getSendSeq().clone();
+        channel.pipeline().addLast("decoder", ServerConfig.PLAIN_TRAFFIC ? new PlainPacketDecoder() : new PacketDecoder(recvSeq));
+        channel.pipeline().addLast("handler", handler);
+        channel.pipeline().addLast("connect", new ConnectHandler(sendSeq));
+
         client.setClientKey(getNewClientKey());
-        c.writeAndFlush(connect(recvSeq, sendSeq));
-        c.attr(NettyClient.CLIENT_KEY).set(client);
+        channel.attr(NettyClient.CLIENT_KEY).set(client);
+        channel.writeAndFlush(connect(recvSeq, sendSeq));
     }
 
     @Override
@@ -48,12 +46,6 @@ public final class PacketChannelInitializer extends ChannelInitializer<SocketCha
         log.error("Exception caught while initializing channel", cause);
         cause.printStackTrace();
         ctx.close();
-    }
-
-    private static byte[] getNewIv() {
-        final byte[] iv = new byte[4];
-        Util.getRandom().nextBytes(iv);
-        return iv;
     }
 
     private static byte[] getNewClientKey() {
