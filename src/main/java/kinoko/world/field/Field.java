@@ -378,7 +378,7 @@ public final class Field {
         }
     }
 
-    public void removeUser(User user) {
+    public synchronized void removeUser(User user) {
         userPool.removeUser(user);
         // Handle dialogs
         user.closeDialog();

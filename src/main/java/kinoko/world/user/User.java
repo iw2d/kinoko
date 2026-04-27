@@ -782,6 +782,9 @@ public final class User extends Life {
     }
 
     public void warp(Field destination, int x, int y, int portalId, boolean isMigrate, boolean isRevive) {
+        if (getConnectedServer().isShutdown()) {
+            return;
+        }
         if (getField() != null) {
             getField().removeUser(this);
         }

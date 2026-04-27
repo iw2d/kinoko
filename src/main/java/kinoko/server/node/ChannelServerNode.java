@@ -30,6 +30,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -277,9 +278,11 @@ public final class ChannelServerNode extends ServerNode {
     public void shutdown() throws InterruptedException {
         // Close client channels
         startShutdown();
+        final List<CompletableFuture<Void>> clientFutures = new ArrayList<>();
         for (Client client : clientStorage.getConnectedClients()) {
-            client.close();
+            clientFutures.add(ServerExecutor.submit(client, client::close));
         }
+        CompletableFuture.allOf(clientFutures.toArray(new CompletableFuture<?>[0])).join();
 
         // Clean up
         eventManager.shutdown();

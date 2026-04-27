@@ -39,24 +39,24 @@ public final class ServerExecutor {
 
     // GAME EXECUTOR METHODS -------------------------------------------------------------------------------------------
 
-    public static void submit(Client client, Runnable runnable) {
+    public static CompletableFuture<Void> submit(Client client, Runnable runnable) {
         if (client.getUser() == null) {
-            submitService(runnable);
+            return submitService(runnable);
         } else {
-            submit(client.getUser(), runnable);
+            return submit(client.getUser(), runnable);
         }
     }
 
-    public static void submit(User user, Runnable runnable) {
+    public static CompletableFuture<Void> submit(User user, Runnable runnable) {
         if (user.getField() == null) {
-            submitService(runnable);
+            return submitService(runnable);
         } else {
-            submit(user.getField(), runnable);
+            return submit(user.getField(), runnable);
         }
     }
 
-    public static void submit(Field field, Runnable runnable) {
-        getExecutor(field).submit(runnable);
+    public static CompletableFuture<Void> submit(Field field, Runnable runnable) {
+        return getExecutor(field).submit(runnable);
     }
 
     public static ScheduledFuture<?> schedule(Client client, Runnable runnable, long delay, TimeUnit timeUnit) {
@@ -78,15 +78,15 @@ public final class ServerExecutor {
 
     // SERVICE EXECUTOR METHODS ----------------------------------------------------------------------------------------
 
-    public static void submitService(Runnable runnable) {
-        serviceExecutor.submit(() -> {
+    public static CompletableFuture<Void> submitService(Runnable runnable) {
+        return CompletableFuture.runAsync(() ->{
             try {
                 runnable.run();
             } catch (Exception e) {
                 log.error("Exception caught during service execution : {}", e, e);
                 e.printStackTrace();
             }
-        });
+        }, serviceExecutor);
     }
 
     public static ScheduledFuture<?> scheduleService(Runnable runnable, long delay, TimeUnit timeUnit) {
