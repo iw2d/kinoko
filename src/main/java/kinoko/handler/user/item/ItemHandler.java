@@ -395,7 +395,7 @@ public abstract class ItemHandler {
         if (success) {
             // Update skill record
             final SkillRecord skillRecord = new SkillRecord(skillId);
-            skillRecord.setSkillLevel(user.getSkillLevel(skillId));
+            skillRecord.setSkillLevel(user.getSkillManager().getSkill(skillId).map(SkillRecord::getSkillLevel).orElse(0));
             skillRecord.setMasterLevel(itemInfo.getInfo(ItemInfoType.masterLevel));
             sm.addSkill(skillRecord);
             user.write(WvsContext.changeSkillRecordResult(skillRecord, false));
